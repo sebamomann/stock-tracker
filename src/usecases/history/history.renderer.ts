@@ -61,8 +61,8 @@ export class HistoryRenderer extends Renderer implements IRenderer {
         const detailsHTML = document.createElement('div')!;
         detailsHTML.className = "details";
 
-        const quantityHTML = this.htmlSpan("quantity", `Qt: ${String(fTransaction.quantity)}`);
-        const priceHTML = this.htmlSpan("price", `Price: ${String(fTransaction.price)}€`);
+        const quantityHTML = this.htmlSpan("quantity", `Quantity: ${String(fTransaction.quantity)}`);
+        const priceHTML = this.htmlSpan("price", `Total: ${String(fTransaction.price)}€`);
 
         detailsHTML.appendChild(quantityHTML);
         detailsHTML.appendChild(priceHTML);
