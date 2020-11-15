@@ -1,5 +1,8 @@
 import {Renderer} from "../Renderer";
 import {IRenderer} from "../../interface/IRenderer";
+import {TransactionFactory} from "../../models/transaction/TransactionFactory";
+import {Stock} from "../../models/Stock";
+import {Database} from "../../service/Database";
 
 export class TransactionDialogRenderer extends Renderer implements IRenderer {
     private static htmlDropdownSelect() {
@@ -7,11 +10,11 @@ export class TransactionDialogRenderer extends Renderer implements IRenderer {
 
         let option1 = document.createElement("option");
         option1.innerText = "Purchase";
-        option1.value = "1";
+        option1.value = "0";
 
         let option2 = document.createElement("option");
         option2.innerText = "Sale";
-        option2.value = "2";
+        option2.value = "1";
 
         select.append(option1, option2);
 
@@ -31,6 +34,10 @@ export class TransactionDialogRenderer extends Renderer implements IRenderer {
 
         let select = TransactionDialogRenderer.htmlDropdownSelect();
 
+        let tickerInput = document.createElement("input");
+        tickerInput.id = "form-ticker"
+        tickerInput.placeholder = "Ticker";
+
         let quantityInput = document.createElement("input");
         quantityInput.id = "form-quantity"
         quantityInput.placeholder = "Quantity";
@@ -39,6 +46,11 @@ export class TransactionDialogRenderer extends Renderer implements IRenderer {
         priceInput.id = "form-price"
         priceInput.placeholder = "Price (total)";
 
+        let dateInput = document.createElement("input");
+        dateInput.id = "form-price";
+        dateInput.type = "date";
+        dateInput.placeholder = "Datum";
+
         let submit = document.createElement("button");
         submit.type = "submit";
         submit.innerText = "submit";
@@ -46,17 +58,23 @@ export class TransactionDialogRenderer extends Renderer implements IRenderer {
             e.preventDefault();
             const inputs = (document.getElementById("transaction-create-form") as HTMLFormElement).elements;
 
-            let option = (inputs[0] as HTMLSelectElement).value;
-            let quantity = (inputs[1] as HTMLInputElement).value;
-            let price = (inputs[2] as HTMLInputElement).value;
+            let stock = new Stock((inputs[0] as HTMLSelectElement).value);
+            let option = (inputs[1] as HTMLSelectElement).value;
+            let quantity = (inputs[2] as HTMLInputElement).value;
+            let price = (inputs[3] as HTMLInputElement).value;
+            let date = (inputs[4] as HTMLInputElement).value;
 
-            console.log(`Selected Option: ${option} - Qt: ${quantity} - Price: ${price}`);
+            const transactionFactory = new TransactionFactory();
+            const transaction = transactionFactory.createTransaction(stock, +option, +quantity, +price, new Date(date));
 
+            Database.createTransaction(transaction);
         });
 
+        formHTML.append(tickerInput);
         formHTML.append(select);
         formHTML.append(quantityInput);
         formHTML.append(priceInput);
+        formHTML.append(dateInput);
         formHTML.append(submit);
 
         actions.append(formHTML);

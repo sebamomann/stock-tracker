@@ -2,6 +2,7 @@ import {prod} from "../configuration/Logger";
 import {Stock} from "../models/Stock";
 import {PurchaseTransaction} from "../models/transaction/PurchaseTransaction";
 import {SaleTransaction} from "../models/transaction/SaleTransaction";
+import {Transaction} from "../models/transaction/Transaction";
 
 export class Database {
     constructor() {
@@ -12,15 +13,15 @@ export class Database {
      *
      * @return string[] Array of all tickers
      */
-    static loadOwnedStocks(): string[] {
+    static loadOwnedStockTickers(): string[] {
         const tickers = ['TSLA'];
 
-        prod.info("Ticker List: " + JSON.stringify(tickers));
+        prod.info("Loaded Ticker List: " + JSON.stringify(tickers));
 
         return tickers;
     }
 
-    static loadStockTransactions(stock: Stock) {
+    static loadTransactionsOfStock(stock: Stock) {
         const transaction1 = new PurchaseTransaction(stock, 100, 10, new Date());
         const transaction2 = new PurchaseTransaction(stock, 200, 5, new Date());
         const transaction3 = new PurchaseTransaction(stock, 150, 5, new Date());
@@ -31,5 +32,9 @@ export class Database {
         return [
             transaction1, transaction2, transaction3, transaction4, transaction5, transaction6
         ];
+    }
+
+    static createTransaction(transaction: Transaction) {
+        prod.info(`Stored Transaction: ${transaction}`);
     }
 }

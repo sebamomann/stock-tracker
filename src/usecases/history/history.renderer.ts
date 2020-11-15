@@ -3,6 +3,7 @@ import {Renderer} from "../Renderer";
 import {History} from "../../models/History";
 import {ITransaction} from "../../interface/ITransaction";
 import {PurchaseTransaction} from "../../models/transaction/PurchaseTransaction";
+import {Transaction} from "../../models/transaction/Transaction";
 
 export class HistoryRenderer extends Renderer implements IRenderer {
     private history: History;
@@ -27,7 +28,7 @@ export class HistoryRenderer extends Renderer implements IRenderer {
         wrapper.appendChild(historyDetails);
     }
 
-    private htmlTransactionBlock(fTransaction: ITransaction) {
+    private htmlTransactionBlock(fTransaction: Transaction) {
         const transactionBlock = document.createElement('div')!;
         const classes = ["transaction-block", "block"];
         (fTransaction instanceof PurchaseTransaction) ? classes.push("purchase") : classes.push("sale")
@@ -73,8 +74,8 @@ export class HistoryRenderer extends Renderer implements IRenderer {
         transactionHistoryWrapper.className = "transaction-history-wrapper";
 
         this.history
-            .getTransactions()
-            .forEach((fTransaction: ITransaction) => {
+            .transactions
+            .forEach((fTransaction: Transaction) => {
                 const transactionBlock = this.htmlTransactionBlock(fTransaction);
 
                 transactionHistoryWrapper.append(transactionBlock);
@@ -108,18 +109,18 @@ export class HistoryRenderer extends Renderer implements IRenderer {
     }
 
     private htmlPriceBalance() {
-        let priceBalance = this.history.getPriceBalance();
+        let priceBalance = this.history.getTotalTransactionBalance();
         return this.htmlSpan("price-balance", `Price Balance: ${String(priceBalance)}`);
     }
 
     private htmlCurrentWorth() {
-        let currentWorth = this.history.getCurrentWorth();
+        let currentWorth = this.history.totalWorthOfCurrentlyOwnedStocks();
         return this.htmlSpan("current-worth", `Current Worth: ${String(currentWorth)}`);
     }
 
     private htmlPotentialWinTotal() {
-        let htmlPotentialWinTotal = this.history.getCurrentWorth();
-        let priceBalance = this.history.getPriceBalance();
+        let htmlPotentialWinTotal = this.history.totalWorthOfCurrentlyOwnedStocks();
+        let priceBalance = this.history.getTotalTransactionBalance();
 
         let potentialWinTotal = priceBalance + htmlPotentialWinTotal;
 

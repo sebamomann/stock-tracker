@@ -13,7 +13,7 @@ export class StockList {
      * For each Element add a new {@link Stock} to the list
      */
     public loadStockList() {
-        const ownedStockTickers = Database.loadOwnedStocks();
+        const ownedStockTickers = Database.loadOwnedStockTickers();
 
         ownedStockTickers.forEach((ticker: string) => {
             const stock = new Stock(ticker);

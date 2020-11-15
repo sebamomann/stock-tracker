@@ -4,12 +4,17 @@ import {Transaction} from "./transaction/Transaction";
 
 export class History {
     private readonly _stock: Stock;
-    private transactions: Transaction[] = [];
 
     constructor(stock: Stock) {
         this._stock = stock;
 
-        this.loadTransactionHistory();
+        this.loadTransactions();
+    }
+
+    private _transactions: Transaction[] = [];
+
+    get transactions(): Transaction[] {
+        return this._transactions;
     }
 
     get stock(): Stock {
@@ -17,27 +22,22 @@ export class History {
     }
 
     /**
-     * Load all transaction made with this particular Stock
+     * Calculate the current worth of all owned Stocks (of this company)
      */
-    public loadTransactionHistory() {
-        this.transactions = Database.loadStockTransactions(this._stock);
-    }
-
-    public getCurrentWorth(): number {
+    public totalWorthOfCurrentlyOwnedStocks(): number {
         const quantity = this.numberOfOwnedStocks();
         const currentPrice = this.stock.getPrice();
 
         return quantity * currentPrice;
     }
 
-    public getTransactions() {
-        return this.transactions;
-    }
-
+    /**
+     * Get the number of currently owned Stocks (of this company)
+     */
     public numberOfOwnedStocks() {
         let quantityOwned = 0;
 
-        this.transactions
+        this._transactions
             .forEach((fTransaction) => {
                 quantityOwned += fTransaction.getTransactionQuantity();
             });
@@ -45,14 +45,26 @@ export class History {
         return quantityOwned;
     }
 
-    public getPriceBalance() {
+    /**
+     * Calculate the total balance from buying and selling Stocks.<br/>
+     * Sold Stocks {@link SaleTransaction} increase balance.<br/>
+     * Purchased Stocks  {@link PurchaseTransaction} decrease balance
+     */
+    public getTotalTransactionBalance() {
         let balance = 0;
 
-        this.transactions
+        this._transactions
             .forEach((fTransaction) => {
                 balance += fTransaction.getTransactionPrice();
             });
 
         return balance;
+    }
+
+    /**
+     * Load all transaction made with this particular Stock
+     */
+    private loadTransactions() {
+        this._transactions = Database.loadTransactionsOfStock(this._stock);
     }
 }

@@ -4,7 +4,7 @@ var Database = /** @class */ (function () {
     function Database() {
     }
 
-    Database.loadOwnedStocks = function () {
+    Database.loadOwnedStockTickers = function () {
         return ['TSLA', 'TSLA2', 'TSLA3'];
     };
     return Database;
