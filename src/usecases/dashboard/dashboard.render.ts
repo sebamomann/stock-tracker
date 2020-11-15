@@ -1,26 +1,36 @@
 import {StockList} from "../../models/StockList";
+import {History} from "../../models/History";
+import {Stock} from "../../models/Stock";
+import {IRenderer} from "../../interface/IRenderer";
+import {Renderer} from "../Renderer";
+import {HistoryRenderer} from "../history/history.renderer";
 
-export class DashboardRender {
+export class DashboardRender extends Renderer implements IRenderer {
     private stockList: StockList;
 
     constructor(stockList: StockList) {
+        super();
+
         this.stockList = stockList;
     }
 
     render() {
+        this.reset();
+
         const wrapper = document.getElementById("wrapper")!;
-        wrapper.innerHTML = "";
 
         const stockListWrapper = document.createElement('div');
         stockListWrapper.className = "stock-list-wrapper";
 
         this.stockList
             .getList()
-            .forEach((fStock) => {
+            .forEach((fStock: Stock) => {
                 const stockBlock = document.createElement('div')!;
                 stockBlock.className = "stock-block";
                 stockBlock.addEventListener("click", (e: Event) => {
-
+                    const history = new History(fStock);
+                    const historyRenderer = new HistoryRenderer(history);
+                    historyRenderer.render();
                 });
 
                 const stockName = document.createElement('span');

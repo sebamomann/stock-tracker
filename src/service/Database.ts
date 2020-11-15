@@ -1,4 +1,7 @@
 import {prod} from "../configuration/Logger";
+import {Stock} from "../models/Stock";
+import {PurchaseTransaction} from "../models/transaction/PurchaseTransaction";
+import {SaleTransaction} from "../models/transaction/SaleTransaction";
 
 export class Database {
     constructor() {
@@ -15,5 +18,18 @@ export class Database {
         prod.info("Ticker List: " + JSON.stringify(tickers));
 
         return tickers;
+    }
+
+    static loadStockTransactions(stock: Stock) {
+        const transaction1 = new PurchaseTransaction(stock, 100, 10);
+        const transaction2 = new PurchaseTransaction(stock, 200, 5);
+        const transaction3 = new PurchaseTransaction(stock, 150, 5);
+        const transaction4 = new PurchaseTransaction(stock, 100, 10);
+        const transaction5 = new SaleTransaction(stock, 400, 20);
+        const transaction6 = new SaleTransaction(stock, 300, 5);
+
+        return [
+            transaction1, transaction2, transaction3, transaction4, transaction5, transaction6
+        ];
     }
 }

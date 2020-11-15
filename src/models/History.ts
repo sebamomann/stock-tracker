@@ -1,28 +1,25 @@
-import {IStock} from "../interface/IStock";
 import {Stock} from "./Stock";
+import {ITransaction} from "../interface/ITransaction";
 import {Database} from "../service/Database";
 
 export class History {
-    private list: IStock[] = [];
+    private stock: Stock;
+    private history: ITransaction[] = [];
 
-    constructor() {
-        this.loadStockList()
+    constructor(stock: Stock) {
+        this.stock = stock;
+
+        this.loadTransactionHistory();
     }
 
     /**
-     * Populate list with data from data provider. </br>
-     * For each Element add a new {@link Stock} to the list
+     * Load all transaction made with this particular Stock
      */
-    public loadStockList() {
-        const ownedStockTickers = Database.loadOwnedStocks();
-
-        ownedStockTickers.forEach((ticker: string) => {
-            const stock = new Stock(ticker);
-            this.list.push(stock)
-        })
+    public loadTransactionHistory() {
+        this.history = Database.loadStockTransactions(this.stock);
     }
 
-    public getList() {
-        return this.list;
+    public getHistory() {
+        return this.history;
     }
 }

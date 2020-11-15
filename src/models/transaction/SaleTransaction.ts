@@ -1,7 +1,7 @@
 import {ITransaction} from "../../interface/ITransaction";
 import {Stock} from "../Stock";
 
-export class PurchaseTransaction implements ITransaction {
+export class SaleTransaction implements ITransaction {
     price: number;
     quantity: number;
     stock: Stock;
@@ -13,10 +13,10 @@ export class PurchaseTransaction implements ITransaction {
     }
 
     getTransactionPrice(): number {
-        return -this.price;
+        return +this.price;
     }
 
     getTransactionQuantity(): number {
-        return this.quantity;
+        return -this.quantity;
     }
 }
