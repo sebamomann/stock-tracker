@@ -14,11 +14,11 @@ export class Transaction implements ITransaction {
         this.date = date;
     }
 
-    getTransactionPrice(): number {
+    public getTransactionPrice(): number {
         return this.price;
     }
 
-    getTransactionQuantity(): number {
+    public getTransactionQuantity(): number {
         return this.quantity;
     }
 }

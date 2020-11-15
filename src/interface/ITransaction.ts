@@ -8,13 +8,13 @@ export interface ITransaction {
 
     /**
      * Return the price. <br/>
-     * sold (+) or purchased (-)
+     * sold (+) {@link SaleTransaction} or purchased (-) {@link PurchaseTransaction}
      */
     getTransactionPrice(): number;
 
     /**
      * Return the number of stocks to add or remove from the balance. <br/>
-     * sold (-) or purchased (+)
+     * sold (-) {@link SaleTransaction} or purchased (+) {@link PurchaseTransaction}
      */
     getTransactionQuantity(): number;
 }
