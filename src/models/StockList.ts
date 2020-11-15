@@ -1,9 +1,8 @@
-import {IStock} from "../interface/IStock";
 import {Stock} from "./Stock";
 import {Database} from "../service/Database";
 
 export class StockList {
-    private list: IStock[] = [];
+    private list: Stock[] = [];
 
     constructor() {
         this.loadStockList()

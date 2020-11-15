@@ -3,21 +3,31 @@ import {ITransaction} from "../interface/ITransaction";
 import {Database} from "../service/Database";
 
 export class History {
-    private readonly stock: Stock;
-
+    private readonly _stock: Stock;
     private transactions: ITransaction[] = [];
 
     constructor(stock: Stock) {
-        this.stock = stock;
+        this._stock = stock;
 
         this.loadTransactionHistory();
+    }
+
+    get stock(): Stock {
+        return this._stock;
     }
 
     /**
      * Load all transaction made with this particular Stock
      */
     public loadTransactionHistory() {
-        this.transactions = Database.loadStockTransactions(this.stock);
+        this.transactions = Database.loadStockTransactions(this._stock);
+    }
+
+    public getCurrentWorth(): number {
+        const quantity = this.numberOfOwnedStocks();
+        const currentPrice = this.stock.getPrice();
+
+        return quantity * currentPrice;
     }
 
     public getTransactions() {

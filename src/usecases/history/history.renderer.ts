@@ -88,6 +88,12 @@ export class HistoryRenderer extends Renderer implements IRenderer {
         const priceBalanceHTML = this.htmlPriceBalance();
         historyDetails.appendChild(priceBalanceHTML);
 
+        const potentialValue = this.htmlCurrentWorth();
+        historyDetails.appendChild(potentialValue);
+
+        const potentialWinTotal = this.htmlPotentialWinTotal();
+        historyDetails.appendChild(potentialWinTotal);
+
         return historyDetails;
     }
 
@@ -107,5 +113,28 @@ export class HistoryRenderer extends Renderer implements IRenderer {
         priceBalanceHTML.className = "price-balance";
         priceBalanceHTML.innerText = `Price Balance: ${String(priceBalance)}`;
         return priceBalanceHTML;
+    }
+
+    private htmlCurrentWorth() {
+        let currentWorth = this.history.getCurrentWorth();
+
+        const currentWorthHTML = document.createElement('span');
+        currentWorthHTML.className = "current-worth";
+        currentWorthHTML.innerText = `Current Worth: ${String(currentWorth)}`;
+
+        return currentWorthHTML;
+    }
+
+    private htmlPotentialWinTotal() {
+        let htmlPotentialWinTotal = this.history.getCurrentWorth();
+        let priceBalance = this.history.getPriceBalance();
+
+        let potentialWinTotal = priceBalance + htmlPotentialWinTotal;
+
+        const htmlPotentialWinTotalHTML = document.createElement('span');
+        htmlPotentialWinTotalHTML.className = "potential-win-total";
+        htmlPotentialWinTotalHTML.innerText = `Potential Win Total: ${String(potentialWinTotal)}`;
+
+        return htmlPotentialWinTotalHTML;
     }
 }

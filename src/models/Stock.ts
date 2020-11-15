@@ -4,7 +4,7 @@ import {StockInfoService} from "../service/StockInfoService";
 export class Stock implements IStock {
     name: string = '';
     ticker: string;
-    pricing: number = 0;
+    pricing: number = 100.50;
 
     constructor(ticker: string) {
         this.ticker = ticker;
@@ -16,5 +16,9 @@ export class Stock implements IStock {
         const stock = StockInfoService.getStockInfo(this.ticker);
 
         this.name = stock.name;
+    }
+
+    getPrice(): number {
+        return this.pricing;
     }
 }
