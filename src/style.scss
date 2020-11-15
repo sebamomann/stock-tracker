@@ -1,0 +1,18 @@
+.stock-list-wrapper {
+  .stock-block {
+    background-color: lightgray;
+    border: 2px solid red;
+
+    span {
+      display: block;
+    }
+
+    .name {
+      font-weight: bold;
+    }
+
+    .ticker {
+      font-style: italic;
+    }
+  }
+}
