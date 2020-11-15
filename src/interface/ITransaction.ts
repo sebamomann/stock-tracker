@@ -4,6 +4,7 @@ export interface ITransaction {
     stock: Stock;
     price: number;
     quantity: number;
+    date: Date;
 
     /**
      * Return the price. <br/>

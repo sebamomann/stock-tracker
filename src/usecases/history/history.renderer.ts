@@ -13,33 +13,59 @@ export class HistoryRenderer extends Renderer implements IRenderer {
         this.history = history;
     }
 
-    private static htmlDetails(fTransaction: ITransaction) {
-        const detailsHTML = document.createElement('div')!;
-        detailsHTML.className = "details";
-
-        const quantityHTML = document.createElement('span');
-        quantityHTML.className = "quantity";
-        quantityHTML.innerText = `Qt: ${String(fTransaction.quantity)}`;
-
-        const priceHTML = document.createElement('span');
-        priceHTML.className = "price";
-        priceHTML.innerText = `Price: ${String(fTransaction.price)}€`;
-
-        detailsHTML.appendChild(quantityHTML);
-        detailsHTML.appendChild(priceHTML);
-        return detailsHTML;
-    }
-
     render(): void {
         this.reset();
 
         const wrapper = document.getElementById("wrapper")!;
 
+        const historyHeader = this.htmlHistoryHeader();
         const transactionListWrapper = this.htmlTransactionList();
         const historyDetails = this.htmlHistoryDetails();
 
+        wrapper.appendChild(historyHeader);
         wrapper.appendChild(transactionListWrapper);
         wrapper.appendChild(historyDetails);
+    }
+
+    private htmlTransactionBlock(fTransaction: ITransaction) {
+        const transactionBlock = document.createElement('div')!;
+        const classes = ["transaction-block", "block"];
+        (fTransaction instanceof PurchaseTransaction) ? classes.push("purchase") : classes.push("sale")
+
+        transactionBlock.className = classes.join(" ");
+
+        transactionBlock.addEventListener("click", (e: Event) => {
+        });
+
+        const headlineHTML = document.createElement('h3');
+        headlineHTML.className = "headline";
+        headlineHTML.innerText = (fTransaction instanceof PurchaseTransaction) ? "Purchase" : "Sale"
+
+        transactionBlock.appendChild(headlineHTML);
+
+        const dateHTML = document.createElement('span');
+        dateHTML.className = "date";
+        dateHTML.innerText = `${String(fTransaction.date.toDateString())}`;
+
+        transactionBlock.appendChild(dateHTML);
+
+        const detailsHTML = this.htmlTransactionDetails(fTransaction);
+        transactionBlock.appendChild(detailsHTML);
+
+        return transactionBlock;
+    }
+
+    private htmlTransactionDetails(fTransaction: ITransaction) {
+        const detailsHTML = document.createElement('div')!;
+        detailsHTML.className = "details";
+
+        const quantityHTML = this.htmlSpan("quantity", `Qt: ${String(fTransaction.quantity)}`);
+        const priceHTML = this.htmlSpan("price", `Price: ${String(fTransaction.price)}€`);
+
+        detailsHTML.appendChild(quantityHTML);
+        detailsHTML.appendChild(priceHTML);
+
+        return detailsHTML;
     }
 
     private htmlTransactionList() {
@@ -49,28 +75,7 @@ export class HistoryRenderer extends Renderer implements IRenderer {
         this.history
             .getTransactions()
             .forEach((fTransaction: ITransaction) => {
-                const transactionBlock = document.createElement('div')!;
-                const classes = ["transaction-block"];
-                (fTransaction instanceof PurchaseTransaction) ? classes.push("purchase") : classes.push("sale")
-
-                transactionBlock.className = classes.join(" ");
-
-                transactionBlock.addEventListener("click", (e: Event) => {
-                });
-
-                const stockName = document.createElement('span');
-                stockName.className = "name";
-                stockName.innerText = fTransaction.stock.name;
-
-                const stockTicker = document.createElement('span');
-                stockTicker.className = "ticker";
-                stockTicker.innerText = fTransaction.stock.ticker;
-
-                const details = HistoryRenderer.htmlDetails(fTransaction);
-
-                transactionBlock.appendChild(stockName);
-                transactionBlock.appendChild(stockTicker);
-                transactionBlock.appendChild(details);
+                const transactionBlock = this.htmlTransactionBlock(fTransaction);
 
                 transactionHistoryWrapper.append(transactionBlock);
             });
@@ -80,7 +85,7 @@ export class HistoryRenderer extends Renderer implements IRenderer {
 
     private htmlHistoryDetails() {
         const historyDetails = document.createElement('div');
-        historyDetails.className = "history-details";
+        historyDetails.className = "history-details block";
 
         const quantityOwnedHTML = this.htmlQuantityOwned();
         historyDetails.appendChild(quantityOwnedHTML);
@@ -99,30 +104,17 @@ export class HistoryRenderer extends Renderer implements IRenderer {
 
     private htmlQuantityOwned() {
         let quantityOwned = this.history.numberOfOwnedStocks();
-
-        const quantityOwnedHTML = document.createElement('span');
-        quantityOwnedHTML.className = "owned-quantity";
-        quantityOwnedHTML.innerText = `Owned: ${String(quantityOwned)}`;
-        return quantityOwnedHTML;
+        return this.htmlSpan("owned-quantity", `Owned: ${String(quantityOwned)}`);
     }
 
     private htmlPriceBalance() {
         let priceBalance = this.history.getPriceBalance();
-
-        const priceBalanceHTML = document.createElement('span');
-        priceBalanceHTML.className = "price-balance";
-        priceBalanceHTML.innerText = `Price Balance: ${String(priceBalance)}`;
-        return priceBalanceHTML;
+        return this.htmlSpan("price-balance", `Price Balance: ${String(priceBalance)}`);
     }
 
     private htmlCurrentWorth() {
         let currentWorth = this.history.getCurrentWorth();
-
-        const currentWorthHTML = document.createElement('span');
-        currentWorthHTML.className = "current-worth";
-        currentWorthHTML.innerText = `Current Worth: ${String(currentWorth)}`;
-
-        return currentWorthHTML;
+        return this.htmlSpan("current-worth", `Current Worth: ${String(currentWorth)}`);
     }
 
     private htmlPotentialWinTotal() {
@@ -131,10 +123,26 @@ export class HistoryRenderer extends Renderer implements IRenderer {
 
         let potentialWinTotal = priceBalance + htmlPotentialWinTotal;
 
-        const htmlPotentialWinTotalHTML = document.createElement('span');
-        htmlPotentialWinTotalHTML.className = "potential-win-total";
-        htmlPotentialWinTotalHTML.innerText = `Potential Win Total: ${String(potentialWinTotal)}`;
+        return this.htmlSpan("potential-win-total", `Potential Win Total: ${String(potentialWinTotal)}`);
+    }
 
-        return htmlPotentialWinTotalHTML;
+    private htmlHistoryHeader() {
+        const stock = this.history.stock;
+
+        const historyHeader = document.createElement('div');
+        historyHeader.className = "history-header";
+
+        const stockTicker = document.createElement('h1');
+        stockTicker.className = "stock-ticker";
+        stockTicker.innerText = stock.ticker;
+
+        const stockName = document.createElement('h2');
+        stockName.className = "stock-name";
+        stockName.innerText = stock.name;
+
+        historyHeader.appendChild(stockTicker);
+        historyHeader.appendChild(stockName);
+
+        return historyHeader;
     }
 }

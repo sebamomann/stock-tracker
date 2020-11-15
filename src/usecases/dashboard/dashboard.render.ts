@@ -26,23 +26,23 @@ export class DashboardRender extends Renderer implements IRenderer {
             .getList()
             .forEach((fStock: Stock) => {
                 const stockBlock = document.createElement('div')!;
-                stockBlock.className = "stock-block";
+                stockBlock.className = "stock-block block";
                 stockBlock.addEventListener("click", (e: Event) => {
                     const history = new History(fStock);
                     const historyRenderer = new HistoryRenderer(history);
                     historyRenderer.render();
                 });
 
-                const stockName = document.createElement('span');
-                stockName.className = "name";
-                stockName.innerText = fStock.name;
-
                 const stockTicker = document.createElement('span');
-                stockTicker.className = "ticker";
+                stockTicker.className = "stock-ticker";
                 stockTicker.innerText = fStock.ticker;
 
-                stockBlock.appendChild(stockName);
+                const stockName = document.createElement('span');
+                stockName.className = "stock-name";
+                stockName.innerText = fStock.name;
+
                 stockBlock.appendChild(stockTicker);
+                stockBlock.appendChild(stockName);
 
                 stockListWrapper.append(stockBlock);
             });

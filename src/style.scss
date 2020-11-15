@@ -1,53 +1,79 @@
+body {
+  background-color: #f8f8ff;
+}
+
+.block {
+  padding: 8px 16px;
+  border-radius: 10px;
+  margin: 10px 0;
+  background-color: lightgray;
+  border: 2px solid gray;
+}
+
+.stock-ticker {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.stock-name {
+  font-style: italic;
+  opacity: 0.5;
+}
+
 .stock-list-wrapper {
   .stock-block {
-    background-color: lightgray;
-    border: 2px solid red;
-
     span {
-      display: block;
+      display: inline-block;
+      margin: 0 10px 0 0;
     }
+  }
+}
 
-    .name {
-      font-weight: bold;
-    }
-
-    .ticker {
-      font-style: italic;
-    }
+.history-header {
+  h1, h2 {
+    display: inline-block;
   }
 }
 
 .transaction-history-wrapper {
   .transaction-block {
-    background-color: lightblue;
-    border: 2px solid black;
-
     &.purchase {
-      background-color: #ffacac;
+      background-color: #ffcfcf;
       color: red;
     }
 
     &.sale {
-      background-color: rgb(179, 255, 179);
+      background-color: rgb(201, 255, 201);
       color: green;
+    }
+
+    .headline {
+      margin: 5px 10px 0 0;
+      display: inline-block;
+      color: black;
+      font-size: 1.25em;
+    }
+
+    .date {
+      display: inline-block;
+      opacity: 1;
+      color: #4b4b4b;
+      font-style: italic;
+      text-align: right;
     }
 
     span {
       display: block;
-    }
-
-    .name {
-      font-weight: bold;
-    }
-
-    .ticker {
-      font-style: italic;
+      margin: 5px 0;
     }
   }
 }
 
 .history-details {
-  background-color: yellow;
+  padding: 8px 16px;
+  border-radius: 10px;
+  margin: 50px 0;
+  background-color: lightgray;
 
   span {
     display: block;

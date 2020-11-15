@@ -1,10 +1,10 @@
 import {Stock} from "./Stock";
-import {ITransaction} from "../interface/ITransaction";
 import {Database} from "../service/Database";
+import {Transaction} from "./transaction/Transaction";
 
 export class History {
     private readonly _stock: Stock;
-    private transactions: ITransaction[] = [];
+    private transactions: Transaction[] = [];
 
     constructor(stock: Stock) {
         this._stock = stock;

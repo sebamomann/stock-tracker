@@ -5,11 +5,13 @@ export class Transaction implements ITransaction {
     price: number;
     quantity: number;
     stock: Stock;
+    date: Date;
 
-    constructor(stock: Stock, price: number, quantity: number) {
+    constructor(stock: Stock, price: number, quantity: number, date: Date) {
         this.stock = stock;
         this.price = price;
         this.quantity = quantity;
+        this.date = date;
     }
 
     getTransactionPrice(): number {

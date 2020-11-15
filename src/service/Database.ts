@@ -21,12 +21,12 @@ export class Database {
     }
 
     static loadStockTransactions(stock: Stock) {
-        const transaction1 = new PurchaseTransaction(stock, 100, 10);
-        const transaction2 = new PurchaseTransaction(stock, 200, 5);
-        const transaction3 = new PurchaseTransaction(stock, 150, 5);
-        const transaction4 = new PurchaseTransaction(stock, 100, 10);
-        const transaction5 = new SaleTransaction(stock, 400, 20);
-        const transaction6 = new SaleTransaction(stock, 300, 5);
+        const transaction1 = new PurchaseTransaction(stock, 100, 10, new Date());
+        const transaction2 = new PurchaseTransaction(stock, 200, 5, new Date());
+        const transaction3 = new PurchaseTransaction(stock, 150, 5, new Date());
+        const transaction4 = new PurchaseTransaction(stock, 100, 10, new Date());
+        const transaction5 = new SaleTransaction(stock, 400, 20, new Date());
+        const transaction6 = new SaleTransaction(stock, 300, 5, new Date());
 
         return [
             transaction1, transaction2, transaction3, transaction4, transaction5, transaction6
