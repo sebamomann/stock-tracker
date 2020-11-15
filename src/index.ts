@@ -1,10 +1,10 @@
 import {StockList} from "./models/StockList";
-import {DashboardRender} from "./usecases/dashboard/dashboard.render";
+import {DashboardRenderer} from "./usecases/dashboard/dashboard.renderer";
 
 import "./style.scss";
 
 document.addEventListener("DOMContentLoaded", function (event) {
     const list = new StockList();
-    const dashboardRender = new DashboardRender(list);
+    const dashboardRender = new DashboardRenderer(list);
     dashboardRender.render();
 });

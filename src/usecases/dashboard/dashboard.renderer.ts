@@ -4,8 +4,9 @@ import {Stock} from "../../models/Stock";
 import {IRenderer} from "../../interface/IRenderer";
 import {Renderer} from "../Renderer";
 import {HistoryRenderer} from "../history/history.renderer";
+import {TransactionDialogRenderer} from "./transaction-dialog.renderer";
 
-export class DashboardRender extends Renderer implements IRenderer {
+export class DashboardRenderer extends Renderer implements IRenderer {
     private stockList: StockList;
 
     constructor(stockList: StockList) {
@@ -47,6 +48,20 @@ export class DashboardRender extends Renderer implements IRenderer {
                 stockListWrapper.append(stockBlock);
             });
 
+        let actionsHTML = document.createElement('div');
+        actionsHTML.className = "actions";
+        actionsHTML.id = "actions";
+
+        let createButton = document.createElement('button');
+        createButton.innerText = "Add Transaction";
+        createButton.addEventListener("click", (e: Event) => {
+            let transactionCreateDialogRenderer = new TransactionDialogRenderer();
+            transactionCreateDialogRenderer.render();
+        });
+
+        actionsHTML.appendChild(createButton);
+
+        wrapper.appendChild(actionsHTML);
         wrapper.appendChild(stockListWrapper);
     }
 }
