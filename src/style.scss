@@ -10,6 +10,19 @@ body {
   border: 2px solid gray;
 }
 
+button {
+  display: inline-block;
+  border-radius: 5px;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  border: 2px solid black;
+  margin: 0;
+
+  &.create-transaction {
+    font-size: 1.125em;
+  }
+}
+
 .stock-ticker {
   font-weight: bold;
   margin-right: 10px;
@@ -82,6 +95,7 @@ body {
 
 form {
   max-width: 500px;
+  margin-bottom: 75px;
 
   input, select {
     display: block;
@@ -93,17 +107,19 @@ form {
   }
 
   button {
-    &[type="submit"] {
-      border-radius: 5px;
-      text-transform: uppercase;
-      padding: 8px 16px;
-      border-color: black;
-      margin-top: 25px;
+    margin: 25px 10px 0 0;
+    transition: 0.25s all;
 
+    &[type="submit"] {
       &:hover {
         transform: scale(1.05);
         transition: 0.5s all;
       }
+    }
+
+    &.cancel {
+      border-color: lightgray;
+      background-color: transparent;
     }
   }
 }

@@ -23,11 +23,8 @@ export class TransactionDialogRenderer extends Renderer implements IRenderer {
 
     render() {
         const actions = document.getElementById("actions")!;
-        const existingForm = document.getElementById("transaction-create-form")!;
 
-        if (existingForm) {
-            existingForm.remove();
-        }
+        this.reset();
 
         let formHTML = document.createElement("form");
         formHTML.id = "transaction-create-form";
@@ -70,13 +67,30 @@ export class TransactionDialogRenderer extends Renderer implements IRenderer {
             Database.createTransaction(transaction);
         });
 
+        let cancelButton = document.createElement("button");
+        cancelButton.className = "cancel";
+        cancelButton.innerText = "Cancel";
+        cancelButton.addEventListener("click", (e: Event) => {
+            this.reset();
+        });
+
         formHTML.append(tickerInput);
         formHTML.append(select);
         formHTML.append(quantityInput);
         formHTML.append(priceInput);
         formHTML.append(dateInput);
         formHTML.append(submit);
+        formHTML.append(cancelButton);
 
         actions.append(formHTML);
+    }
+
+    //override
+    reset() {
+        const existingForm = document.getElementById("transaction-create-form")!;
+
+        if (existingForm) {
+            existingForm.remove();
+        }
     }
 }

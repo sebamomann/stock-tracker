@@ -36,6 +36,7 @@ export class HistoryRenderer extends Renderer implements IRenderer {
         transactionBlock.className = classes.join(" ");
 
         transactionBlock.addEventListener("click", (e: Event) => {
+
         });
 
         const headlineHTML = document.createElement('h3');
