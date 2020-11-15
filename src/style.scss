@@ -16,3 +16,33 @@
     }
   }
 }
+
+.transaction-history-wrapper {
+  .transaction-block {
+    background-color: lightblue;
+    border: 2px solid black;
+
+    &.purchase {
+      background-color: #ffacac;
+      color: red;
+    }
+
+    &.sale {
+      background-color: rgb(179, 255, 179);
+      color: green;
+    }
+
+    span {
+      display: block;
+    }
+
+    .name {
+      font-weight: bold;
+    }
+
+    .ticker {
+      font-style: italic;
+    }
+  }
+}
+

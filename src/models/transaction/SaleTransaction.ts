@@ -1,21 +1,13 @@
 import {ITransaction} from "../../interface/ITransaction";
 import {Stock} from "../Stock";
+import {Transaction} from "./Transaction";
 
-export class SaleTransaction implements ITransaction {
-    price: number;
-    quantity: number;
-    stock: Stock;
-
+export class SaleTransaction extends Transaction implements ITransaction {
     constructor(stock: Stock, price: number, quantity: number) {
-        this.stock = stock;
-        this.price = price;
-        this.quantity = quantity;
+        super(stock, price, quantity);
     }
 
-    getTransactionPrice(): number {
-        return +this.price;
-    }
-
+    // override
     getTransactionQuantity(): number {
         return -this.quantity;
     }
