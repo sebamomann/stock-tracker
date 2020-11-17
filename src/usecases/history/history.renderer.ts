@@ -106,17 +106,17 @@ export class HistoryRenderer extends Renderer implements IRenderer {
 
     private htmlQuantityOwned() {
         let quantityOwned = this.history.numberOfOwnedStocks();
-        return this.htmlSpan("owned-quantity", `Owned: ${String(quantityOwned)}`);
+        return this.htmlSpan("owned-quantity", `Owned: ${String(quantityOwned)} pcs.`);
     }
 
     private htmlPriceBalance() {
         let priceBalance = this.history.getTotalTransactionBalance();
-        return this.htmlSpan("price-balance", `Price Balance: ${String(priceBalance)}`);
+        return this.htmlSpan("price-balance", `Price Balance: ${String(priceBalance)}€`);
     }
 
     private htmlCurrentWorth() {
         let currentWorth = this.history.totalWorthOfCurrentlyOwnedStocks();
-        return this.htmlSpan("current-worth", `Current Worth: ${String(currentWorth)}`);
+        return this.htmlSpan("current-worth", `Current Worth: ${String(currentWorth)}€`);
     }
 
     private htmlPotentialWinTotal() {
@@ -125,7 +125,7 @@ export class HistoryRenderer extends Renderer implements IRenderer {
 
         let potentialWinTotal = priceBalance + htmlPotentialWinTotal;
 
-        return this.htmlSpan("potential-win-total", `Potential Win Total: ${String(potentialWinTotal)}`);
+        return this.htmlSpan("potential-win-total", `Potential Win Total: ${String(potentialWinTotal)}€`);
     }
 
     private htmlHistoryHeader() {
