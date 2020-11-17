@@ -1,40 +1,83 @@
 import {prod} from "../configuration/Logger";
 import {Stock} from "../models/Stock";
-import {PurchaseTransaction} from "../models/transaction/PurchaseTransaction";
-import {SaleTransaction} from "../models/transaction/SaleTransaction";
 import {Transaction} from "../models/transaction/Transaction";
+import {TransactionMapper} from "../models/transaction/TransactionMapper";
 
 export class Database {
     constructor() {
     }
 
     /**
-     * Fetch all ticks the user has ever traded with.<br/>
+     * Fetch all ticker symbols the user has ever traded with.<br/>
      *
      * @return string[] Array of all tickers
      */
     static loadOwnedStockTickers(): string[] {
-        const tickers = ['TSLA'];
+        let data = this.getData();
+        let tickers = Object.getOwnPropertyNames(data);
 
         prod.info("Loaded Ticker List: " + JSON.stringify(tickers));
 
         return tickers;
     }
 
-    static loadTransactionsOfStock(stock: Stock) {
-        const transaction1 = new PurchaseTransaction(stock, 100, 10, new Date());
-        const transaction2 = new PurchaseTransaction(stock, 200, 5, new Date());
-        const transaction3 = new PurchaseTransaction(stock, 150, 5, new Date());
-        const transaction4 = new PurchaseTransaction(stock, 100, 10, new Date());
-        const transaction5 = new SaleTransaction(stock, 400, 20, new Date());
-        const transaction6 = new SaleTransaction(stock, 300, 5, new Date());
+    /**
+     * Fetch all transaction that have been mate for the given Stock
+     *
+     * @param stock {@link Stock}
+     *
+     * @return Transaction[]  Array of {@link SaleTransaction} and {@link PurchaseTransaction}
+     */
+    static loadTransactionsOfStock(stock: Stock): Transaction[] {
+        let data = this.getData();
 
-        return [
-            transaction1, transaction2, transaction3, transaction4, transaction5, transaction6
-        ];
+        const stockTransactions = data[stock.ticker];
+
+        let output: Transaction[] = [];
+
+        stockTransactions.forEach((fTransaction: any) => {
+            const databaseObjectFromTransaction = TransactionMapper.transactionFromDatabaseObject(fTransaction, stock);
+            output.push(databaseObjectFromTransaction);
+        });
+
+        return output;
     }
 
-    static createTransaction(transaction: Transaction) {
-        prod.info(`Stored Transaction: ${transaction}`);
+    /**
+     * Store given {@link Transaction} into the database
+     *
+     * @param transaction {@link Transaction}
+     */
+    static createTransaction(transaction: Transaction): void {
+        let data = this.getData();
+
+        // create array for stock if not existing
+        if (!data[transaction.stock.ticker]) {
+            prod.info(`New Subarray for: ${transaction.stock.ticker}`);
+            data[transaction.stock.ticker] = []
+        }
+
+        let databaseObjectFromTransaction = TransactionMapper.DatabaseObjectFromTransaction(transaction);
+        data[transaction.stock.ticker].push(databaseObjectFromTransaction);
+
+        prod.info(`DB OBJ from Transaction: ${JSON.stringify(databaseObjectFromTransaction)}`);
+        prod.info(`Store to Ticker: ${transaction.stock.ticker}`);
+
+        localStorage.setItem("database", JSON.stringify(data));
+    }
+
+    /**
+     * Get Data Object from local storage. <br/>
+     * Fill with default object, if storage is empty
+     */
+    private static getData(): any {
+        let data: any = {};
+
+        const data_raw = localStorage.getItem("database");
+        if (data_raw) {
+            data = JSON.parse(data_raw);
+        }
+
+        return data;
     }
 }
