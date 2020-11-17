@@ -2,7 +2,7 @@ import {Renderer} from "../Renderer";
 import {IRenderer} from "../../interface/IRenderer";
 import {TransactionFactory} from "../../models/transaction/TransactionFactory";
 import {Stock} from "../../models/Stock";
-import {Database} from "../../service/Database";
+import {Database} from "../../database/Database";
 
 export class TransactionDialogRenderer extends Renderer implements IRenderer {
     private static htmlDropdownSelect() {

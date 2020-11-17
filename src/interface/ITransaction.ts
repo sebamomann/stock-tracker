@@ -1,10 +1,8 @@
 import {Stock} from "../models/Stock";
+import {ITransactionShared} from "./shared/ITrasactionShared";
 
-export interface ITransaction {
+export interface ITransaction extends ITransactionShared {
     stock: Stock;
-    price: number;
-    quantity: number;
-    date: Date;
 
     /**
      * Return the price. <br/>

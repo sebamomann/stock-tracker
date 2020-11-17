@@ -1,5 +1,5 @@
 import {Stock} from "./Stock";
-import {Database} from "../service/Database";
+import {Database} from "../database/Database";
 import {Transaction} from "./transaction/Transaction";
 
 export class History {

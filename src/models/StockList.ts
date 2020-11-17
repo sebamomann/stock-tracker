@@ -1,5 +1,5 @@
 import {Stock} from "./Stock";
-import {Database} from "../service/Database";
+import {Database} from "../database/Database";
 
 export class StockList {
     private list: Stock[] = [];
