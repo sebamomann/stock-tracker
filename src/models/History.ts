@@ -50,7 +50,7 @@ export class History {
      * Sold Stocks {@link SaleTransaction} increase balance.<br/>
      * Purchased Stocks  {@link PurchaseTransaction} decrease balance
      */
-    public getTotalTransactionBalance() {
+    public totalTransactionBalance() {
         let balance = 0;
 
         this._transactions
@@ -59,6 +59,16 @@ export class History {
             });
 
         return balance;
+    }
+
+    /**
+     * Adjust split factor of past orders
+     *
+     * @param split
+     * @param date
+     */
+    public stockSplit(split: number, date: Date) {
+
     }
 
     /**

@@ -10,18 +10,19 @@ export class TransactionMapper {
         let quantity = obj.quantity;
         let option = obj.option;
         let date = obj.date;
+        let splitFactor = obj.splitFactor;
 
         let transaction: Transaction;
 
         switch (option) {
             case 1:
-                transaction = new PurchaseTransaction(stock, price, quantity, new Date(date));
+                transaction = new PurchaseTransaction(stock, price, quantity, new Date(date), splitFactor);
                 break;
             case 2:
-                transaction = new SaleTransaction(stock, price, quantity, new Date(date));
+                transaction = new SaleTransaction(stock, price, quantity, new Date(date), splitFactor);
                 break;
             default:
-                transaction = new PurchaseTransaction(stock, price, quantity, new Date(date));
+                transaction = new PurchaseTransaction(stock, price, quantity, new Date(date), splitFactor);
         }
 
 
@@ -36,6 +37,7 @@ export class TransactionMapper {
             quantity: transaction.quantity,
             date: transaction.date,
             option,
+            splitFactor: transaction.splitFactor
         };
     }
 }

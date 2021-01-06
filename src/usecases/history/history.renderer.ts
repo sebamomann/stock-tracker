@@ -110,7 +110,7 @@ export class HistoryRenderer extends Renderer implements IRenderer {
     }
 
     private htmlPriceBalance() {
-        let priceBalance = this.history.getTotalTransactionBalance();
+        let priceBalance = this.history.totalTransactionBalance();
         return this.htmlSpan("price-balance", `Price Balance: ${String(Math.round(priceBalance))}€`);
     }
 
@@ -121,7 +121,7 @@ export class HistoryRenderer extends Renderer implements IRenderer {
 
     private async htmlPotentialWinTotal() {
         let htmlPotentialWinTotal = await this.history.totalWorthOfCurrentlyOwnedStocks();
-        let priceBalance = this.history.getTotalTransactionBalance();
+        let priceBalance = this.history.totalTransactionBalance();
 
         let potentialWinTotal = priceBalance + htmlPotentialWinTotal;
 

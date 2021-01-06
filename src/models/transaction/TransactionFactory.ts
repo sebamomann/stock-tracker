@@ -10,10 +10,10 @@ export class TransactionFactory {
 
         switch (option) {
             case 0:
-                transaction = new PurchaseTransaction(stock, price, quantity, date);
+                transaction = new PurchaseTransaction(stock, price, quantity, date, 1);
                 break;
             case 1:
-                transaction = new SaleTransaction(stock, price, quantity, date);
+                transaction = new SaleTransaction(stock, price, quantity, date, 1);
                 break;
             default:
                 throw new Error("Undefined Transaction Option");
