@@ -14,14 +14,14 @@ export class HistoryRenderer extends Renderer implements IRenderer {
         this.history = history;
     }
 
-    render(): void {
+    async render(): Promise<void> {
         this.reset();
 
         const wrapper = document.getElementById("wrapper")!;
 
         const historyHeader = this.htmlHistoryHeader();
         const transactionListWrapper = this.htmlTransactionList();
-        const historyDetails = this.htmlHistoryDetails();
+        const historyDetails = await this.htmlHistoryDetails();
 
         wrapper.appendChild(historyHeader);
         wrapper.appendChild(transactionListWrapper);
@@ -85,7 +85,7 @@ export class HistoryRenderer extends Renderer implements IRenderer {
         return transactionHistoryWrapper;
     }
 
-    private htmlHistoryDetails() {
+    private async htmlHistoryDetails() {
         const historyDetails = document.createElement('div');
         historyDetails.className = "history-details block";
 
@@ -95,10 +95,10 @@ export class HistoryRenderer extends Renderer implements IRenderer {
         const priceBalanceHTML = this.htmlPriceBalance();
         historyDetails.appendChild(priceBalanceHTML);
 
-        const potentialValue = this.htmlCurrentWorth();
+        const potentialValue = await this.htmlCurrentWorth();
         historyDetails.appendChild(potentialValue);
 
-        const potentialWinTotal = this.htmlPotentialWinTotal();
+        const potentialWinTotal = await this.htmlPotentialWinTotal();
         historyDetails.appendChild(potentialWinTotal);
 
         return historyDetails;
@@ -111,21 +111,21 @@ export class HistoryRenderer extends Renderer implements IRenderer {
 
     private htmlPriceBalance() {
         let priceBalance = this.history.getTotalTransactionBalance();
-        return this.htmlSpan("price-balance", `Price Balance: ${String(priceBalance)}€`);
+        return this.htmlSpan("price-balance", `Price Balance: ${String(Math.round(priceBalance))}€`);
     }
 
-    private htmlCurrentWorth() {
-        let currentWorth = this.history.totalWorthOfCurrentlyOwnedStocks();
-        return this.htmlSpan("current-worth", `Current Worth: ${String(currentWorth)}€`);
+    private async htmlCurrentWorth() {
+        let currentWorth = await this.history.totalWorthOfCurrentlyOwnedStocks();
+        return this.htmlSpan("current-worth", `Current Worth: ${String(Math.round(currentWorth))}€`);
     }
 
-    private htmlPotentialWinTotal() {
-        let htmlPotentialWinTotal = this.history.totalWorthOfCurrentlyOwnedStocks();
+    private async htmlPotentialWinTotal() {
+        let htmlPotentialWinTotal = await this.history.totalWorthOfCurrentlyOwnedStocks();
         let priceBalance = this.history.getTotalTransactionBalance();
 
         let potentialWinTotal = priceBalance + htmlPotentialWinTotal;
 
-        return this.htmlSpan("potential-win-total", `Potential Win Total: ${String(potentialWinTotal)}€`);
+        return this.htmlSpan("potential-win-total", `Potential Win Total: ${String(Math.round(potentialWinTotal))}€`);
     }
 
     private htmlHistoryHeader() {

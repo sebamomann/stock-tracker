@@ -24,9 +24,9 @@ export class History {
     /**
      * Calculate the current worth of all owned Stocks (of this company)
      */
-    public totalWorthOfCurrentlyOwnedStocks(): number {
+    public async totalWorthOfCurrentlyOwnedStocks(): Promise<number> {
         const quantity = this.numberOfOwnedStocks();
-        const currentPrice = this.stock.getPrice();
+        const currentPrice = await this.stock.getPrice();
 
         return quantity * currentPrice;
     }

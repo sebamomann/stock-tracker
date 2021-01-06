@@ -1,10 +1,11 @@
 import {IStock} from "../interface/IStock";
 import {StockInfoService} from "../service/StockInfoService";
+import axios from "axios";
 
 export class Stock implements IStock {
     name: string = '';
     ticker: string;
-    pricing: number = 100.50;
+    pricing: number = 0;
 
     constructor(ticker: string) {
         this.ticker = ticker;
@@ -18,7 +19,15 @@ export class Stock implements IStock {
         this.name = stock.name;
     }
 
-    getPrice(): number {
+    async getPrice(): Promise<number> {
+        if (this.pricing === 0) {
+            const response = await axios.get('https://financialmodelingprep.com/api/v3/quote-short/' + this.ticker + '?apikey=47514be15edda25e057c1aeb9235ef75', {
+                headers: {}
+            })
+
+            this.pricing = response.data[0].price;
+        }
+
         return this.pricing;
     }
 }

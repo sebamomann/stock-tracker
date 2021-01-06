@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
     entry: './src/index.ts',
@@ -18,9 +19,23 @@ module.exports = {
                 ],
                 include: [path.resolve(__dirname, 'src')]
             },
-        ]
+        ],
     },
     resolve: {
+        fallback: {
+            "util": require.resolve("util/"),
+            "assert": require.resolve("assert/"),
+            "https": require.resolve("https-browserify"),
+            "http": require.resolve("stream-http"),
+            "buffer": require.resolve("buffer/"),
+            "crypto": require.resolve("crypto-browserify"),
+            "stream": require.resolve("stream-browserify"),
+            "zlib": require.resolve("browserify-zlib"),
+            "path": require.resolve("path-browserify"),
+            fs: false,
+            net: false,
+            tls: false,
+        },
         extensions: ['.ts', '.js', '.scss']
     },
     output: {
@@ -30,5 +45,11 @@ module.exports = {
     devServer: {
         disableHostCheck: true,
         hot: false
-    }
+    },
+    plugins: [
+        new webpack.ProvidePlugin({
+            process: 'process/browser',
+            Buffer: ['buffer', 'Buffer'],
+        })
+    ],
 }
