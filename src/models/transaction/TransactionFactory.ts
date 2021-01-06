@@ -8,12 +8,14 @@ export class TransactionFactory {
     createTransaction(stock: Stock, option: number, quantity: number, price: number, date: Date) {
         let transaction: Transaction;
 
+        let id = makeid(10);
+
         switch (option) {
             case 0:
-                transaction = new PurchaseTransaction(stock, price, quantity, date, 1);
+                transaction = new PurchaseTransaction(id, stock, price, quantity, date, 1);
                 break;
             case 1:
-                transaction = new SaleTransaction(stock, price, quantity, date, 1);
+                transaction = new SaleTransaction(id, stock, price, quantity, date, 1);
                 break;
             default:
                 throw new Error("Undefined Transaction Option");
@@ -23,4 +25,15 @@ export class TransactionFactory {
 
         return transaction;
     }
+}
+
+// TODO OUTSOURCE
+function makeid(length: number) {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
 }

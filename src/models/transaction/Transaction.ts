@@ -2,13 +2,17 @@ import {ITransaction} from "../../interface/ITransaction";
 import {Stock} from "../Stock";
 
 export class Transaction implements ITransaction {
+    id: string;
+
     stock: Stock;
     price: number;
     quantity: number;
     date: Date;
     splitFactor: number;
 
-    constructor(stock: Stock, price: number, quantity: number, date: Date, splitFactor: number) {
+    constructor(id: string, stock: Stock, price: number, quantity: number, date: Date, splitFactor: number) {
+        this.id = id;
+
         this.stock = stock;
         this.price = price;
         this.quantity = quantity;

@@ -2,6 +2,7 @@ import {prod} from "../configuration/Logger";
 import {Stock} from "../models/Stock";
 import {Transaction} from "../models/transaction/Transaction";
 import {TransactionMapper} from "../models/transaction/TransactionMapper";
+import {ITransactionDatabaseModel} from "./models/ITransactionDatabase.model";
 
 export class Database {
     constructor() {
@@ -62,6 +63,19 @@ export class Database {
 
         prod.info(`DB OBJ from Transaction: ${JSON.stringify(databaseObjectFromTransaction)}`);
         prod.info(`Store to Ticker: ${transaction.stock.ticker}`);
+
+        localStorage.setItem("database", JSON.stringify(data));
+    }
+
+    static updateTransactionSplit(transaction: Transaction) {
+        let data = this.getData();
+        data[transaction.stock.ticker] = data[transaction.stock.ticker].forEach((fTransaction: ITransactionDatabaseModel) => {
+            if (fTransaction.id === transaction.id) {
+                fTransaction.splitFactor = transaction.splitFactor;
+            }
+
+            return fTransaction;
+        });
 
         localStorage.setItem("database", JSON.stringify(data));
     }

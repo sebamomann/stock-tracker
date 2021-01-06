@@ -6,6 +6,7 @@ import {ITransactionDatabaseModel} from "../../database/models/ITransactionDatab
 
 export class TransactionMapper {
     public static transactionFromDatabaseObject(obj: ITransactionDatabaseModel, stock: Stock): Transaction {
+        let id = obj.id;
         let price = obj.price;
         let quantity = obj.quantity;
         let option = obj.option;
@@ -16,13 +17,13 @@ export class TransactionMapper {
 
         switch (option) {
             case 1:
-                transaction = new PurchaseTransaction(stock, price, quantity, new Date(date), splitFactor);
+                transaction = new PurchaseTransaction(id, stock, price, quantity, new Date(date), splitFactor);
                 break;
             case 2:
-                transaction = new SaleTransaction(stock, price, quantity, new Date(date), splitFactor);
+                transaction = new SaleTransaction(id, stock, price, quantity, new Date(date), splitFactor);
                 break;
             default:
-                transaction = new PurchaseTransaction(stock, price, quantity, new Date(date), splitFactor);
+                transaction = new PurchaseTransaction(id, stock, price, quantity, new Date(date), splitFactor);
         }
 
 
@@ -33,6 +34,7 @@ export class TransactionMapper {
         let option = (transaction instanceof PurchaseTransaction) ? 1 : 2;
 
         return {
+            id: transaction.id,
             price: transaction.price,
             quantity: transaction.quantity,
             date: transaction.date,
