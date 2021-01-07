@@ -27,7 +27,7 @@ export class StockFactory {
         const stockInfoService = new StockInfoService();
         const profile = await stockInfoService.getProfilesByTicker([ticker]);
 
-        const stock = this.createStockByProfile(profile);
+        const stock = this.createStockByProfile(profile[0]);
 
         return stock;
     }

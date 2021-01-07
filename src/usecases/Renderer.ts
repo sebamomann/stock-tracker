@@ -1,6 +1,7 @@
 import {IRenderer} from "../interface/IRenderer";
+import events from "events";
 
-export class Renderer implements IRenderer {
+export class Renderer extends events.EventEmitter implements IRenderer {
     render(): void {
     }
 

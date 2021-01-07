@@ -26,6 +26,11 @@ export class TransactionDialogRenderer extends Renderer implements IRenderer {
 
         this.reset();
 
+        let headerHTML = document.createElement("h2");
+        headerHTML.id = "create-transaction-header";
+        headerHTML.className = "title";
+        headerHTML.innerText = "Create transaction";
+
         let formHTML = document.createElement("form");
         formHTML.id = "transaction-create-form";
 
@@ -48,10 +53,13 @@ export class TransactionDialogRenderer extends Renderer implements IRenderer {
         dateInput.type = "date";
         dateInput.placeholder = "Datum";
 
-        let submit = document.createElement("button");
-        submit.type = "submit";
-        submit.innerText = "submit";
-        submit.addEventListener('click', async (e: Event) => {
+        let formActions = document.createElement("div");
+        formActions.className = "form-actions";
+
+        let submitButton = document.createElement("button");
+        submitButton.type = "submit";
+        submitButton.innerText = "submit";
+        submitButton.addEventListener('click', async (e: Event) => {
             e.preventDefault();
             const inputs = (document.getElementById("transaction-create-form") as HTMLFormElement).elements;
 
@@ -67,13 +75,15 @@ export class TransactionDialogRenderer extends Renderer implements IRenderer {
             const transaction = transactionFactory.createTransaction(stock, +option, +quantity, +price, new Date(date));
 
             Database.createTransaction(transaction);
+
+            this.emit("created", stock);
         });
 
         let cancelButton = document.createElement("button");
         cancelButton.className = "cancel";
         cancelButton.innerText = "Cancel";
         cancelButton.addEventListener("click", (e: Event) => {
-            this.reset();
+            this.emit("cancel");
         });
 
         formHTML.append(tickerInput);
@@ -81,9 +91,13 @@ export class TransactionDialogRenderer extends Renderer implements IRenderer {
         formHTML.append(quantityInput);
         formHTML.append(priceInput);
         formHTML.append(dateInput);
-        formHTML.append(submit);
-        formHTML.append(cancelButton);
 
+        formActions.append(submitButton);
+        formActions.append(cancelButton);
+
+        formHTML.append(formActions);
+
+        actions.append(headerHTML);
         actions.append(formHTML);
     }
 

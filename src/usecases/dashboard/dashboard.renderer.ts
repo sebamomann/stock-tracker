@@ -5,6 +5,7 @@ import {IRenderer} from "../../interface/IRenderer";
 import {Renderer} from "../Renderer";
 import {HistoryRenderer} from "../history/history.renderer";
 import {TransactionDialogRenderer} from "./transaction-dialog.renderer";
+import {prod} from "../../configuration/Logger";
 
 export class DashboardRenderer extends Renderer implements IRenderer {
     private stockList: StockList;
@@ -19,6 +20,8 @@ export class DashboardRenderer extends Renderer implements IRenderer {
         this.reset();
 
         const wrapper = document.getElementById("wrapper")!;
+
+        this.htmlActions();
 
         const stockListWrapper = document.createElement('div');
         stockListWrapper.className = "stock-list-wrapper";
@@ -48,21 +51,50 @@ export class DashboardRenderer extends Renderer implements IRenderer {
                 stockListWrapper.append(stockBlock);
             });
 
+
+        wrapper.appendChild(stockListWrapper);
+
+        prod.info(`Created HTML Stock-List for Dashboard`);
+    }
+
+    private htmlActions() {
         let actionsHTML = document.createElement('div');
         actionsHTML.className = "actions";
         actionsHTML.id = "actions";
 
         let createButton = document.createElement('button');
         createButton.className = "create-transaction"
+        createButton.id = "create-transaction"
         createButton.innerText = "Add Transaction";
         createButton.addEventListener("click", (e: Event) => {
+            const button = document.getElementById("create-transaction")!;
+            button.remove();
+
             let transactionCreateDialogRenderer = new TransactionDialogRenderer();
             transactionCreateDialogRenderer.render();
+
+            transactionCreateDialogRenderer.on("created", (stock: Stock) => {
+                this.stockList.add(stock);
+
+                this.render();
+            });
+
+            transactionCreateDialogRenderer.on("cancel", () => {
+                this.htmlActions();
+            })
         });
 
         actionsHTML.appendChild(createButton);
 
-        wrapper.appendChild(actionsHTML);
-        wrapper.appendChild(stockListWrapper);
+        const existing = document.getElementById("actions");
+
+        if (existing) {
+            existing.replaceWith(actionsHTML);
+        } else {
+            const wrapper = document.getElementById("wrapper")!;
+            wrapper.append(actionsHTML);
+        }
+
+        prod.info(`Created HTML Actions for Dashboard`);
     }
 }

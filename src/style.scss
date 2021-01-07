@@ -1,43 +1,89 @@
 body {
-  background-color: #f8f8ff;
-}
+  background-color: #232222;
+  font-family: sans-serif;
 
-.block {
-  padding: 8px 16px;
-  border-radius: 10px;
-  margin: 10px 0;
-  background-color: lightgray;
-  border: 2px solid gray;
-}
+  #wrapper {
+    width: 100%;
+    max-width: 1275px;
+    margin: 0 auto;
 
-button {
-  display: inline-block;
-  border-radius: 5px;
-  text-transform: uppercase;
-  padding: 8px 16px;
-  border: 2px solid black;
-  margin: 0;
+    .title {
+      color: white;
+    }
 
-  &.create-transaction {
-    font-size: 1.125em;
-  }
-}
+    #actions {
+      margin-bottom: 50px;
+      padding: 25px 0 0;
 
-.stock-ticker {
-  font-weight: bold;
-  margin-right: 10px;
-}
+      button {
+        display: inline-block;
+        border-radius: 5px;
+        text-transform: uppercase;
+        padding: 8px 16px;
+        border: 2px solid white;
+        margin: 0;
+        background-color: transparent;
+        color: white;
+      }
 
-.stock-name {
-  font-style: italic;
-  opacity: 0.5;
-}
+      .create-transaction {
+        font-size: 1.125em;
+      }
 
-.stock-list-wrapper {
-  .stock-block {
-    span {
-      display: inline-block;
-      margin: 0 10px 0 0;
+      .title {
+        margin-top: 0;
+      }
+
+      form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2.5%;
+        max-width: 50%;
+
+        input {
+        }
+
+        .form-actions {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 5%;
+
+          button {
+            width: 100%;
+            max-width: 200px;
+            align-self: start;
+          }
+        }
+      }
+    }
+
+    .block {
+      padding: 8px 16px;
+      border-radius: 10px;
+      margin: 10px 0;
+      background-color: lightgray;
+    }
+
+    .stock-list-wrapper {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7.5%;
+
+      .stock-block {
+        span {
+          display: block;
+
+          &.stock-ticker {
+            font-weight: bold;
+          }
+
+          &.stock-name {
+            margin-top: 5px;
+            font-style: italic;
+            opacity: 0.65;
+          }
+        }
+      }
     }
   }
 }
