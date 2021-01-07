@@ -25,7 +25,12 @@ export class Stock implements IStock {
                 headers: {}
             })
 
-            this.pricing = response.data[0].price;
+            const responseCurrency = await axios.get(' https://api.exchangeratesapi.io/latest?base=USD', {
+                headers: {}
+            })
+
+            // @ts-ignore
+            this.pricing = response.data[0].price * responseCurrency.data.rates.EUR;
         }
 
         return this.pricing;

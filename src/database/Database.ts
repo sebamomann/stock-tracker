@@ -69,7 +69,8 @@ export class Database {
 
     static updateTransactionSplit(transaction: Transaction) {
         let data = this.getData();
-        data[transaction.stock.ticker] = data[transaction.stock.ticker].forEach((fTransaction: ITransactionDatabaseModel) => {
+
+        data[transaction.stock.ticker] = data[transaction.stock.ticker].map((fTransaction: ITransactionDatabaseModel) => {
             if (fTransaction.id === transaction.id) {
                 fTransaction.splitFactor = transaction.splitFactor;
             }

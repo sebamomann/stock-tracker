@@ -69,11 +69,10 @@ export class History {
      */
     public stockSplit(split: number, date: Date) {
         this.transactions.forEach((fTransaction) => {
-            if(fTransaction.date < date) {
+            if (fTransaction.date < date) {
                 fTransaction.splitFactor *= split;
+                Database.updateTransactionSplit(fTransaction);
             }
-
-            Database.updateTransactionSplit(fTransaction);
         });
     }
 

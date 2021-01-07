@@ -4,6 +4,7 @@ import {History} from "../../models/History";
 import {ITransaction} from "../../interface/ITransaction";
 import {PurchaseTransaction} from "../../models/transaction/PurchaseTransaction";
 import {Transaction} from "../../models/transaction/Transaction";
+import {StockSplitDialogRenderer} from "./stock-split-dialog.renderer";
 
 export class HistoryRenderer extends Renderer implements IRenderer {
     private history: History;
@@ -95,6 +96,9 @@ export class HistoryRenderer extends Renderer implements IRenderer {
         const priceBalanceHTML = this.htmlPriceBalance();
         historyDetails.appendChild(priceBalanceHTML);
 
+        const stockPrice = await this.htmlStockPrice();
+        historyDetails.appendChild(stockPrice);
+
         const potentialValue = await this.htmlCurrentWorth();
         historyDetails.appendChild(potentialValue);
 
@@ -117,6 +121,11 @@ export class HistoryRenderer extends Renderer implements IRenderer {
     private async htmlCurrentWorth() {
         let currentWorth = await this.history.totalWorthOfCurrentlyOwnedStocks();
         return this.htmlSpan("current-worth", `Current Worth: ${String(Math.round(currentWorth))}€`);
+    }
+
+    private async htmlStockPrice() {
+        let stockPrice = await this.history.stock.getPrice();
+        return this.htmlSpan("current-worth-per-stock", `Worth per Stock: ${String(Math.round((stockPrice + Number.EPSILON) * 100) / 100)}€`);
     }
 
     private async htmlPotentialWinTotal() {
@@ -142,9 +151,33 @@ export class HistoryRenderer extends Renderer implements IRenderer {
         stockName.className = "stock-name";
         stockName.innerText = stock.name;
 
+        const stockSplit = this.htmlStockSplit();
+
         historyHeader.appendChild(stockTicker);
         historyHeader.appendChild(stockName);
+        historyHeader.appendChild(stockSplit);
 
         return historyHeader;
+    }
+
+    private htmlStockSplit() {
+        const stockSplitWrapper = document.createElement('div');
+        stockSplitWrapper.id = "stock-split-wrapper";
+
+        let stockSplitButton = document.createElement('button');
+        stockSplitButton.className = "stock-split-button"
+        stockSplitButton.innerText = "Stock Split";
+        stockSplitButton.addEventListener("click", (e: Event) => {
+            let stockSplitDialogRenderer = new StockSplitDialogRenderer(this.history);
+            stockSplitDialogRenderer.render();
+        });
+
+        const stockSplitForm = document.createElement('div');
+        stockSplitForm.id = "stock-split-block";
+
+        stockSplitWrapper.appendChild(stockSplitButton);
+        stockSplitWrapper.appendChild(stockSplitForm);
+
+        return stockSplitWrapper;
     }
 }

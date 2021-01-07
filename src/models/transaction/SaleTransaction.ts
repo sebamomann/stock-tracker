@@ -4,6 +4,6 @@ import {Transaction} from "./Transaction";
 export class SaleTransaction extends Transaction implements ITransaction {
     // override
     getTransactionQuantity(): number {
-        return -this.quantity;
+        return -this.quantity * this.splitFactor;
     }
 }
