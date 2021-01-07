@@ -18,4 +18,11 @@ export class Renderer extends events.EventEmitter implements IRenderer {
 
         return elem;
     }
+
+    htmlDiv(classes: string): any {
+        const elem = document.createElement('div');
+        elem.className = classes;
+
+        return elem;
+    }
 }

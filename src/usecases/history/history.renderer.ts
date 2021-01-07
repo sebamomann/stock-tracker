@@ -21,12 +21,16 @@ export class HistoryRenderer extends Renderer implements IRenderer {
         const wrapper = document.getElementById("wrapper")!;
 
         const historyHeader = this.htmlHistoryHeader();
+        const historyWrapper = this.htmlHistoryWrapper();
         const transactionListWrapper = this.htmlTransactionList();
         const historyDetails = await this.htmlHistoryDetails();
 
         wrapper.appendChild(historyHeader);
-        wrapper.appendChild(transactionListWrapper);
-        wrapper.appendChild(historyDetails);
+
+        historyWrapper.appendChild(transactionListWrapper);
+        historyWrapper.appendChild(historyDetails);
+
+        wrapper.appendChild(historyWrapper);
     }
 
     private htmlTransactionBlock(fTransaction: Transaction) {
@@ -110,22 +114,54 @@ export class HistoryRenderer extends Renderer implements IRenderer {
 
     private htmlQuantityOwned() {
         let quantityOwned = this.history.numberOfOwnedStocks();
-        return this.htmlSpan("owned-quantity", `Owned: ${String(quantityOwned)} pcs.`);
+
+        const div = this.htmlDiv("owned-quantity table-div");
+        const span1 = this.htmlSpan("", `Owned`);
+        const span2 = this.htmlSpan("", `${String(quantityOwned)} pcs.`);
+
+        div.appendChild(span1);
+        div.appendChild(span2);
+
+        return div;
     }
 
     private htmlPriceBalance() {
         let priceBalance = this.history.totalTransactionBalance();
-        return this.htmlSpan("price-balance", `Price Balance: ${String(Math.round(priceBalance))}€`);
+
+        const div = this.htmlDiv("price-balance table-div");
+        const span1 = this.htmlSpan("", `Price Balance`);
+        const span2 = this.htmlSpan("", `${String(Math.round(priceBalance))}€`);
+
+        div.appendChild(span1);
+        div.appendChild(span2);
+
+        return div;
     }
 
     private async htmlCurrentWorth() {
         let currentWorth = await this.history.totalWorthOfCurrentlyOwnedStocks();
-        return this.htmlSpan("current-worth", `Current Worth: ${String(Math.round(currentWorth))}€`);
+
+        const div = this.htmlDiv("current-worth table-div");
+        const span1 = this.htmlSpan("", `Current Worth`);
+        const span2 = this.htmlSpan("", `${String(Math.round(currentWorth))}€`);
+
+        div.appendChild(span1);
+        div.appendChild(span2);
+
+        return div;
     }
 
     private async htmlStockPrice() {
         let stockPrice = await this.history.stock.getPrice();
-        return this.htmlSpan("current-worth-per-stock", `Worth per Stock: ${String(Math.round((stockPrice + Number.EPSILON) * 100) / 100)}€`);
+
+        const div = this.htmlDiv("current-worth-per-stock table-div");
+        const span1 = this.htmlSpan("", `Worth per Stock`);
+        const span2 = this.htmlSpan("", `${String(Math.round((stockPrice + Number.EPSILON) * 100) / 100)}€`);
+
+        div.appendChild(span1);
+        div.appendChild(span2);
+
+        return div;
     }
 
     private async htmlPotentialWinTotal() {
@@ -134,7 +170,14 @@ export class HistoryRenderer extends Renderer implements IRenderer {
 
         let potentialWinTotal = priceBalance + htmlPotentialWinTotal;
 
-        return this.htmlSpan("potential-win-total", `Potential Win Total: ${String(Math.round(potentialWinTotal))}€`);
+        const div = this.htmlDiv("potential-win-total table-div");
+        const span1 = this.htmlSpan("", `Potential Win Total`);
+        const span2 = this.htmlSpan("", `${String(Math.round(potentialWinTotal))}€`);
+
+        div.appendChild(span1);
+        div.appendChild(span2);
+
+        return div;
     }
 
     private htmlHistoryHeader() {
@@ -179,5 +222,12 @@ export class HistoryRenderer extends Renderer implements IRenderer {
         stockSplitWrapper.appendChild(stockSplitForm);
 
         return stockSplitWrapper;
+    }
+
+    private htmlHistoryWrapper() {
+        const historyWrapper = document.createElement('div');
+        historyWrapper.className = "history-wrapper";
+
+        return historyWrapper;
     }
 }

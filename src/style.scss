@@ -94,48 +94,62 @@ body {
   }
 }
 
-.transaction-history-wrapper {
-  .transaction-block {
-    &.purchase {
-      background-color: #ffcfcf;
-      color: red;
-    }
+.history-wrapper {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 5%;
 
-    &.sale {
-      background-color: rgb(201, 255, 201);
-      color: green;
-    }
+  .transaction-history-wrapper {
+    height: 80vh;
+    overflow: auto;
 
-    .headline {
-      margin: 5px 10px 0 0;
-      display: inline-block;
-      color: black;
-      font-size: 1.25em;
-    }
+    .transaction-block {
+      &.purchase {
+        background-color: #ffcfcf;
+        color: red;
+      }
 
-    .date {
-      display: inline-block;
-      opacity: 1;
-      color: #4b4b4b;
-      font-style: italic;
-      text-align: right;
-    }
+      &.sale {
+        background-color: rgb(201, 255, 201);
+        color: green;
+      }
 
-    span {
-      display: block;
-      margin: 5px 0;
+      .headline {
+        margin: 5px 10px 0 0;
+        display: inline-block;
+        color: black;
+        font-size: 1.25em;
+      }
+
+      .date {
+        display: inline-block;
+        opacity: 1;
+        color: #4b4b4b;
+        font-style: italic;
+        text-align: right;
+      }
+
+      span {
+        display: block;
+        margin: 5px 0;
+      }
     }
   }
-}
 
-.history-details {
-  padding: 8px 16px;
-  border-radius: 10px;
-  margin: 50px 0;
-  background-color: lightgray;
+  .history-details {
+    height: fit-content;
 
-  span {
-    display: block;
+    div {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5%;
+
+      span {
+        &:nth-of-type(odd) {
+          font-weight: bolder;
+        }
+      }
+    }
   }
 }
 
