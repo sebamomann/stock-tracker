@@ -1,31 +1,16 @@
-const si = require('stock-info');
-var yahooStockPrices = require('yahoo-stock-prices');
 const axios = require('axios').default;
 
 export class StockInfoService {
     constructor() {
     }
 
-    public static getStockInfo(ticker: string): any {
-        // si.getSingleStockInfo(ticker).then((r: any) => console.log(r));
+    public async getProfilesByTicker(ownedStockTickers: string[]) {
+        const tickers = ownedStockTickers.join(",");
 
+        const response = await axios.get('https://financialmodelingprep.com/api/v3/profile/' + tickers + '?apikey=47514be15edda25e057c1aeb9235ef75', {
+            headers: {}
+        })
 
-
-
-        // try {
-        //     const response = await axios.get(yourUrl);
-        // } catch (exception) {
-        //     process.stderr.write(`ERROR received from ${url}: ${exception}\n`);
-        // }
-
-        // yahooStockPrices.getCurrentPrice(ticker, function (err: any, price: any) {
-        //
-        //     console.log(price);
-        //
-        // });
-
-        const val = {ticker: ticker, name: ticker};
-
-        return val;
+        return response.data;
     }
 }

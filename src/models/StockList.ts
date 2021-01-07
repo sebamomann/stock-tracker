@@ -1,22 +1,28 @@
 import {Stock} from "./Stock";
 import {Database} from "../database/Database";
+import {StockFactory} from "./StockFactory";
+import {StockInfoService} from "../service/StockInfoService";
 
 export class StockList {
     private list: Stock[] = [];
 
     constructor() {
-        this.loadStockList()
     }
 
     /**
      * Populate list with data from data provider. </br>
      * For each Element add a new {@link Stock} to the list
      */
-    public loadStockList() {
+    public async loadStockList() {
         const ownedStockTickers = Database.loadOwnedStockTickers();
 
-        ownedStockTickers.forEach((ticker: string) => {
-            const stock = new Stock(ticker);
+        const stockInfoService = new StockInfoService();
+        const profiles = await stockInfoService.getProfilesByTicker(ownedStockTickers);
+
+        ownedStockTickers.forEach((ticker: string, index: number) => {
+            const stockFactory = new StockFactory();
+            const stock = stockFactory.createStockByProfile(profiles[index]);
+
             this.list.push(stock)
         })
     }

@@ -1,8 +1,8 @@
 import {Renderer} from "../Renderer";
 import {IRenderer} from "../../interface/IRenderer";
 import {TransactionFactory} from "../../models/transaction/TransactionFactory";
-import {Stock} from "../../models/Stock";
 import {Database} from "../../database/Database";
+import {StockFactory} from "../../models/StockFactory";
 
 export class TransactionDialogRenderer extends Renderer implements IRenderer {
     private static htmlDropdownSelect() {
@@ -51,11 +51,13 @@ export class TransactionDialogRenderer extends Renderer implements IRenderer {
         let submit = document.createElement("button");
         submit.type = "submit";
         submit.innerText = "submit";
-        submit.addEventListener('click', (e: Event) => {
+        submit.addEventListener('click', async (e: Event) => {
             e.preventDefault();
             const inputs = (document.getElementById("transaction-create-form") as HTMLFormElement).elements;
 
-            let stock = new Stock((inputs[0] as HTMLSelectElement).value);
+            const stockFactory = new StockFactory();
+            let stock = await stockFactory.createStockByTicker((inputs[0] as HTMLSelectElement).value);
+
             let option = (inputs[1] as HTMLSelectElement).value;
             let quantity = (inputs[2] as HTMLInputElement).value;
             let price = (inputs[3] as HTMLInputElement).value;

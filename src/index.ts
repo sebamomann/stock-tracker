@@ -3,8 +3,10 @@ import {DashboardRenderer} from "./usecases/dashboard/dashboard.renderer";
 
 import "./style.scss";
 
-document.addEventListener("DOMContentLoaded", function (event) {
+document.addEventListener("DOMContentLoaded", async function (event) {
     const list = new StockList();
+    await list.loadStockList();
+
     const dashboardRender = new DashboardRenderer(list);
     dashboardRender.render();
 });
