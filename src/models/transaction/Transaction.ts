@@ -25,7 +25,6 @@ export class Transaction implements ITransaction {
     }
 
     public getTransactionQuantity(): number {
-        console.log(this.stock.name, this.id, this.quantity, this.quantity * (this.splitFactor ? this.splitFactor : 1));
         return this.quantity * (this.splitFactor ? this.splitFactor : 1);
     }
 }

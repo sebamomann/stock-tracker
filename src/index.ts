@@ -1,12 +1,19 @@
-import {StockList} from "./models/StockList";
-import {DashboardRenderer} from "./usecases/dashboard/dashboard.renderer";
-
 import "./style.scss";
+import {MainRouter} from "./router/MainRouter";
 
-document.addEventListener("DOMContentLoaded", async function (event) {
-    const list = new StockList();
-    await list.loadStockList();
 
-    const dashboardRender = new DashboardRenderer(list);
-    dashboardRender.render();
-});
+function run() {
+    let loaded = false;
+
+    document.addEventListener("DOMContentLoaded", async function (event) {
+        if (!loaded) {
+            console.log("INIT");
+
+            const router = new MainRouter(window.location.pathname);
+
+            loaded = true;
+        }
+    });
+}
+
+run();

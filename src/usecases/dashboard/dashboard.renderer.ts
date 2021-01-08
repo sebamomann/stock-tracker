@@ -34,6 +34,12 @@ export class DashboardRenderer extends Renderer implements IRenderer {
                 stockBlock.addEventListener("click", (e: Event) => {
                     const history = new History(fStock);
                     const historyRenderer = new HistoryRenderer(history);
+
+                    if (window.history.pushState) {
+                        var newurl = window.location.protocol + "//" + window.location.host + "/stock" + '?ticker=' + fStock.ticker;
+                        window.history.pushState({path: newurl}, '', newurl);
+                    }
+
                     historyRenderer.render();
                 });
 
