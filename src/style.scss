@@ -15,17 +15,6 @@ body {
       margin-bottom: 50px;
       padding: 25px 0 0;
 
-      button {
-        display: inline-block;
-        border-radius: 5px;
-        text-transform: uppercase;
-        padding: 8px 16px;
-        border: 2px solid white;
-        margin: 0;
-        background-color: transparent;
-        color: white;
-      }
-
       .create-transaction {
         font-size: 1.125em;
       }
@@ -84,6 +73,19 @@ body {
           }
         }
       }
+    }
+  }
+
+  .button {
+    &.main-button {
+      display: inline-block;
+      border-radius: 5px;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border: 2px solid white;
+      margin: 0;
+      background-color: transparent;
+      color: white;
     }
   }
 }

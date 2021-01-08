@@ -69,7 +69,7 @@ export class DashboardRenderer extends Renderer implements IRenderer {
         actionsHTML.id = "actions";
 
         let createButton = document.createElement('button');
-        createButton.className = "create-transaction"
+        createButton.className = "create-transaction button main-button"
         createButton.id = "create-transaction"
         createButton.innerText = "Add Transaction";
         createButton.addEventListener("click", (e: Event) => {

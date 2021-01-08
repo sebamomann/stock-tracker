@@ -20,12 +20,14 @@ export class StockList {
         const stockInfoService = new StockInfoService();
         const profiles = await stockInfoService.getProfilesByTicker(ownedStockTickers);
 
-        ownedStockTickers.forEach((ticker: string, index: number) => {
-            const stockFactory = new StockFactory();
-            const stock = stockFactory.createStockByProfile(profiles[index]);
+        if (profiles.length > 0) {
+            ownedStockTickers.forEach((ticker: string, index: number) => {
+                const stockFactory = new StockFactory();
+                const stock = stockFactory.createStockByProfile(profiles[index]);
 
-            this.list.push(stock)
-        });
+                this.list.push(stock)
+            });
+        }
 
         prod.info(`Created Stocks by Profiles`);
     }
