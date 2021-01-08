@@ -43,8 +43,11 @@ module.exports = {
         path: path.resolve(__dirname, 'public')
     },
     devServer: {
+        port: 3000,
         disableHostCheck: true,
-        hot: false
+        hot: true,
+        historyApiFallback: true,
+        contentBase: './public',
     },
     plugins: [
         new webpack.ProvidePlugin({
