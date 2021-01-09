@@ -8,22 +8,26 @@ export class MainRouter extends Router {
     constructor(path: string) {
         super(path);
 
+        prod.info("ROUTER - MAIN constructing ...");
+
         this.route().then(r => {
-            prod.info("ROUTER - Main route initialized");
+            prod.info("ROUTER - Main route routed");
+
+            window.addEventListener('popstate', () => {
+                console.log('LOCATION CHANGE!');
+
+                this.path = window.location.pathname;
+
+                this.route().then(r => {
+                    prod.info("ROUTER - Main route routed");
+                });
+            })
         });
-
-        window.addEventListener('popstate', () => {
-            console.log('LOCATION CHANGE!');
-
-            this.path = window.location.pathname;
-
-            this.route().then(r => {
-                prod.info("ROUTER - Main route initialized");
-            });
-        })
     }
 
     public async route() {
+        prod.info("ROUTER - Main route called");
+
         const pathArray = this.path.split("/");
         const currentPath = pathArray[1];
 

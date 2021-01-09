@@ -11,11 +11,13 @@ export class StockRouter extends Router {
         super(path);
 
         this.route().then(r => {
-            prod.info("ROUTER - Stock route initialized");
+            prod.info("ROUTER - Stock route routed");
         });
     }
 
     public async route() {
+        prod.info("ROUTER - Stock route called");
+
         const pathArray = this.path.split("/");
         const currentPath = pathArray[0];
 

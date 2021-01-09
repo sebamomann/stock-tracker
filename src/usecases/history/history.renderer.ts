@@ -208,7 +208,7 @@ export class HistoryRenderer extends Renderer implements IRenderer {
         stockSplitWrapper.id = "stock-split-wrapper";
 
         let stockSplitButton = document.createElement('button');
-        stockSplitButton.className = "stock-split-button"
+        stockSplitButton.className = "stock-split-button button main-button"
         stockSplitButton.innerText = "Stock Split";
         stockSplitButton.addEventListener("click", (e: Event) => {
             let stockSplitDialogRenderer = new StockSplitDialogRenderer(this.history);

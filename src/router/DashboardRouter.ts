@@ -14,9 +14,7 @@ export class DashboardRouter extends Router {
     }
 
     public async route() {
-        if (this.path) {
-
-        }
+        prod.info("ROUTER - Dashboard route called");
 
         const pathArray = this.path.split("/");
         const currentPath = pathArray[0];
