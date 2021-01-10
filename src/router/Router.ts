@@ -3,8 +3,6 @@ export class Router {
 
     constructor(path: string) {
         this.path = path;
-
-        this.route().then();
     }
 
     /**
