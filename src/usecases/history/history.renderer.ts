@@ -1,4 +1,3 @@
-import {IRenderer} from "../../interface/IRenderer";
 import {Renderer} from "../Renderer";
 import {History} from "../../models/History";
 import {ITransaction} from "../../interface/ITransaction";
@@ -6,7 +5,7 @@ import {PurchaseTransaction} from "../../models/transaction/PurchaseTransaction"
 import {Transaction} from "../../models/transaction/Transaction";
 import {StockSplitDialogRenderer} from "./stock-split-dialog.renderer";
 
-export class HistoryRenderer extends Renderer implements IRenderer {
+export class HistoryRenderer extends Renderer {
     private history: History;
 
     constructor(history: History) {

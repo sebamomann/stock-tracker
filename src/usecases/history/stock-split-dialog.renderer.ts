@@ -2,7 +2,7 @@ import {Renderer} from "../Renderer";
 import {IRenderer} from "../../interface/IRenderer";
 import {History} from "../../models/History";
 
-export class StockSplitDialogRenderer extends Renderer implements IRenderer {
+export class StockSplitDialogRenderer extends Renderer{
     private history: History;
 
     constructor(history: History) {

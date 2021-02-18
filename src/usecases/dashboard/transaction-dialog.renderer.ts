@@ -1,10 +1,9 @@
 import {Renderer} from "../Renderer";
-import {IRenderer} from "../../interface/IRenderer";
 import {TransactionFactory} from "../../models/transaction/TransactionFactory";
 import {Database} from "../../database/Database";
 import {StockFactory} from "../../models/StockFactory";
 
-export class TransactionDialogRenderer extends Renderer implements IRenderer {
+export class TransactionDialogRenderer extends Renderer {
     private static htmlDropdownSelect() {
         let select = document.createElement("select");
 

@@ -1,13 +1,12 @@
 import {StockList} from "../../models/StockList";
 import {History} from "../../models/History";
 import {Stock} from "../../models/Stock";
-import {IRenderer} from "../../interface/IRenderer";
 import {Renderer} from "../Renderer";
 import {HistoryRenderer} from "../history/history.renderer";
 import {TransactionDialogRenderer} from "./transaction-dialog.renderer";
 import {prod} from "../../configuration/Logger";
 
-export class DashboardRenderer extends Renderer implements IRenderer {
+export class DashboardRenderer extends Renderer {
     private stockList: StockList;
 
     constructor(stockList: StockList) {
