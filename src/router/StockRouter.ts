@@ -25,12 +25,10 @@ export class StockRouter extends Router {
             const urlParams = new URLSearchParams(window.location.search);
             const ticker = urlParams.get('ticker');
 
-            const stockFactory = new StockFactory();
-
             let stock = new InvalidStock();
 
             if (ticker) {
-                stock = await stockFactory.createStockByTicker(ticker);
+                stock = await StockFactory.createStockByTicker(ticker);
             }
 
             const history = new History(stock);

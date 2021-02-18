@@ -4,8 +4,7 @@ import {EUR_Stock} from "./EUR_Stock";
 import {USD_Stock} from "./USD_Stock";
 
 export class StockFactory {
-    public createStockByProfile(profile: IAPI_StockProfile) {
-
+    public static createStockByProfile(profile: IAPI_StockProfile) {
         let stock;
 
         switch (profile.currency) {
@@ -23,12 +22,10 @@ export class StockFactory {
         return stock;
     }
 
-    public async createStockByTicker(ticker: string) {
+    public static async createStockByTicker(ticker: string) {
         const stockInfoService = new StockInfoService();
         const profile = await stockInfoService.getProfilesByTicker([ticker]);
 
-        const stock = this.createStockByProfile(profile[0]);
-
-        return stock;
+        return this.createStockByProfile(profile[0]);
     }
 }

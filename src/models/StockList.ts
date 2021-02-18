@@ -22,8 +22,7 @@ export class StockList {
 
         if (profiles.length > 0) {
             ownedStockTickers.forEach((ticker: string, index: number) => {
-                const stockFactory = new StockFactory();
-                const stock = stockFactory.createStockByProfile(profiles[index]);
+                const stock = StockFactory.createStockByProfile(profiles[index]);
 
                 this.list.push(stock)
             });

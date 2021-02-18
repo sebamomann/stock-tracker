@@ -62,8 +62,7 @@ export class TransactionDialogRenderer extends Renderer {
             e.preventDefault();
             const inputs = (document.getElementById("transaction-create-form") as HTMLFormElement).elements;
 
-            const stockFactory = new StockFactory();
-            let stock = await stockFactory.createStockByTicker((inputs[0] as HTMLSelectElement).value);
+            let stock = await StockFactory.createStockByTicker((inputs[0] as HTMLSelectElement).value);
 
             let option = (inputs[1] as HTMLSelectElement).value;
             let quantity = (inputs[2] as HTMLInputElement).value;
