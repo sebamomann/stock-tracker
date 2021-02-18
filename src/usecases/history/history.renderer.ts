@@ -35,6 +35,7 @@ export class HistoryRenderer extends Renderer {
     private htmlTransactionBlock(fTransaction: Transaction) {
         const transactionBlock = document.createElement('div')!;
         const classes = ["transaction-block", "block"];
+        // TODO?
         (fTransaction instanceof PurchaseTransaction) ? classes.push("purchase") : classes.push("sale")
 
         transactionBlock.className = classes.join(" ");

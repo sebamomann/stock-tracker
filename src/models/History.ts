@@ -2,6 +2,7 @@ import {Stock} from "./Stock";
 import {Database} from "../database/Database";
 import {Transaction} from "./transaction/Transaction";
 
+// TODO HISTORY ANALYZER?
 export class History {
     private readonly _stock: Stock;
 
