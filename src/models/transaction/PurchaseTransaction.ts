@@ -1,7 +1,6 @@
-import {ITransaction} from "../../interface/ITransaction";
 import {Transaction} from "./Transaction";
 
-export class PurchaseTransaction extends Transaction implements ITransaction {
+export class PurchaseTransaction extends Transaction {
     // override
     getTransactionPrice(): number {
         return -this.price;
