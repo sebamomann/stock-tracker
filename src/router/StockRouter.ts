@@ -34,7 +34,7 @@ export class StockRouter extends Router {
             const history = new History(stock);
 
             const historyRenderer = new HistoryRenderer(history);
-            historyRenderer.render();
+            await historyRenderer.render();
         }
     }
 

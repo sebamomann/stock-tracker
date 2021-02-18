@@ -1,5 +1,4 @@
 export interface IRenderer {
-
     /**
      * Render the current value
      */
