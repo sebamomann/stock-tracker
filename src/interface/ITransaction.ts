@@ -1,4 +1,4 @@
-import {Stock} from "../models/Stock/Stock";
+import {Stock} from "../models/stock/Stock";
 import {ITransactionShared} from "./shared/ITrasactionShared";
 
 export interface ITransaction extends ITransactionShared {

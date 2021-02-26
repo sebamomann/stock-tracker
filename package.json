@@ -44,5 +44,10 @@
     "typescript-logging": "^1.0.0",
     "util": "^0.12.3",
     "yahoo-stock-prices": "^1.0.1"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "^config$": "<rootDir>/path/to/App/config.js"
+    }
   }
 }

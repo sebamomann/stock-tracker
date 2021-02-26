@@ -1,5 +1,5 @@
 import {ITransaction} from "../../interface/ITransaction";
-import {Stock} from "../Stock/Stock";
+import {Stock} from "../stock/Stock";
 
 export class Transaction implements ITransaction {
     id: string;

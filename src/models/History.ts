@@ -1,6 +1,6 @@
-import {Stock} from "./Stock/Stock";
 import {Database} from "../database/Database";
 import {Transaction} from "./transaction/Transaction";
+import {Stock} from "./stock/Stock";
 
 // TODO HISTORY ANALYZER?
 export class History {
@@ -40,6 +40,7 @@ export class History {
 
         this._transactions
             .forEach((fTransaction) => {
+                console.log(fTransaction)
                 quantityOwned += fTransaction.getTransactionQuantity();
             });
 

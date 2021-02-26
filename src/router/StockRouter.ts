@@ -2,8 +2,8 @@ import {Router} from "./Router";
 import {prod} from "../configuration/Logger";
 import {History} from "../models/History";
 import {HistoryRenderer} from "../usecases/history/history.renderer";
-import {StockFactory} from "../models/Stock/StockFactory";
-import {InvalidStock} from "../models/Stock/InvalidStock";
+import {StockFactory} from "../models/stock/StockFactory";
+import {InvalidStock} from "../models/stock/InvalidStock";
 
 export class StockRouter extends Router {
 

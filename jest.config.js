@@ -3,7 +3,7 @@ module.exports = {
         "<rootDir>"
     ],
     "modulePaths": [
-        "<rootDir>"
+        "<rootDir>",
     ],
     "testMatch": [
         "**/__tests__/**/*.+(ts|tsx|js)",

@@ -1,10 +1,10 @@
-import {StockList} from "../../models/Stock/StockList";
+import {StockList} from "../../models/stock/StockList";
 import {History} from "../../models/History";
-import {Stock} from "../../models/Stock/Stock";
 import {Renderer} from "../Renderer";
 import {HistoryRenderer} from "../history/history.renderer";
 import {TransactionDialogRenderer} from "./transaction-dialog.renderer";
 import {prod} from "../../configuration/Logger";
+import {Stock} from "../../models/stock/Stock";
 
 export class DashboardRenderer extends Renderer {
     private stockList: StockList;

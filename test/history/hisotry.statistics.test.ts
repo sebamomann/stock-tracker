@@ -1,6 +1,5 @@
 import {History} from "../../src/models/History";
 import {Transaction} from "../../src/models/transaction/Transaction";
-import {Stock} from "../../src/models/Stock/Stock";
 
 describe('Calculate statistical data of History', () => {
     beforeAll(() => {
@@ -9,7 +8,7 @@ describe('Calculate statistical data of History', () => {
             const transactions = [];
 
             for (let i = 0; i < 5; i++) {
-                transactions.push(jest.mock(Transaction.toString()));
+                transactions.push(jest.mock('../../src/models/transaction/Transaction'));
             }
 
             return transactions;
@@ -18,7 +17,7 @@ describe('Calculate statistical data of History', () => {
 
     it('Should return correct amount of stocks owned', () => {
         // mocks
-        const getTransactionQuantityMock = jest.spyOn(Transaction.prototype as any, 'getTransactionQuantity');
+        const getTransactionQuantityMock = jest.spyOn(Transaction.prototype, 'getTransactionQuantity');
         getTransactionQuantityMock
             .mockReturnValueOnce(3)
             .mockReturnValueOnce(2)
@@ -27,7 +26,7 @@ describe('Calculate statistical data of History', () => {
             .mockReturnValueOnce(2);
 
         // setup
-        const history = new History(jest.mock(Stock.toString()) as any);
+        const history = new History(jest.mock('../../src/models/stock/Stock') as any);
 
         // action
         const numberOfOwnedStocks = history.numberOfOwnedStocks();

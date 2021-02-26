@@ -1,6 +1,6 @@
 import {Transaction} from "./Transaction";
 import {PurchaseTransaction} from "./PurchaseTransaction";
-import {Stock} from "../Stock/Stock";
+import {Stock} from "../stock/Stock";
 import {SaleTransaction} from "./SaleTransaction";
 import {prod} from "../../configuration/Logger";
 
