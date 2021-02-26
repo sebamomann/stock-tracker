@@ -67,6 +67,11 @@ export class Database {
         localStorage.setItem("database", JSON.stringify(data));
     }
 
+    /**
+     * Find given {@link Transaction} by ID and store it into the database
+     *
+     * @param transaction {@link Transaction}
+     */
     static updateTransactionSplit(transaction: Transaction) {
         let data = this.getData();
 
