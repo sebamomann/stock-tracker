@@ -1,5 +1,5 @@
-import {IAPI_StockProfile} from "./API/IAPI_StockProfile";
-import {StockInfoService} from "../service/StockInfoService";
+import {IAPI_StockProfile} from "../API/IAPI_StockProfile";
+import {StockInfoService} from "../../service/StockInfoService";
 import {EUR_Stock} from "./EUR_Stock";
 import {USD_Stock} from "./USD_Stock";
 

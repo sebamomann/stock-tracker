@@ -1,5 +1,5 @@
 import {prod} from "../configuration/Logger";
-import {Stock} from "../models/Stock";
+import {Stock} from "../models/Stock/Stock";
 import {Transaction} from "../models/transaction/Transaction";
 import {TransactionMapper} from "../models/transaction/TransactionMapper";
 import {ITransactionDatabaseModel} from "./models/ITransactionDatabase.model";

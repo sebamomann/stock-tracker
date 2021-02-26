@@ -1,4 +1,4 @@
-import {Stock} from "./Stock";
+import {Stock} from "./Stock/Stock";
 import {Database} from "../database/Database";
 import {Transaction} from "./transaction/Transaction";
 

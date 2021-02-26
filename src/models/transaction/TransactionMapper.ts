@@ -1,6 +1,6 @@
 import {PurchaseTransaction} from "./PurchaseTransaction";
 import {SaleTransaction} from "./SaleTransaction";
-import {Stock} from "../Stock";
+import {Stock} from "../Stock/Stock";
 import {Transaction} from "./Transaction";
 import {ITransactionDatabaseModel} from "../../database/models/ITransactionDatabase.model";
 

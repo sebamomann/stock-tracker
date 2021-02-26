@@ -1,4 +1,4 @@
-import {IStock} from "../interface/IStock";
+import {IStock} from "../../interface/IStock";
 
 export class Stock implements IStock {
     public name: string;

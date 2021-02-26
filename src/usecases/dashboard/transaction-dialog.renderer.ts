@@ -1,7 +1,7 @@
 import {Renderer} from "../Renderer";
 import {TransactionFactory} from "../../models/transaction/TransactionFactory";
 import {Database} from "../../database/Database";
-import {StockFactory} from "../../models/StockFactory";
+import {StockFactory} from "../../models/Stock/StockFactory";
 
 export class TransactionDialogRenderer extends Renderer {
     private static htmlDropdownSelect() {

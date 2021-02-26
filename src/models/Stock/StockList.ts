@@ -1,8 +1,8 @@
 import {Stock} from "./Stock";
-import {Database} from "../database/Database";
+import {Database} from "../../database/Database";
 import {StockFactory} from "./StockFactory";
-import {StockInfoService} from "../service/StockInfoService";
-import {prod} from "../configuration/Logger";
+import {StockInfoService} from "../../service/StockInfoService";
+import {prod} from "../../configuration/Logger";
 
 export class StockList {
     private list: Stock[] = [];
