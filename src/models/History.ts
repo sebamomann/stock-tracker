@@ -40,7 +40,6 @@ export class History {
 
         this._transactions
             .forEach((fTransaction) => {
-                console.log(fTransaction)
                 quantityOwned += fTransaction.getTransactionQuantity();
             });
 
