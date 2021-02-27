@@ -39,9 +39,11 @@ export class History {
         let quantityOwned = 0;
 
         this._transactions
-            .forEach((fTransaction) => {
-                quantityOwned += fTransaction.getTransactionQuantity();
-            });
+            .forEach(
+                (fTransaction) => {
+                    quantityOwned += fTransaction.getTransactionQuantity();
+                }
+            );
 
         return quantityOwned;
     }
@@ -55,9 +57,11 @@ export class History {
         let balance = 0;
 
         this._transactions
-            .forEach((fTransaction) => {
-                balance += fTransaction.getTransactionPrice();
-            });
+            .forEach(
+                (fTransaction) => {
+                    balance += fTransaction.getTransactionPrice();
+                }
+            );
 
         return balance;
     }
@@ -69,12 +73,14 @@ export class History {
      * @param date
      */
     public stockSplit(split: number, date: Date) {
-        this.transactions.forEach((fTransaction) => {
-            if (fTransaction.date < date) {
-                fTransaction.splitFactor *= split;
-                Database.updateTransactionSplit(fTransaction);
+        this.transactions.forEach(
+            (fTransaction) => {
+                if (fTransaction.date < date) {
+                    fTransaction.splitFactor *= split;
+                    Database.updateTransactionSplit(fTransaction);
+                }
             }
-        });
+        );
     }
 
     /**
