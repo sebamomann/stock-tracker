@@ -23,7 +23,9 @@ export class History {
     }
 
     /**
-     * Calculate the current worth of all owned Stocks (of this company)
+     * Calculate the current worth of all owned {@link Stock} (of this company).
+     *
+     * @return Promise<number>      Calculated worth of owned stocks.
      */
     public async totalWorthOfCurrentlyOwnedStocks(): Promise<number> {
         const quantity = this.numberOfOwnedStocks();
@@ -33,9 +35,11 @@ export class History {
     }
 
     /**
-     * Get the number of currently owned Stocks (of this company)
+     * Get the number of currently owned {@link Stock} (of particular company specified in {@link History.stock} field)
+     *
+     * @return number        Owned {@link Stock}
      */
-    public numberOfOwnedStocks() {
+    public numberOfOwnedStocks(): number {
         let quantityOwned = 0;
 
         this._transactions
@@ -50,10 +54,13 @@ export class History {
 
     /**
      * Calculate the total balance from buying and selling Stocks.<br/>
-     * Sold Stocks {@link SaleTransaction} increase balance.<br/>
-     * Purchased Stocks  {@link PurchaseTransaction} decrease balance
+     * <br/>
+     * Sold {@link Stock} ({@link SaleTransaction}) increase balance.<br/>
+     * Purchased {@link Stock} {@link PurchaseTransaction} decrease balance.
+     *
+     * @return number       Balance
      */
-    public totalTransactionBalance() {
+    public totalTransactionBalance(): number {
         let balance = 0;
 
         this._transactions
@@ -67,16 +74,20 @@ export class History {
     }
 
     /**
-     * Adjust split factor of past orders
+     * Adjust split factor of past orders. <br/>
+     * If Transaction is younger than passed date then adjust split factor.
      *
-     * @param split
-     * @param date
+     * @param split         Split factor. e.g. 5 for 5:1 split
+     * @param date          Date when split happened
+     *
+     * @return void         Adjusts {@link Transaction}, no return needed
      */
-    public stockSplit(split: number, date: Date) {
+    public stockSplit(split: number, date: Date): void {
         this.transactions.forEach(
             (fTransaction) => {
                 if (fTransaction.date < date) {
                     fTransaction.splitFactor *= split;
+
                     Database.updateTransactionSplit(fTransaction);
                 }
             }
@@ -85,8 +96,10 @@ export class History {
 
     /**
      * Load all transaction made with this particular Stock
+     *
+     * @return void         Adjusts "this" scope. no return needed
      */
-    private loadTransactions() {
+    private loadTransactions(): void {
         this._transactions = Database.loadTransactionsOfStock(this._stock);
     }
 }
