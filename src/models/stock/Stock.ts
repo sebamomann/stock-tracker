@@ -11,6 +11,13 @@ export class Stock implements IStock {
         this.pricing = price;
     }
 
+    /**
+     * Get price of Stock at the time of its creation<br/
+     * Async for proper extension of class.<br/>
+     * Extending classes request price conversion from external API.<br/>
+     *
+     * @return Promise<number>      Price converted in to EUR with current factor
+     */
     public async getPrice(): Promise<number> {
         return new Promise((resolve) => {
             return resolve(this.pricing);
