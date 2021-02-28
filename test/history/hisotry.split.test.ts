@@ -23,7 +23,7 @@ describe('Create Stocksplit by adapting split factor of transaction of History',
             }
 
             Database.loadTransactionsOfStock = jest.fn().mockReturnValue([...transactions]);
-            Database.updateTransactionSplit = jest.fn();
+            Database.updateTransaction = jest.fn();
 
             // setup
             const history = new History({} as any);
@@ -35,12 +35,12 @@ describe('Create Stocksplit by adapting split factor of transaction of History',
             transactions.map(mTransaction => mTransaction.splitFactor *= 5);
 
             //assert
-            expect(Database.updateTransactionSplit).toHaveBeenCalledTimes(5);
-            expect(Database.updateTransactionSplit).toHaveBeenNthCalledWith(1, transactions[0])
-            expect(Database.updateTransactionSplit).toHaveBeenNthCalledWith(2, transactions[1])
-            expect(Database.updateTransactionSplit).toHaveBeenNthCalledWith(3, transactions[2])
-            expect(Database.updateTransactionSplit).toHaveBeenNthCalledWith(4, transactions[3])
-            expect(Database.updateTransactionSplit).toHaveBeenNthCalledWith(5, transactions[4])
+            expect(Database.updateTransaction).toHaveBeenCalledTimes(5);
+            expect(Database.updateTransaction).toHaveBeenNthCalledWith(1, transactions[0])
+            expect(Database.updateTransaction).toHaveBeenNthCalledWith(2, transactions[1])
+            expect(Database.updateTransaction).toHaveBeenNthCalledWith(3, transactions[2])
+            expect(Database.updateTransaction).toHaveBeenNthCalledWith(4, transactions[3])
+            expect(Database.updateTransaction).toHaveBeenNthCalledWith(5, transactions[4])
         });
 
         it('Correctly save 3 of 5 transactions that were split', async () => {
@@ -66,7 +66,7 @@ describe('Create Stocksplit by adapting split factor of transaction of History',
             }
 
             Database.loadTransactionsOfStock = jest.fn().mockReturnValue([...transactions]);
-            Database.updateTransactionSplit = jest.fn();
+            Database.updateTransaction = jest.fn();
 
             // setup
             const history = new History({} as any);
@@ -78,10 +78,10 @@ describe('Create Stocksplit by adapting split factor of transaction of History',
             transactions.map(mTransaction => mTransaction.splitFactor *= 5);
 
             //assert
-            expect(Database.updateTransactionSplit).toHaveBeenCalledTimes(3);
-            expect(Database.updateTransactionSplit).toHaveBeenNthCalledWith(1, transactions[0])
-            expect(Database.updateTransactionSplit).toHaveBeenNthCalledWith(2, transactions[1])
-            expect(Database.updateTransactionSplit).toHaveBeenNthCalledWith(3, transactions[2])
+            expect(Database.updateTransaction).toHaveBeenCalledTimes(3);
+            expect(Database.updateTransaction).toHaveBeenNthCalledWith(1, transactions[0])
+            expect(Database.updateTransaction).toHaveBeenNthCalledWith(2, transactions[1])
+            expect(Database.updateTransaction).toHaveBeenNthCalledWith(3, transactions[2])
         });
 
         it('Correctly save 0 of 5 transactions that were split', async () => {
@@ -100,7 +100,7 @@ describe('Create Stocksplit by adapting split factor of transaction of History',
             }
 
             Database.loadTransactionsOfStock = jest.fn().mockReturnValue([...transactions]);
-            Database.updateTransactionSplit = jest.fn();
+            Database.updateTransaction = jest.fn();
 
             // setup
             const history = new History({} as any);
@@ -109,7 +109,7 @@ describe('Create Stocksplit by adapting split factor of transaction of History',
             history.stockSplit(5, new Date());
 
             //assert
-            expect(Database.updateTransactionSplit).toHaveBeenCalledTimes(0);
+            expect(Database.updateTransaction).toHaveBeenCalledTimes(0);
         });
     });
 });

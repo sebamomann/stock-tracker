@@ -72,7 +72,7 @@ export class Database {
      *
      * @param transaction {@link Transaction}
      */
-    static updateTransactionSplit(transaction: Transaction) {
+    static updateTransaction(transaction: Transaction) {
         let data = this.getData();
 
         data[transaction.stock.ticker] = data[transaction.stock.ticker].map((fTransaction: ITransactionDatabaseModel) => {

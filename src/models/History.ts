@@ -88,7 +88,7 @@ export class History {
                 if (fTransaction.date < date) {
                     fTransaction.splitFactor *= split;
 
-                    Database.updateTransactionSplit(fTransaction);
+                    Database.updateTransaction(fTransaction);
                 }
             }
         );
