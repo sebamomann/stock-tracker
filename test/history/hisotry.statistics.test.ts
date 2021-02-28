@@ -2,10 +2,6 @@ import {History} from "../../src/models/History";
 import {Database} from "../../src/database/Database";
 import {Transaction} from "../../src/models/transaction/Transaction";
 
-jest.genMockFromModule("../../src/models/transaction/Transaction");
-jest.mock("../../src/models/transaction/Transaction");
-
-
 describe('Calculate statistical data of History', () => {
     beforeAll(() => {
     });

@@ -75,7 +75,7 @@ export class History {
 
     /**
      * Adjust split factor of past orders. <br/>
-     * If Transaction is younger than passed date then adjust split factor.
+     * If Transaction is older than passed date then adjust split factor.
      *
      * @param split         Split factor. e.g. 5 for 5:1 split
      * @param date          Date when split happened

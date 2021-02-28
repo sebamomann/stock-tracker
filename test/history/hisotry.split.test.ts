@@ -1,0 +1,46 @@
+import {History} from "../../src/models/History";
+import {Database} from "../../src/database/Database";
+import {Transaction} from "../../src/models/transaction/Transaction";
+
+describe('Create Stocksplit by adapting split factor of transaction of History', () => {
+    beforeAll(() => {
+    });
+
+    describe('totalWorthOfCurrentlyOwnedStocks', () => {
+        it('Should return correct worth', async () => {
+            //mocking
+            const d = new Date();
+            d.setDate(d.getDate() - 5);
+
+            const mockTransaction = {
+                date: d,
+                splitFactor: 1,
+            };
+
+            const transactions: Transaction[] = [];
+            for (let i = 0; i < 5; i++) {
+                transactions.push({...mockTransaction, id: i} as any);
+            }
+
+            Database.loadTransactionsOfStock = jest.fn().mockReturnValue([...transactions]);
+            Database.updateTransactionSplit = jest.fn();
+
+            // setup
+            const history = new History({} as any);
+
+            // action
+            history.stockSplit(5, new Date());
+
+            // prepare expected
+            transactions.map(mTransaction => mTransaction.splitFactor *= 5);
+
+            //assert
+            expect(Database.updateTransactionSplit).toHaveBeenCalledTimes(5);
+            expect(Database.updateTransactionSplit).toHaveBeenNthCalledWith(1, transactions[0])
+            expect(Database.updateTransactionSplit).toHaveBeenNthCalledWith(2, transactions[1])
+            expect(Database.updateTransactionSplit).toHaveBeenNthCalledWith(3, transactions[2])
+            expect(Database.updateTransactionSplit).toHaveBeenNthCalledWith(4, transactions[3])
+            expect(Database.updateTransactionSplit).toHaveBeenNthCalledWith(5, transactions[4])
+        });
+    });
+});
