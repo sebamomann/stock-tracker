@@ -5,6 +5,7 @@ import {HistoryRenderer} from "../history/history.renderer";
 import {TransactionDialogRenderer} from "./transaction-dialog.renderer";
 import {prod} from "../../configuration/Logger";
 import {Stock} from "../../models/stock/Stock";
+import {TransactionDatabaseAccessor} from "../../database/accessor/TransactionDatabaseAccessor";
 
 export class DashboardRenderer extends Renderer {
     private stockList: StockList;
@@ -31,7 +32,8 @@ export class DashboardRenderer extends Renderer {
                 const stockBlock = document.createElement('div')!;
                 stockBlock.className = "stock-block block";
                 stockBlock.addEventListener("click", (e: Event) => {
-                    const history = new History(fStock);
+                    const transactionsDatabaseAccessor = new TransactionDatabaseAccessor();
+                    const history = new History(transactionsDatabaseAccessor, fStock);
                     const historyRenderer = new HistoryRenderer(history);
 
                     if (window.history.pushState) {
@@ -75,7 +77,8 @@ export class DashboardRenderer extends Renderer {
             const button = document.getElementById("create-transaction")!;
             button.remove();
 
-            let transactionCreateDialogRenderer = new TransactionDialogRenderer();
+            const transactionsDatabaseAccessor = new TransactionDatabaseAccessor();
+            let transactionCreateDialogRenderer = new TransactionDialogRenderer(transactionsDatabaseAccessor);
             transactionCreateDialogRenderer.render();
 
             transactionCreateDialogRenderer.on("created", (stock: Stock) => {

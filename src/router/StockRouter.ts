@@ -4,6 +4,7 @@ import {History} from "../models/History";
 import {HistoryRenderer} from "../usecases/history/history.renderer";
 import {StockFactory} from "../models/stock/StockFactory";
 import {InvalidStock} from "../models/stock/InvalidStock";
+import {TransactionDatabaseAccessor} from "../database/accessor/TransactionDatabaseAccessor";
 
 export class StockRouter extends Router {
 
@@ -31,7 +32,8 @@ export class StockRouter extends Router {
                 stock = await StockFactory.createStockByTicker(ticker);
             }
 
-            const history = new History(stock);
+            const transactionsDatabaseAccessor = new TransactionDatabaseAccessor();
+            const history = new History(transactionsDatabaseAccessor, stock);
 
             const historyRenderer = new HistoryRenderer(history);
             await historyRenderer.render();
