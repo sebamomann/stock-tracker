@@ -3,7 +3,6 @@ import {Stock} from "../stock/Stock";
 
 export class Transaction implements ITransaction {
     id: string;
-
     stock: Stock;
     price: number;
     quantity: number;

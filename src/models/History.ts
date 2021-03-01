@@ -1,13 +1,16 @@
-import {Database} from "../database/Database";
 import {Transaction} from "./transaction/Transaction";
 import {Stock} from "./stock/Stock";
+import {ITransactionAccessor} from "../database/accessor/ITransactionAccessor";
 
 // TODO HISTORY ANALYZER?
 export class History {
+    private readonly _transactionDatabaseAccessor: ITransactionAccessor;
     private readonly _stock: Stock;
 
-    constructor(stock: Stock) {
+    constructor(transactionDatabaseAccessor: ITransactionAccessor,
+                stock: Stock) {
         this._stock = stock;
+        this._transactionDatabaseAccessor = transactionDatabaseAccessor;
 
         this.loadTransactions();
     }
@@ -23,7 +26,7 @@ export class History {
     }
 
     /**
-     * Calculate the current worth of all owned {@link Stock} (of this company).
+     * Calculate the current worth of all owned {@link IStock} (of this company).
      *
      * @return Promise<number>      Calculated worth of owned stocks.
      */
@@ -35,9 +38,9 @@ export class History {
     }
 
     /**
-     * Get the number of currently owned {@link Stock} (of particular company specified in {@link History.stock} field)
+     * Get the number of currently owned {@link IStock} (of particular company specified in {@link History.stock} field)
      *
-     * @return number        Owned {@link Stock}
+     * @return number        Owned {@link IStock}
      */
     public numberOfOwnedStocks(): number {
         let quantityOwned = 0;
@@ -53,10 +56,10 @@ export class History {
     }
 
     /**
-     * Calculate the total balance from buying and selling Stocks.<br/>
+     * Calculate the total balance from buying and selling {@link IStock}.<br/>
      * <br/>
-     * Sold {@link Stock} ({@link SaleTransaction}) increase balance.<br/>
-     * Purchased {@link Stock} {@link PurchaseTransaction} decrease balance.
+     * Sold {@link IStock} ({@link SaleTransaction}) increase balance.<br/>
+     * Purchased {@link IStock} {@link PurchaseTransaction} decrease balance.
      *
      * @return number       Balance
      */
@@ -75,12 +78,12 @@ export class History {
 
     /**
      * Adjust split factor of past orders. <br/>
-     * If Transaction is older than passed date then adjust split factor.
+     * If {@link ITransaction} is older than passed date then adjust split factor.
      *
      * @param split         Split factor. e.g. 5 for 5:1 split
      * @param date          Date when split happened
      *
-     * @return void         Adjusts {@link Transaction}, no return needed
+     * @return void         Adjusts {@link ITransaction}, no return needed
      */
     public stockSplit(split: number, date: Date): void {
         this.transactions.forEach(
@@ -88,18 +91,18 @@ export class History {
                 if (fTransaction.date < date) {
                     fTransaction.splitFactor *= split;
 
-                    Database.updateTransaction(fTransaction);
+                    this._transactionDatabaseAccessor.updateTransaction(fTransaction)
                 }
             }
         );
     }
 
     /**
-     * Load all transaction made with this particular Stock
+     * Load all {@link ITransaction} made for this particular {@link IStock}
      *
-     * @return void         Adjusts "this" scope. no return needed
+     * @return void         Adjusts "this" scope. No return needed
      */
     private loadTransactions(): void {
-        this._transactions = Database.loadTransactionsOfStock(this._stock);
+        this._transactions = this._transactionDatabaseAccessor.getTransactionsByStock(this._stock);
     }
 }

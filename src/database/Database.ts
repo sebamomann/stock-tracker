@@ -1,8 +1,9 @@
 import {prod} from "../configuration/Logger";
 import {Stock} from "../models/stock/Stock";
 import {Transaction} from "../models/transaction/Transaction";
-import {TransactionMapper} from "../models/transaction/TransactionMapper";
 import {ITransactionDatabaseModel} from "./models/ITransactionDatabase.model";
+import {ITransaction} from "../interface/ITransaction";
+import {IStock} from "../interface/IStock";
 
 export class Database {
     constructor() {
@@ -25,63 +26,56 @@ export class Database {
     /**
      * Fetch all transaction that have been mate for the given Stock
      *
-     * @param stock {@link Stock}
+     * @param stock             {@link Stock}
      *
-     * @return Transaction[]  Array of {@link SaleTransaction} and {@link PurchaseTransaction}
+     * @return any[]            Array of raw {@link ITransaction}
      */
-    static loadTransactionsOfStock(stock: Stock): Transaction[] {
+    static loadTransactionsOfStock(stock: Stock): any[] {
         let data = this.getData();
 
-        const stockTransactions = data[stock.ticker];
-
-        let output: Transaction[] = [];
-
-        stockTransactions.forEach((fTransaction: any) => {
-            const databaseObjectFromTransaction = TransactionMapper.transactionFromDatabaseObject(fTransaction, stock);
-            output.push(databaseObjectFromTransaction);
-        });
-
-        return output;
+        return data[stock.ticker];
     }
 
     /**
      * Store given {@link Transaction} into the database
      *
+     * @param stock
      * @param transaction {@link Transaction}
      */
-    static createTransaction(transaction: Transaction): void {
+    static createTransaction(stock: IStock, transaction: ITransactionDatabaseModel): void {
         let data = this.getData();
 
         // create array for stock if not existing
-        if (!data[transaction.stock.ticker]) {
-            prod.info(`New Subarray for: ${transaction.stock.ticker}`);
-            data[transaction.stock.ticker] = []
+        if (!data[stock.ticker]) {
+            prod.info(`New Subarray for: ${stock.ticker}`);
+            data[stock.ticker] = []
         }
 
-        let databaseObjectFromTransaction = TransactionMapper.DatabaseObjectFromTransaction(transaction);
-        data[transaction.stock.ticker].push(databaseObjectFromTransaction);
+        data[stock.ticker].push(transaction);
 
-        prod.info(`DB OBJ from Transaction: ${JSON.stringify(databaseObjectFromTransaction)}`);
-        prod.info(`Store to Ticker: ${transaction.stock.ticker}`);
+        prod.info(`DB OBJ from Transaction: ${JSON.stringify(transaction)}`);
+        prod.info(`Store to Ticker: ${stock.ticker}`);
 
         localStorage.setItem("database", JSON.stringify(data));
     }
 
     /**
-     * Find given {@link Transaction} by ID and store it into the database
+     * Find given {@link ITransaction} by ID and store it into the database
      *
-     * @param transaction {@link Transaction}
+     * @param stock         {@link IStock}
+     * @param transaction   {@link ITransactionDatabaseModel}
      */
-    static updateTransaction(transaction: Transaction) {
+    static updateTransaction(stock: IStock, transaction: ITransactionDatabaseModel) {
         let data = this.getData();
 
-        data[transaction.stock.ticker] = data[transaction.stock.ticker].map((fTransaction: ITransactionDatabaseModel) => {
-            if (fTransaction.id === transaction.id) {
-                fTransaction.splitFactor = transaction.splitFactor;
-            }
+        data[stock.ticker] = data[stock.ticker].map(
+            (fTransaction: ITransactionDatabaseModel) => {
+                if (fTransaction.id === transaction.id) {
+                    fTransaction = transaction;
+                }
 
-            return fTransaction;
-        });
+                return fTransaction;
+            });
 
         localStorage.setItem("database", JSON.stringify(data));
     }
@@ -90,7 +84,7 @@ export class Database {
      * Get Data Object from local storage. <br/>
      * Fill with default object, if storage is empty
      */
-    private static getData(): any {
+    public static getData(): any {
         let data: any = {};
 
         const data_raw = localStorage.getItem("database");

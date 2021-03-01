@@ -1,9 +1,18 @@
 import {Renderer} from "../Renderer";
 import {TransactionFactory} from "../../models/transaction/TransactionFactory";
-import {Database} from "../../database/Database";
 import {StockFactory} from "../../models/stock/StockFactory";
+import {ITransactionAccessor} from "../../database/accessor/ITransactionAccessor";
 
 export class TransactionDialogRenderer extends Renderer {
+
+    private _transactionDatabaseAccessor: ITransactionAccessor;
+
+    constructor(transactionDatabaseAccessor: ITransactionAccessor) {
+        super();
+
+        this._transactionDatabaseAccessor = transactionDatabaseAccessor;
+    }
+
     private static htmlDropdownSelect() {
         let select = document.createElement("select");
 
@@ -72,7 +81,7 @@ export class TransactionDialogRenderer extends Renderer {
             const transactionFactory = new TransactionFactory();
             const transaction = transactionFactory.createTransaction(stock, +option, +quantity, +price, new Date(date));
 
-            Database.createTransaction(transaction);
+            this._transactionDatabaseAccessor.createTransaction(transaction);
 
             this.emit("created", stock);
         });
