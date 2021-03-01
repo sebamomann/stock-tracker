@@ -1,6 +1,49 @@
 import {History} from "../../src/models/History";
-import {Database} from "../../src/database/Database";
 import {Transaction} from "../../src/models/transaction/Transaction";
+import {TransactionDatabaseAccessor} from "../../src/database/accessor/TransactionDatabaseAccessor";
+import {anyOfClass, instance, mock, verify, when} from "ts-mockito";
+import {ITransaction} from "../../src/interface/ITransaction";
+import {Stock} from "../../src/models/stock/Stock";
+
+function createMockedTransactionsOlderThanCurrentDate(numberOfStocksToCreate: number, idStartingAt: number): ITransaction[] {
+    const output: ITransaction[] = [];
+
+    const dateInPast = new Date();
+    dateInPast.setDate(dateInPast.getDate() - 5);
+
+    for (let i = idStartingAt; i < idStartingAt + numberOfStocksToCreate; i++) {
+        const mockTransaction: Transaction = mock(Transaction);
+        const transaction: Transaction = instance(mockTransaction);
+
+        transaction.id = String(i);
+        transaction.date = dateInPast;
+        transaction.splitFactor = 1;
+
+        output.push(transaction);
+    }
+
+    return output;
+}
+
+function createMockedTransactionsYoungerThanCurrentDate(numberOfStocksToCreate: number, idStartingAt: number): ITransaction[] {
+    const output: ITransaction[] = [];
+
+    const dateInFuture = new Date();
+    dateInFuture.setDate(dateInFuture.getDate() + 5);
+
+    for (let i = idStartingAt; i < idStartingAt + numberOfStocksToCreate; i++) {
+        const mockTransaction: Transaction = mock(Transaction);
+        const transaction: Transaction = instance(mockTransaction);
+
+        transaction.id = String(i);
+        transaction.date = dateInFuture;
+        transaction.splitFactor = 1;
+
+        output.push(transaction);
+    }
+
+    return output;
+}
 
 describe('Create Stocksplit by adapting split factor of transaction of History', () => {
     beforeAll(() => {
@@ -8,108 +51,97 @@ describe('Create Stocksplit by adapting split factor of transaction of History',
 
     describe('totalWorthOfCurrentlyOwnedStocks', () => {
         it('Correctly save all 5 updated transactions', async () => {
+            const transactions: ITransaction[] = [];
+
             //mocking
-            const d = new Date();
-            d.setDate(d.getDate() - 5);
+            transactions.push(...createMockedTransactionsOlderThanCurrentDate(5, 0));
 
-            const mockTransaction = {
-                date: d,
-                splitFactor: 1,
-            };
+            const mockedStock: Stock = mock(Stock);
+            const mockedInstanceStock: Stock = instance(mockedStock);
 
-            const transactions: Transaction[] = [];
-            for (let i = 0; i < 5; i++) {
-                transactions.push({...mockTransaction, id: i} as any);
-            }
+            const mockedTransactionsDatabaseAccessor: TransactionDatabaseAccessor = mock(TransactionDatabaseAccessor);
+            const mockedInstanceTransactionDatabaseAccessor: TransactionDatabaseAccessor = instance(mockedTransactionsDatabaseAccessor);
 
-            Database.loadTransactionsOfStock = jest.fn().mockReturnValue([...transactions]);
-            Database.updateTransaction = jest.fn();
-
-            // setup
-            const history = new History({} as any);
+            when(mockedTransactionsDatabaseAccessor.getTransactionsByStock(mockedInstanceStock)).thenReturn(transactions);
+            when(mockedTransactionsDatabaseAccessor.updateTransaction(anyOfClass(Transaction))).thenReturn();
 
             // action
+            const history = new History(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
             history.stockSplit(5, new Date());
 
             // prepare expected
             transactions.map(mTransaction => mTransaction.splitFactor *= 5);
 
             //assert
-            expect(Database.updateTransaction).toHaveBeenCalledTimes(5);
-            expect(Database.updateTransaction).toHaveBeenNthCalledWith(1, transactions[0])
-            expect(Database.updateTransaction).toHaveBeenNthCalledWith(2, transactions[1])
-            expect(Database.updateTransaction).toHaveBeenNthCalledWith(3, transactions[2])
-            expect(Database.updateTransaction).toHaveBeenNthCalledWith(4, transactions[3])
-            expect(Database.updateTransaction).toHaveBeenNthCalledWith(5, transactions[4])
+            verify(mockedTransactionsDatabaseAccessor.getTransactionsByStock(mockedInstanceStock)).times(1);
+
+            verify(mockedTransactionsDatabaseAccessor.updateTransaction(transactions[0])).times(1);
+            verify(mockedTransactionsDatabaseAccessor.updateTransaction(transactions[1])).times(1);
+            verify(mockedTransactionsDatabaseAccessor.updateTransaction(transactions[2])).times(1);
+            verify(mockedTransactionsDatabaseAccessor.updateTransaction(transactions[3])).times(1);
+            verify(mockedTransactionsDatabaseAccessor.updateTransaction(transactions[4])).times(1);
         });
 
         it('Correctly save 3 of 5 transactions that were split', async () => {
             //mocking
-            const d = new Date();
-            d.setDate(d.getDate() - 5);
+            const transactions: ITransaction[] = [];
+            transactions.push(...createMockedTransactionsOlderThanCurrentDate(3, 0));
+            transactions.push(...createMockedTransactionsYoungerThanCurrentDate(3, 2));
 
-            const mockTransaction = {
-                date: d,
-                splitFactor: 1,
-            };
+            const mockedStock: Stock = mock(Stock);
+            const mockedInstanceStock: Stock = instance(mockedStock);
 
-            const transactions: Transaction[] = [];
-            for (let i = 0; i < 3; i++) {
-                transactions.push({...mockTransaction, id: i} as any);
-            }
+            const mockedTransactionsDatabaseAccessor: TransactionDatabaseAccessor = mock(TransactionDatabaseAccessor);
+            const mockedInstanceTransactionDatabaseAccessor: TransactionDatabaseAccessor = instance(mockedTransactionsDatabaseAccessor);
 
-            const d2 = new Date();
-            d2.setDate(d2.getDate() + 5);
-
-            for (let i = 3; i < 5; i++) {
-                transactions.push({...mockTransaction, id: i, date: d2} as any);
-            }
-
-            Database.loadTransactionsOfStock = jest.fn().mockReturnValue([...transactions]);
-            Database.updateTransaction = jest.fn();
-
-            // setup
-            const history = new History({} as any);
+            when(mockedTransactionsDatabaseAccessor.getTransactionsByStock(mockedInstanceStock)).thenReturn(transactions);
+            when(mockedTransactionsDatabaseAccessor.updateTransaction(anyOfClass(Transaction))).thenReturn();
 
             // action
+            const history = new History(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
             history.stockSplit(5, new Date());
 
             // prepare expected
             transactions.map(mTransaction => mTransaction.splitFactor *= 5);
 
             //assert
-            expect(Database.updateTransaction).toHaveBeenCalledTimes(3);
-            expect(Database.updateTransaction).toHaveBeenNthCalledWith(1, transactions[0])
-            expect(Database.updateTransaction).toHaveBeenNthCalledWith(2, transactions[1])
-            expect(Database.updateTransaction).toHaveBeenNthCalledWith(3, transactions[2])
+            verify(mockedTransactionsDatabaseAccessor.getTransactionsByStock(mockedInstanceStock)).times(1);
+
+            verify(mockedTransactionsDatabaseAccessor.updateTransaction(transactions[0])).times(1);
+            verify(mockedTransactionsDatabaseAccessor.updateTransaction(transactions[1])).times(1);
+            verify(mockedTransactionsDatabaseAccessor.updateTransaction(transactions[2])).times(1);
+            verify(mockedTransactionsDatabaseAccessor.updateTransaction(transactions[3])).times(0);
+            verify(mockedTransactionsDatabaseAccessor.updateTransaction(transactions[4])).times(0);
         });
 
         it('Correctly save 0 of 5 transactions that were split', async () => {
-            //mocking
-            const d = new Date();
-            d.setDate(d.getDate() + 5);
+            const transactions: ITransaction[] = [];
+            transactions.push(...createMockedTransactionsYoungerThanCurrentDate(5, 0));
 
-            const mockTransaction = {
-                date: d,
-                splitFactor: 1,
-            };
+            const mockedStock: Stock = mock(Stock);
+            const mockedInstanceStock: Stock = instance(mockedStock);
 
-            const transactions: Transaction[] = [];
-            for (let i = 0; i < 5; i++) {
-                transactions.push({...mockTransaction, id: i} as any);
-            }
+            const mockedTransactionsDatabaseAccessor: TransactionDatabaseAccessor = mock(TransactionDatabaseAccessor);
+            const mockedInstanceTransactionDatabaseAccessor: TransactionDatabaseAccessor = instance(mockedTransactionsDatabaseAccessor);
 
-            Database.loadTransactionsOfStock = jest.fn().mockReturnValue([...transactions]);
-            Database.updateTransaction = jest.fn();
-
-            // setup
-            const history = new History({} as any);
+            when(mockedTransactionsDatabaseAccessor.getTransactionsByStock(mockedInstanceStock)).thenReturn(transactions);
+            when(mockedTransactionsDatabaseAccessor.updateTransaction(anyOfClass(Transaction))).thenReturn();
 
             // action
+            const history = new History(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
             history.stockSplit(5, new Date());
 
+            // prepare expected
+            transactions.map(mTransaction => mTransaction.splitFactor *= 5);
+
             //assert
-            expect(Database.updateTransaction).toHaveBeenCalledTimes(0);
+            verify(mockedTransactionsDatabaseAccessor.getTransactionsByStock(mockedInstanceStock)).times(1);
+
+            verify(mockedTransactionsDatabaseAccessor.updateTransaction(transactions[0])).times(0);
+            verify(mockedTransactionsDatabaseAccessor.updateTransaction(transactions[1])).times(0);
+            verify(mockedTransactionsDatabaseAccessor.updateTransaction(transactions[2])).times(0);
+            verify(mockedTransactionsDatabaseAccessor.updateTransaction(transactions[3])).times(0);
+            verify(mockedTransactionsDatabaseAccessor.updateTransaction(transactions[4])).times(0);
         });
     });
 });

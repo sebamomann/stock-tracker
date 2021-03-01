@@ -1,6 +1,7 @@
 import {Transaction} from "./transaction/Transaction";
 import {Stock} from "./stock/Stock";
 import {ITransactionAccessor} from "../database/accessor/ITransactionAccessor";
+import {IStock} from "../interface/IStock";
 
 // TODO HISTORY ANALYZER?
 export class History {
