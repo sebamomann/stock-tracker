@@ -46,14 +46,9 @@ function createMockedTransactionsYoungerThanCurrentDate(numberOfStocksToCreate: 
 }
 
 describe('Create Stocksplit by adapting split factor of transaction of History', () => {
-    beforeAll(() => {
-    });
-
     describe('totalWorthOfCurrentlyOwnedStocks', () => {
         it('Correctly save all 5 updated transactions', async () => {
             const transactions: ITransaction[] = [];
-
-            //mocking
             transactions.push(...createMockedTransactionsOlderThanCurrentDate(5, 0));
 
             const mockedStock: Stock = mock(Stock);
