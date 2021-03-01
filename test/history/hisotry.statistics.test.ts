@@ -1,6 +1,29 @@
 import {History} from "../../src/models/History";
-import {Database} from "../../src/database/Database";
 import {Transaction} from "../../src/models/transaction/Transaction";
+import {ITransaction} from "../../src/interface/ITransaction";
+import {instance, mock, spy, verify, when} from "ts-mockito";
+import {TransactionDatabaseAccessor} from "../../src/database/accessor/TransactionDatabaseAccessor";
+import {Stock} from "../../src/models/stock/Stock";
+
+function createMockedTransactionsOlderThanCurrentDate(_mock: Transaction, numberOfStocksToCreate: number, idStartingAt: number): ITransaction[] {
+    const output: ITransaction[] = [];
+
+    const dateInPast = new Date();
+    dateInPast.setDate(dateInPast.getDate() - 5);
+
+    for (let i = idStartingAt; i < idStartingAt + numberOfStocksToCreate; i++) {
+        const _transaction: ITransaction = instance(_mock);
+        const transaction = {..._transaction};
+
+        transaction.id = String(i);
+        transaction.date = dateInPast;
+        transaction.splitFactor = 1;
+
+        output.push(transaction);
+    }
+
+    return output;
+}
 
 describe('Calculate statistical data of History', () => {
     beforeAll(() => {
@@ -9,20 +32,18 @@ describe('Calculate statistical data of History', () => {
     describe('totalWorthOfCurrentlyOwnedStocks', () => {
         it('Should return correct worth', async () => {
             //mocking
-            const spyNumberOfOwnedStocksFn = jest.spyOn(History.prototype, "numberOfOwnedStocks");
-            spyNumberOfOwnedStocksFn.mockReturnValueOnce(10);
+            const mockedStock: Stock = mock(Stock);
+            const mockedInstanceStock: Stock = instance(mockedStock);
 
-            const mockStockGetPrice = jest.fn()
-                .mockReturnValueOnce(100); // 100€
+            const mockedTransactionsDatabaseAccessor: TransactionDatabaseAccessor = mock(TransactionDatabaseAccessor);
+            const mockedInstanceTransactionDatabaseAccessor: TransactionDatabaseAccessor = instance(mockedTransactionsDatabaseAccessor);
 
-            const mockStock = {
-                getPrice: mockStockGetPrice
-            };
+            const history: History = new History(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
+            const spiedHistory = spy(history);
 
-            Database.loadTransactionsOfStock = jest.fn().mockReturnValue([{}]);
-
-            // setup
-            const history = new History(mockStock as any);
+            when(mockedTransactionsDatabaseAccessor.getTransactionsByStock(mockedInstanceStock)).thenReturn([]);
+            when(mockedStock.getPrice()).thenResolve(100);
+            when(spiedHistory.numberOfOwnedStocks()).thenReturn(10);
 
             // action
             const totalWorthOfCurrentlyOwnedStocks = await history.totalWorthOfCurrentlyOwnedStocks();
@@ -35,26 +56,22 @@ describe('Calculate statistical data of History', () => {
     describe('getTransactionQuantity', () => {
         it('Should return correct amount of stocks owned', () => {
             //mocking
-            const mockTransactionQuantityFunction = jest.fn()
-                .mockReturnValueOnce(3)
-                .mockReturnValueOnce(2)
-                .mockReturnValueOnce(2)
-                .mockReturnValueOnce(1)
-                .mockReturnValueOnce(2);
+            const mockTransaction: Transaction = mock(Transaction);
 
-            const mockTransaction = {
-                getTransactionQuantity: mockTransactionQuantityFunction
-            };
+            const transactions: ITransaction[] = [];
+            transactions.push(...createMockedTransactionsOlderThanCurrentDate(mockTransaction, 5, 0));
 
-            const transactions: Transaction[] = [];
-            for (let i = 0; i < 5; i++) {
-                transactions.push(mockTransaction as any);
-            }
+            const mockedStock: Stock = mock(Stock);
+            const mockedInstanceStock: Stock = instance(mockedStock);
 
-            Database.loadTransactionsOfStock = jest.fn().mockReturnValue(transactions);
+            const mockedTransactionsDatabaseAccessor: TransactionDatabaseAccessor = mock(TransactionDatabaseAccessor);
+            const mockedInstanceTransactionDatabaseAccessor: TransactionDatabaseAccessor = instance(mockedTransactionsDatabaseAccessor);
+
+            when(mockedTransactionsDatabaseAccessor.getTransactionsByStock(mockedInstanceStock)).thenReturn(transactions);
+            when(mockTransaction.getTransactionQuantity()).thenReturn(3, 2, 2, 1, 2);
 
             // setup
-            const history = new History(jest.mock('../../src/models/stock/Stock') as any);
+            const history = new History(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
 
             // action
             const numberOfOwnedStocks = history.numberOfOwnedStocks();
@@ -67,87 +84,86 @@ describe('Calculate statistical data of History', () => {
     describe('totalTransactionBalance', () => {
         it('Should return correct balance - only purchased stocks -> total negative value', async () => {
             //mocking
-            const mockTransactionPriceFunction = jest.fn()
-                .mockReturnValue(-10);
+            const mockTransaction: Transaction = mock(Transaction);
 
-            const mockTransaction = {
-                getTransactionPrice: mockTransactionPriceFunction
-            };
+            const transactions: ITransaction[] = [];
+            transactions.push(...createMockedTransactionsOlderThanCurrentDate(mockTransaction, 5, 0));
 
-            const transactions: Transaction[] = [];
-            for (let i = 0; i < 5; i++) {
-                transactions.push(mockTransaction as any);
-            }
+            const mockedStock: Stock = mock(Stock);
+            const mockedInstanceStock: Stock = instance(mockedStock);
 
-            Database.loadTransactionsOfStock = jest.fn().mockReturnValue(transactions);
+            const mockedTransactionsDatabaseAccessor: TransactionDatabaseAccessor = mock(TransactionDatabaseAccessor);
+            const mockedInstanceTransactionDatabaseAccessor: TransactionDatabaseAccessor = instance(mockedTransactionsDatabaseAccessor);
+
+            when(mockedTransactionsDatabaseAccessor.getTransactionsByStock(mockedInstanceStock)).thenReturn(transactions);
+            when(mockTransaction.getTransactionPrice()).thenReturn(-10);
 
             // setup
-            const history = new History({} as any);
+            const history = new History(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
 
             // action
-            const totalTransactionBalance = await history.totalTransactionBalance();
+            const totalTransactionBalance = history.totalTransactionBalance();
 
             //assert
             expect(totalTransactionBalance).toBe(-50);
-            expect(mockTransactionPriceFunction).toHaveBeenCalledTimes(5);
+
+            verify(mockTransaction.getTransactionPrice()).times(5);
         });
 
         it('Should return correct balance - only sold stocks -> total positive value', async () => {
             //mocking
-            const mockTransactionPriceFunction = jest.fn()
-                .mockReturnValue(10);
+            const mockTransaction: Transaction = mock(Transaction);
 
-            const mockTransaction = {
-                getTransactionPrice: mockTransactionPriceFunction
-            };
+            const transactions: ITransaction[] = [];
+            transactions.push(...createMockedTransactionsOlderThanCurrentDate(mockTransaction, 5, 0));
 
-            const transactions: Transaction[] = [];
-            for (let i = 0; i < 5; i++) {
-                transactions.push(mockTransaction as any);
-            }
+            const mockedStock: Stock = mock(Stock);
+            const mockedInstanceStock: Stock = instance(mockedStock);
 
-            Database.loadTransactionsOfStock = jest.fn().mockReturnValue(transactions);
+            const mockedTransactionsDatabaseAccessor: TransactionDatabaseAccessor = mock(TransactionDatabaseAccessor);
+            const mockedInstanceTransactionDatabaseAccessor: TransactionDatabaseAccessor = instance(mockedTransactionsDatabaseAccessor);
+
+            when(mockedTransactionsDatabaseAccessor.getTransactionsByStock(mockedInstanceStock)).thenReturn(transactions);
+            when(mockTransaction.getTransactionPrice()).thenReturn(10);
 
             // setup
-            const history = new History({} as any);
+            const history = new History(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
 
             // action
-            const totalTransactionBalance = await history.totalTransactionBalance();
+            const totalTransactionBalance = history.totalTransactionBalance();
 
             //assert
             expect(totalTransactionBalance).toBe(50);
-            expect(mockTransactionPriceFunction).toHaveBeenCalledTimes(5);
+
+            verify(mockTransaction.getTransactionPrice()).times(5);
         });
 
         it('Should return correct balance - only sold and bought stocks', async () => {
             //mocking
-            const mockTransactionPriceFunction = jest.fn()
-                .mockReturnValueOnce(-10)
-                .mockReturnValueOnce(10)
-                .mockReturnValueOnce(20)
-                .mockReturnValueOnce(-5)
-                .mockReturnValueOnce(-10);
+            const mockTransaction: Transaction = mock(Transaction);
 
-            const mockTransaction = {
-                getTransactionPrice: mockTransactionPriceFunction
-            };
+            const transactions: ITransaction[] = [];
+            transactions.push(...createMockedTransactionsOlderThanCurrentDate(mockTransaction, 5, 0));
 
-            const transactions: Transaction[] = [];
-            for (let i = 0; i < 5; i++) {
-                transactions.push(mockTransaction as any);
-            }
+            const mockedStock: Stock = mock(Stock);
+            const mockedInstanceStock: Stock = instance(mockedStock);
 
-            Database.loadTransactionsOfStock = jest.fn().mockReturnValue(transactions);
+            const mockedTransactionsDatabaseAccessor: TransactionDatabaseAccessor = mock(TransactionDatabaseAccessor);
+            const mockedInstanceTransactionDatabaseAccessor: TransactionDatabaseAccessor = instance(mockedTransactionsDatabaseAccessor);
+
+            when(mockedTransactionsDatabaseAccessor.getTransactionsByStock(mockedInstanceStock)).thenReturn(transactions);
+            when(mockTransaction.getTransactionPrice()).thenReturn(-10, 10, 20, -5, -10);
 
             // setup
-            const history = new History({} as any);
+            const history = new History(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
 
             // action
-            const totalTransactionBalance = await history.totalTransactionBalance();
+            const totalTransactionBalance = history.totalTransactionBalance();
 
             //assert
             expect(totalTransactionBalance).toBe(5);
-            expect(mockTransactionPriceFunction).toHaveBeenCalledTimes(5);
+
+            verify(mockTransaction.getTransactionPrice()).times(5);
         });
     });
 });
