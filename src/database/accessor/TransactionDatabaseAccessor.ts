@@ -2,7 +2,7 @@ import {ITransactionAccessor} from "./ITransactionAccessor";
 import {ITransaction} from "../../interface/ITransaction";
 import {Database} from "../Database";
 import {TransactionMapper} from "../../models/transaction/TransactionMapper";
-import {Stock} from "../../models/stock/Stock";
+import {IStock} from "../../interface/IStock";
 
 export class TransactionDatabaseAccessor implements ITransactionAccessor {
     constructor() {
@@ -12,7 +12,7 @@ export class TransactionDatabaseAccessor implements ITransactionAccessor {
         return Database.getData();
     }
 
-    getTransactionsByStock(stock: Stock): ITransaction[] {
+    getTransactionsByStock(stock: IStock): ITransaction[] {
         const rawTransactions: any = Database.loadTransactionsOfStock(stock);
 
         let output: ITransaction[] = [];
