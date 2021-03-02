@@ -79,7 +79,7 @@ export class TransactionDialogRenderer extends Renderer {
             let date = (inputs[4] as HTMLInputElement).value;
 
             const transactionFactory = new TransactionFactory();
-            const transaction = transactionFactory.createTransaction(stock, +option, +quantity, +price, new Date(date));
+            const transaction = transactionFactory.createTransaction(+option, stock, +price, +quantity, new Date(date));
 
             this._transactionDatabaseAccessor.createTransaction(transaction);
 

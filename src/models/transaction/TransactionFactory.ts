@@ -1,29 +1,21 @@
-import {Transaction} from "./Transaction";
 import {PurchaseTransaction} from "./PurchaseTransaction";
-import {Stock} from "../stock/Stock";
 import {SaleTransaction} from "./SaleTransaction";
-import {prod} from "../../configuration/Logger";
+import {ITransaction} from "../../interface/ITransaction";
 
-export class TransactionFactory {
-    createTransaction(stock: Stock, option: number, quantity: number, price: number, date: Date) {
-        let transaction: Transaction;
+export class TransactionFactory<T> {
 
+    constructor() {
+    }
+
+    public createTransaction(option: number, ...args: any[]): ITransaction {
         let id = makeid(10);
 
-        switch (option) {
-            case 0:
-                transaction = new PurchaseTransaction(id, stock, price, quantity, date, 1);
-                break;
-            case 1:
-                transaction = new SaleTransaction(id, stock, price, quantity, date, 1);
-                break;
-            default:
-                throw new Error("Undefined Transaction Option");
-        }
+        const drinks: any = {
+            0: PurchaseTransaction,
+            1: SaleTransaction,
+        };
 
-        prod.info(`Created Stock for: ${stock.ticker}\r\nSelected Option: ${option}\r\nQt: ${quantity}\r\nPrice: ${price}\r\nDate: ${date}`);
-
-        return transaction;
+        return new drinks[option](id, ...args, 1);
     }
 }
 
