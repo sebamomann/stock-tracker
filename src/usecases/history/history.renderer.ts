@@ -6,7 +6,10 @@ import {Transaction} from "../../models/transaction/Transaction";
 import {StockSplitDialogRenderer} from "./stock-split-dialog.renderer";
 
 export class HistoryRenderer extends Renderer {
-    private history: History;
+    private readonly history: History;
+    //
+    // private startDate: Date | undefined = undefined;
+    // private endDate: Date | undefined = undefined;
 
     constructor(history: History) {
         super();
@@ -108,6 +111,42 @@ export class HistoryRenderer extends Renderer {
 
         const potentialWinTotal = await this.htmlPotentialWinTotal();
         historyDetails.appendChild(potentialWinTotal);
+
+        // // date specification
+        // let formHTML = document.createElement("form");
+        // formHTML.id = "timeframe-form";
+        //
+        // const spanTimeframe = this.htmlSpan("", `Zeitraum (optional)`);
+        // formHTML.appendChild(spanTimeframe);
+        //
+        // let dateInputStart = document.createElement("input");
+        // dateInputStart.type = "date";
+        // dateInputStart.placeholder = "Start Datum";
+        // formHTML.appendChild(dateInputStart);
+        //
+        // let dateInputEnd = document.createElement("input");
+        // dateInputEnd.type = "date";
+        // dateInputEnd.placeholder = "End Datum";
+        // formHTML.appendChild(dateInputEnd);
+        //
+        // let submit = document.createElement("button");
+        // submit.type = "submit";
+        // submit.innerText = "submit";
+        // submit.addEventListener('click', (e: Event) => {
+        //     e.preventDefault();
+        //     const inputs = (document.getElementById("stock-split-form") as HTMLFormElement).elements;
+        //
+        //     let startDate = (inputs[0] as HTMLInputElement).value;
+        //     let endDate = (inputs[1] as HTMLInputElement).value;
+        //
+        //     this.startDate = new Date(startDate);
+        //     this.endDate = new Date(endDate);
+        //
+        //     this.render();
+        // });
+        // formHTML.appendChild(submit);
+        //
+        // historyDetails.append(formHTML);
 
         return historyDetails;
     }

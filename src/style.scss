@@ -195,6 +195,10 @@ form {
   max-width: 500px;
   margin-bottom: 75px;
 
+  &#timeframe-form {
+    margin-bottom: 15px;
+  }
+
   input, select {
     display: block;
     border-radius: 5px;

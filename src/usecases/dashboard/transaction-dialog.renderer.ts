@@ -57,7 +57,6 @@ export class TransactionDialogRenderer extends Renderer {
         priceInput.placeholder = "Price (total)";
 
         let dateInput = document.createElement("input");
-        dateInput.id = "form-price";
         dateInput.type = "date";
         dateInput.placeholder = "Datum";
 
