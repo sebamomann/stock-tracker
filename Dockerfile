@@ -1,6 +1,20 @@
-FROM node:7.4.0
+FROM node:12.13.0 AS build
 
-ADD . /src
-RUN cd /src && npm install && npm run build && npm prune --production
+WORKDIR /usr/src/app
 
-CMD ["npm", "run-script", "serve"]
+COPY ./package.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+FROM nginx:1.17.1-alpine
+#COPY --from=build /usr/src/app/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /usr/src/app/public /usr/share/nginx/html
+COPY --from=build /usr/src/app/.htaccess /usr/share/nginx/html/.htaccess
+
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+
+CMD ["/bin/sh",  "-c",  "exec nginx -g 'daemon off;'"]
