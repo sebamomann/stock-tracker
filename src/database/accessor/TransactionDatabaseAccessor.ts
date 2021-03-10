@@ -17,12 +17,14 @@ export class TransactionDatabaseAccessor implements ITransactionAccessor {
 
         let output: ITransaction[] = [];
 
-        rawTransactions.forEach(
-            (fTransaction: any) => {
-                const databaseObjectFromTransaction = TransactionMapper.transactionFromDatabaseObject(fTransaction, stock);
+        if (rawTransactions) {
+            rawTransactions.forEach(
+                (fTransaction: any) => {
+                    const databaseObjectFromTransaction = TransactionMapper.transactionFromDatabaseObject(fTransaction, stock);
 
-                output.push(databaseObjectFromTransaction);
-            });
+                    output.push(databaseObjectFromTransaction);
+                });
+        }
 
         return output;
     }

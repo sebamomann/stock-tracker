@@ -43,7 +43,7 @@ export class Database {
      * @param transaction {@link Transaction}
      */
     static createTransaction(stock: IStock, transaction: ITransactionDatabaseModel): void {
-        let data = this.getData();
+        let data: any = this.getData();
 
         // create array for stock if not existing
         if (!data[stock.ticker]) {
@@ -51,12 +51,15 @@ export class Database {
             data[stock.ticker] = []
         }
 
-        data[stock.ticker].push(transaction);
+        data[stock.ticker] = [transaction, ...data[stock.ticker]];
 
         prod.info(`DB OBJ from Transaction: ${JSON.stringify(transaction)}`);
         prod.info(`Store to Ticker: ${stock.ticker}`);
 
-        localStorage.setItem("database", JSON.stringify(data));
+        console.log(data);
+        console.log(JSON.stringify({...data}));
+
+        localStorage.setItem("database", JSON.stringify({...data}));
     }
 
     /**
@@ -88,9 +91,11 @@ export class Database {
         let data: any = [];
 
         const data_raw = localStorage.getItem("database");
+
         if (data_raw) {
             data = JSON.parse(data_raw);
         }
+
         return data;
     }
 }
