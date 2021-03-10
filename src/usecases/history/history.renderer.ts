@@ -213,6 +213,10 @@ export class HistoryRenderer extends Renderer {
         stockSplitButton.addEventListener("click", (e: Event) => {
             let stockSplitDialogRenderer = new StockSplitDialogRenderer(this.history);
             stockSplitDialogRenderer.render();
+
+            stockSplitDialogRenderer.on("split", () => {
+                this.render();
+            })
         });
 
         const stockSplitForm = document.createElement('div');

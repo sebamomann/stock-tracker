@@ -1,8 +1,7 @@
 import {Renderer} from "../Renderer";
-import {IRenderer} from "../../interface/IRenderer";
 import {History} from "../../models/History";
 
-export class StockSplitDialogRenderer extends Renderer{
+export class StockSplitDialogRenderer extends Renderer {
     private history: History;
 
     constructor(history: History) {
@@ -41,6 +40,8 @@ export class StockSplitDialogRenderer extends Renderer{
             let date = (inputs[1] as HTMLInputElement).value;
 
             this.history.stockSplit(+splitFactor, new Date(date));
+
+            this.emit("split")
         });
 
         let cancelButton = document.createElement("button");
