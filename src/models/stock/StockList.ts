@@ -18,7 +18,7 @@ export class StockList {
         const ownedStockTickers = Database.loadOwnedStockTickers();
 
         const stockInfoService = new StockInfoService();
-        const profiles = await stockInfoService.getProfilesByTicker(ownedStockTickers);
+        const profiles = await stockInfoService.getProfilesByTicker(ownedStockTickers)
 
         if (profiles.length > 0) {
             ownedStockTickers.forEach((ticker: string, index: number) => {

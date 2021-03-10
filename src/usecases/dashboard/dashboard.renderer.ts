@@ -26,6 +26,8 @@ export class DashboardRenderer extends Renderer {
         const stockListWrapper = document.createElement('div');
         stockListWrapper.className = "stock-list-wrapper";
 
+        this.htmlCheckEmptyList(stockListWrapper);
+
         this.stockList
             .getList()
             .forEach((fStock: Stock) => {
@@ -104,5 +106,15 @@ export class DashboardRenderer extends Renderer {
         }
 
         prod.info(`Created HTML Actions for Dashboard`);
+    }
+
+    private htmlCheckEmptyList(stockListWrapper: HTMLDivElement): void {
+        if (this.stockList.getList().length === 0) {
+            const stockTicker = document.createElement('span');
+            stockTicker.className = "empty-list";
+            stockTicker.innerText = "Noch keine Transaktionen Hinterlegt. Bitte füge eine Transaktion hinzu."
+
+            stockListWrapper.append(stockTicker)
+        }
     }
 }

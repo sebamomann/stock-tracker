@@ -85,13 +85,12 @@ export class Database {
      * Fill with default object, if storage is empty
      */
     public static getData(): any {
-        let data: any = {};
+        let data: any = [];
 
         const data_raw = localStorage.getItem("database");
         if (data_raw) {
             data = JSON.parse(data_raw);
         }
-
         return data;
     }
 }
