@@ -39,11 +39,14 @@ export class DashboardRenderer extends Renderer {
                     const historyRenderer = new HistoryRenderer(history);
 
                     if (window.history.pushState) {
-                        var newurl = window.location.protocol + "//" + window.location.host + "/stock" + '?ticker=' + fStock.ticker;
+                        const newurl = window.location.protocol + "//" + window.location.host + "/stock" + '?ticker=' + fStock.ticker;
                         window.history.pushState({path: newurl}, '', newurl);
                     }
 
-                    historyRenderer.render();
+                    historyRenderer.render()
+                        .then(() => {
+
+                        });
                 });
 
                 const stockTicker = document.createElement('span');

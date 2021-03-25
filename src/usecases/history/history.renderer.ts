@@ -254,7 +254,10 @@ export class HistoryRenderer extends Renderer {
             stockSplitDialogRenderer.render();
 
             stockSplitDialogRenderer.on("split", () => {
-                this.render();
+                this.render()
+                    .then(() => {
+
+                    });
             })
         });
 
