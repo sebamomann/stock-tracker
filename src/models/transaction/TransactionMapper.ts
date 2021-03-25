@@ -1,8 +1,8 @@
 import {PurchaseTransaction} from "./PurchaseTransaction";
-import {SaleTransaction} from "./SaleTransaction";
 import {Stock} from "../stock/Stock";
 import {Transaction} from "./Transaction";
 import {ITransactionDatabaseModel} from "../../database/models/ITransactionDatabase.model";
+import {TransactionFactory} from "./TransactionFactory";
 
 export class TransactionMapper {
     public static transactionFromDatabaseObject(obj: ITransactionDatabaseModel, stock: Stock): Transaction {
@@ -15,17 +15,8 @@ export class TransactionMapper {
 
         let transaction: Transaction;
 
-        switch (option) {
-            case 1:
-                transaction = new PurchaseTransaction(id, stock, price, quantity, new Date(date), splitFactor);
-                break;
-            case 2:
-                transaction = new SaleTransaction(id, stock, price, quantity, new Date(date), splitFactor);
-                break;
-            default:
-                transaction = new PurchaseTransaction(id, stock, price, quantity, new Date(date), splitFactor);
-        }
-
+        const transactionFactory = new TransactionFactory();
+        transaction = transactionFactory.createTransaction(option, id, stock, price, quantity, new Date(date), splitFactor)
 
         return transaction;
     }

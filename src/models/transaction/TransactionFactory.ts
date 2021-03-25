@@ -10,12 +10,12 @@ export class TransactionFactory<T> {
     public createTransaction(option: number, ...args: any[]): ITransaction {
         let id = generateRandomIdentificationString(10);
 
-        const drinks: any = {
+        const transactionTypes: any = {
             0: PurchaseTransaction,
             1: SaleTransaction,
         };
 
-        return new drinks[option](id, ...args, 1);
+        return new transactionTypes[option](id, ...args, 1);
     }
 }
 
