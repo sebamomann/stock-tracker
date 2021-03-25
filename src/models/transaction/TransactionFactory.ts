@@ -8,7 +8,7 @@ export class TransactionFactory<T> {
     }
 
     public createTransaction(option: number, ...args: any[]): ITransaction {
-        let id = makeid(10);
+        let id = generateRandomIdentificationString(10);
 
         const drinks: any = {
             0: PurchaseTransaction,
@@ -19,8 +19,7 @@ export class TransactionFactory<T> {
     }
 }
 
-// TODO OUTSOURCE
-function makeid(length: number) {
+function generateRandomIdentificationString(length: number) {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;
