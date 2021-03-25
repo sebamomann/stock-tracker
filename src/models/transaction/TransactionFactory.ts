@@ -8,6 +8,15 @@ export class TransactionFactory<T> {
     }
 
     public createTransaction(option: number, ...args: any[]): ITransaction {
+        const transactionTypes: any = {
+            0: PurchaseTransaction,
+            1: SaleTransaction,
+        };
+
+        return new transactionTypes[option](...args);
+    }
+
+    public createNewTransaction(option: number, ...args: any[]): ITransaction {
         let id = generateRandomIdentificationString(10);
 
         const transactionTypes: any = {

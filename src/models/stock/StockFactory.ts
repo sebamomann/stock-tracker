@@ -5,19 +5,18 @@ import {USD_Stock} from "./USD_Stock";
 
 export class StockFactory {
     public static createStockByProfile(profile: IAPI_StockProfile) {
+        const stockTypes: any = {
+            "EUR": EUR_Stock,
+            "USD": USD_Stock,
+        };
+
         let stock;
 
-        switch (profile.currency) {
-            case "EUR":
-                stock = new EUR_Stock(profile.symbol, profile.companyName, profile.price);
-                break;
-            case "USD":
-                stock = new USD_Stock(profile.symbol, profile.companyName, profile.price);
-                break;
-            default:
-                stock = new USD_Stock(profile.symbol, profile.companyName, profile.price);
+        try {
+            stock = new stockTypes[profile.currency](profile.symbol, profile.companyName, profile.price);
+        } catch (e) {
+            stock = new stockTypes["USD"](profile.symbol, profile.companyName, profile.price);
         }
-
 
         return stock;
     }
