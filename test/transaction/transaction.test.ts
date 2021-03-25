@@ -12,7 +12,7 @@ describe('Check implementation of transactions', () => {
             const mockedInstanceStock = instance(mockedStock);
 
             const transactionFactory = new TransactionFactory();
-            const transaction = transactionFactory.createTransaction(0, mockedInstanceStock, 100, 10, new Date());
+            const transaction = transactionFactory.createNewTransaction(0, mockedInstanceStock, 100, 10, new Date());
 
             // expect
             expect(transaction.getTransactionPrice()).toBe(-100);
@@ -25,7 +25,7 @@ describe('Check implementation of transactions', () => {
             const mockedInstanceStock = instance(mockedStock);
 
             const transactionFactory = new TransactionFactory();
-            const transaction = transactionFactory.createTransaction(1, mockedInstanceStock, 100, 10, new Date());
+            const transaction = transactionFactory.createNewTransaction(1, mockedInstanceStock, 100, 10, new Date());
 
             // expect
             expect(transaction.getTransactionPrice()).toBe(100);
