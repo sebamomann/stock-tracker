@@ -11,9 +11,12 @@ export class StockRouter extends Router {
     constructor(path: string) {
         super(path);
 
-        this.route().then(r => {
-            prod.info("ROUTER - Stock route routed");
-        });
+        this.route()
+            .then(
+                _ => {
+                    prod.info("ROUTER - Stock route routed");
+                }
+            );
     }
 
     public async route() {

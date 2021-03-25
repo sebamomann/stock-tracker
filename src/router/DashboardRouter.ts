@@ -8,7 +8,7 @@ export class DashboardRouter extends Router {
     constructor(path: string) {
         super(path);
 
-        this.route().then(r => {
+        this.route().then(_ => {
             prod.info("ROUTER - Dashboard route initialized");
         });
     }

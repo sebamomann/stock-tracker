@@ -10,19 +10,25 @@ export class MainRouter extends Router {
 
         prod.info("ROUTER - MAIN constructing ...");
 
-        this.route().then(r => {
-            prod.info("ROUTER - Main route routed");
-
-            window.addEventListener('popstate', () => {
-                console.log('LOCATION CHANGE!');
-
-                this.path = window.location.pathname;
-
-                this.route().then(r => {
+        this.route()
+            .then(
+                _ => {
                     prod.info("ROUTER - Main route routed");
-                });
-            })
-        });
+
+                    window.addEventListener('popstate', () => {
+                        console.log('LOCATION CHANGE!');
+
+                        this.path = window.location.pathname;
+
+                        this.route()
+                            .then(
+                                _ => {
+                                    prod.info("ROUTER - Main route routed");
+                                }
+                            );
+                    });
+                }
+            );
     }
 
     public async route() {
@@ -33,14 +39,12 @@ export class MainRouter extends Router {
 
         const redirectPath = pathArray.slice(2, pathArray.length);
 
-        let router;
-
         prod.info(`ROUTER - Path: ${currentPath}`);
 
         if (!currentPath) {
-            router = new DashboardRouter(redirectPath.join("/"));
+            new DashboardRouter(redirectPath.join("/"));
         } else if (currentPath === "stock") {
-            router = new StockRouter(redirectPath.join("/"));
+            new StockRouter(redirectPath.join("/"));
         }
     }
 

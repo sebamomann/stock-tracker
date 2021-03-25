@@ -43,7 +43,7 @@ export class HistoryRenderer extends Renderer {
 
         transactionBlock.className = classes.join(" ");
 
-        transactionBlock.addEventListener("click", (e: Event) => {
+        transactionBlock.addEventListener("click", _ => {
 
         });
 
@@ -249,15 +249,16 @@ export class HistoryRenderer extends Renderer {
         let stockSplitButton = document.createElement('button');
         stockSplitButton.className = "stock-split-button button main-button"
         stockSplitButton.innerText = "Stock Split";
-        stockSplitButton.addEventListener("click", (e: Event) => {
+        stockSplitButton.addEventListener("click", _ => {
             let stockSplitDialogRenderer = new StockSplitDialogRenderer(this.history);
             stockSplitDialogRenderer.render();
 
             stockSplitDialogRenderer.on("split", () => {
                 this.render()
-                    .then(() => {
-
-                    });
+                    .then(
+                        _ => {
+                        }
+                    );
             })
         });
 

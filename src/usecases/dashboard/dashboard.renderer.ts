@@ -33,7 +33,7 @@ export class DashboardRenderer extends Renderer {
             .forEach((fStock: Stock) => {
                 const stockBlock = document.createElement('div')!;
                 stockBlock.className = "stock-block block";
-                stockBlock.addEventListener("click", (e: Event) => {
+                stockBlock.addEventListener("click", () => {
                     const transactionsDatabaseAccessor = new TransactionDatabaseAccessor();
                     const history = new History(transactionsDatabaseAccessor, fStock);
                     const historyRenderer = new HistoryRenderer(history);
@@ -44,9 +44,10 @@ export class DashboardRenderer extends Renderer {
                     }
 
                     historyRenderer.render()
-                        .then(() => {
-
-                        });
+                        .then(
+                            _ => {
+                            }
+                        );
                 });
 
                 const stockTicker = document.createElement('span');
@@ -78,7 +79,7 @@ export class DashboardRenderer extends Renderer {
         createButton.className = "create-transaction button main-button"
         createButton.id = "create-transaction"
         createButton.innerText = "Add Transaction";
-        createButton.addEventListener("click", (e: Event) => {
+        createButton.addEventListener("click", () => {
             const button = document.getElementById("create-transaction")!;
             button.remove();
 

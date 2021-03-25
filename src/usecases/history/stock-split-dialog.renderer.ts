@@ -47,7 +47,7 @@ export class StockSplitDialogRenderer extends Renderer {
         let cancelButton = document.createElement("button");
         cancelButton.className = "cancel";
         cancelButton.innerText = "Cancel";
-        cancelButton.addEventListener("click", (e: Event) => {
+        cancelButton.addEventListener("click", _ => {
             this.reset();
         });
 
