@@ -16,13 +16,15 @@ export class TransactionMapper {
         let transaction: Transaction;
 
         const transactionFactory = new TransactionFactory();
-        transaction = transactionFactory.createTransaction(option, id, stock, price, quantity, new Date(date), splitFactor)
+        console.log(option, id, stock, price, quantity, "--- " + date + "----", splitFactor);
+        console.log(option, id, stock, price, quantity, new Date(date), splitFactor);
+        transaction = transactionFactory.createTransaction(option, id, stock, price, quantity, new Date(date), splitFactor);
 
         return transaction;
     }
 
     static DatabaseObjectFromTransaction(transaction: Transaction): ITransactionDatabaseModel {
-        let option = (transaction instanceof PurchaseTransaction) ? 1 : 2;
+        let option = (transaction instanceof PurchaseTransaction) ? 0 : 1;
 
         return {
             id: transaction.id,
