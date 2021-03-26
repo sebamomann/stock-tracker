@@ -32,9 +32,7 @@ export class StockInformationRenderer extends Renderer {
     }
 
     private image() {
-        let infoWrapper = document.createElement('div');
-        infoWrapper.className = "image-wrapper";
-
+        let infoWrapper = this.htmlDiv(["image-wrapper"]);
         const image = this.htmlImage();
 
         infoWrapper.append(image);
@@ -43,8 +41,7 @@ export class StockInformationRenderer extends Renderer {
     }
 
     private info() {
-        let infoWrapper = document.createElement('div');
-        infoWrapper.className = "info-wrapper";
+        let infoWrapper = this.htmlDiv(["info-wrapper"]);
 
         const name = this.htmlName();
         const ticker = this.htmlTicker();
@@ -60,8 +57,11 @@ export class StockInformationRenderer extends Renderer {
     }
 
     private advanced() {
-        let infoWrapper = document.createElement('div');
-        infoWrapper.className = "info-wrapper advanced";
+        const divClasses = [
+            "info-wrapper",
+            "advanced"
+        ];
+        const infoWrapper = this.htmlDiv(divClasses);
 
         const ceo = this.htmlCeo();
         const address = this.htmlAddress();
@@ -77,8 +77,11 @@ export class StockInformationRenderer extends Renderer {
     }
 
     private web() {
-        let infoWrapper = document.createElement('div');
-        infoWrapper.className = "info-wrapper - web";
+        const divClasses = [
+            "info-wrapper",
+            "web"
+        ];
+        const infoWrapper = this.htmlDiv(divClasses);
 
         const web = this.htmlWeb();
 
@@ -90,15 +93,26 @@ export class StockInformationRenderer extends Renderer {
     private htmlImage() {
         let src = this.stock.getRaw().image;
 
-        return this.htmlImg("info-image table-div", src);
+        const imgClasses = [
+            "info-image",
+            "table-div"
+        ]
+
+
+        return this.htmlImg(imgClasses, src);
     }
 
     private htmlName() {
         let name = this.stock.name;
 
-        const div = this.htmlDiv("info-name table-div");
-        const span1 = this.htmlSpan("", `Name`);
-        const span2 = this.htmlSpan("", `${name}`);
+        const divClasses = [
+            "info-name",
+            "table-div"
+        ]
+
+        const div = this.htmlDiv(divClasses);
+        const span1 = this.htmlSpan([], `Name`);
+        const span2 = this.htmlSpan([], `${name}`);
 
         div.appendChild(span1);
         div.appendChild(span2);
@@ -109,9 +123,14 @@ export class StockInformationRenderer extends Renderer {
     private htmlTicker() {
         let ticker = this.stock.ticker;
 
-        const div = this.htmlDiv("info-ticker table-div");
-        const span1 = this.htmlSpan("", `Ticker`);
-        const span2 = this.htmlSpan("", `${ticker}`);
+        const divClasses = [
+            "info-ticker",
+            "table-div"
+        ]
+
+        const div = this.htmlDiv(divClasses);
+        const span1 = this.htmlSpan([], `Ticker`);
+        const span2 = this.htmlSpan([], `${ticker}`);
 
         div.appendChild(span1);
         div.appendChild(span2);
@@ -122,9 +141,14 @@ export class StockInformationRenderer extends Renderer {
     private htmlCurrency() {
         let currency = this.stock.getRaw().currency;
 
-        const div = this.htmlDiv("info-currency table-div");
-        const span1 = this.htmlSpan("", `Currency`);
-        const span2 = this.htmlSpan("", `${currency}`);
+        const divClasses = [
+            "info-currency",
+            "table-div"
+        ]
+
+        const div = this.htmlDiv(divClasses);
+        const span1 = this.htmlSpan([], `Currency`);
+        const span2 = this.htmlSpan([], `${currency}`);
 
         div.appendChild(span1);
         div.appendChild(span2);
@@ -135,9 +159,14 @@ export class StockInformationRenderer extends Renderer {
     private htmlCountry() {
         let country = this.stock.getRaw().country;
 
-        const div = this.htmlDiv("info-country table-div");
-        const span1 = this.htmlSpan("", `Country`);
-        const span2 = this.htmlSpan("", `${country}`);
+        const divClasses = [
+            "info-country",
+            "table-div"
+        ]
+
+        const div = this.htmlDiv(divClasses);
+        const span1 = this.htmlSpan([], `Country`);
+        const span2 = this.htmlSpan([], `${country}`);
 
         div.appendChild(span1);
         div.appendChild(span2);
@@ -148,9 +177,14 @@ export class StockInformationRenderer extends Renderer {
     private htmlCeo() {
         let ceo = this.stock.getRaw().ceo;
 
-        const div = this.htmlDiv("advanced-ceo table-div");
-        const span1 = this.htmlSpan("", `CEO`);
-        const span2 = this.htmlSpan("", `${ceo}`);
+        const divClasses = [
+            "advanced-ceo",
+            "table-div"
+        ]
+
+        const div = this.htmlDiv(divClasses);
+        const span1 = this.htmlSpan([], `CEO`);
+        const span2 = this.htmlSpan([], `${ceo}`);
 
         div.appendChild(span1);
         div.appendChild(span2);
@@ -161,9 +195,14 @@ export class StockInformationRenderer extends Renderer {
     private htmlAddress() {
         let address = this.stock.getRaw().address;
 
-        const div = this.htmlDiv("advanced-address table-div");
-        const span1 = this.htmlSpan("", `Address`);
-        const span2 = this.htmlSpan("", `${address}`);
+        const divClasses = [
+            "advanced-address",
+            "table-div"
+        ]
+
+        const div = this.htmlDiv(divClasses);
+        const span1 = this.htmlSpan([], `Address`);
+        const span2 = this.htmlSpan([], `${address}`);
 
         div.appendChild(span1);
         div.appendChild(span2);
@@ -174,9 +213,14 @@ export class StockInformationRenderer extends Renderer {
     private htmlCity() {
         let city = this.stock.getRaw().city;
 
-        const div = this.htmlDiv("advanced-city table-div");
-        const span1 = this.htmlSpan("", `City`);
-        const span2 = this.htmlSpan("", `${city}`);
+        const divClasses = [
+            "advanced-city",
+            "table-div"
+        ]
+
+        const div = this.htmlDiv(divClasses);
+        const span1 = this.htmlSpan([], `City`);
+        const span2 = this.htmlSpan([], `${city}`);
 
         div.appendChild(span1);
         div.appendChild(span2);
@@ -187,9 +231,14 @@ export class StockInformationRenderer extends Renderer {
     private htmlState() {
         let state = this.stock.getRaw().state;
 
-        const div = this.htmlDiv("advanced-state table-div");
-        const span1 = this.htmlSpan("", `State`);
-        const span2 = this.htmlSpan("", `${state}`);
+        const divClasses = [
+            "advanced-state",
+            "table-div"
+        ]
+
+        const div = this.htmlDiv(divClasses);
+        const span1 = this.htmlSpan([], `State`);
+        const span2 = this.htmlSpan([], `${state}`);
 
         div.appendChild(span1);
         div.appendChild(span2);
@@ -200,20 +249,29 @@ export class StockInformationRenderer extends Renderer {
     private htmlWeb() {
         let web = this.stock.getRaw().website;
 
-        const div = this.htmlDiv("web-web table-div");
-        const span1 = this.htmlSpan("", `Website`);
-        const a = this.htmlLink("", web, `${web}`);
+        const divClasses = [
+            "web-web",
+            "table-div"
+        ]
 
-        div.appendChild(span1);
+        const div = this.htmlDiv(divClasses);
+        const span = this.htmlSpan([], `Website`);
+        const a = this.htmlLink([], web, `${web}`);
+
+        div.appendChild(span);
         div.appendChild(a);
 
         return div;
     }
 
     private htmlNavigateToTransactionList() {
-        let navigateToTransactionList = document.createElement('button');
-        navigateToTransactionList.className = "stock-transaction-button button main-button margin"
-        navigateToTransactionList.innerText = "Zu den Transaktionen";
+        const buttonClasses = [
+            "stock-transaction-button ",
+            "main-button",
+            "margin"
+        ];
+        const buttonText = "Zu den Transaktionen";
+        let navigateToTransactionList = this.htmlButton(buttonClasses, buttonText);
 
         navigateToTransactionList.addEventListener("click",
             this.navigateToTransactionClickListener()

@@ -29,8 +29,7 @@ export class DashboardRenderer extends Renderer {
     }
 
     private htmlStockList() {
-        const stockListWrapper = document.createElement('div');
-        stockListWrapper.className = "stock-list-wrapper";
+        const stockListWrapper = this.htmlDiv(["stock-list-wrapper"]);
 
         this.htmlCheckEmptyList(stockListWrapper);
 
@@ -45,13 +44,17 @@ export class DashboardRenderer extends Renderer {
     }
 
     private htmlStockBlock(fStock: Stock) {
-        const stockBlock = document.createElement('div')!;
-        stockBlock.className = "stock-block block";
+        const divClasses = [
+            "block",
+            "stock-block"
+        ]
+        const stockBlock = this.htmlDiv(divClasses);
+
         stockBlock.addEventListener("click",
             this.stockClickEventListener(fStock)
         );
 
-        const stockBlockImg = this.htmlImg("", fStock.getRaw().image);
+        const stockBlockImg = this.htmlImg([], fStock.getRaw().image);
         const stockBlockInfo = this.htmLStockBlockInfo(fStock);
 
         stockBlock.append(stockBlockImg);
@@ -61,7 +64,7 @@ export class DashboardRenderer extends Renderer {
     }
 
     private htmLStockBlockInfo(fStock: Stock) {
-        const div = document.createElement('div');
+        const div = this.htmlDiv();
 
         const stockTicker = this.htmlStockTicker(fStock);
         const stockName = this.htmlStockName(fStock);
@@ -73,21 +76,11 @@ export class DashboardRenderer extends Renderer {
     }
 
     private htmlStockName(fStock: Stock) {
-        const stockName = document.createElement('span');
-
-        stockName.className = "stock-name";
-        stockName.innerText = fStock.name;
-
-        return stockName;
+        return this.htmlSpan(["stock-name"], fStock.name)
     }
 
     private htmlStockTicker(fStock: Stock) {
-        const stockTicker = document.createElement('span');
-
-        stockTicker.className = "stock-ticker";
-        stockTicker.innerText = fStock.ticker;
-
-        return stockTicker;
+        return this.htmlSpan(["stock-ticker"], fStock.ticker)
     }
 
     private stockClickEventListener(fStock: Stock) {
@@ -135,20 +128,23 @@ export class DashboardRenderer extends Renderer {
     }
 
     private htmlActionsDiv() {
-        let actionsHTML = document.createElement('div');
+        let actionsHTML = this.htmlDiv(["actions"]);
 
-        actionsHTML.className = "actions";
         actionsHTML.id = "actions";
 
         return actionsHTML;
     }
 
     private htmlCreateTransactionButton() {
-        let createButton = document.createElement('button');
+        const buttonClasses = [
+            "create-transaction",
+            "button",
+            "main-button"
+        ]
 
-        createButton.className = "create-transaction button main-button"
+        let createButton = this.htmlButton(buttonClasses, "Add Transaction");
+
         createButton.id = "create-transaction"
-        createButton.innerText = "Add Transaction";
 
         createButton.addEventListener("click",
             this.createTransactionClickListener()
@@ -203,12 +199,13 @@ export class DashboardRenderer extends Renderer {
 
     private htmlCheckEmptyList(stockListWrapper: HTMLDivElement): void {
         if (this.stockList.getList().length === 0) {
-            const stockTicker = document.createElement('span');
+            const text = "Noch keine Transaktionen Hinterlegt. Bitte füge eine Transaktion hinzu.";
+            const classes = ["empty-list"];
 
-            stockTicker.className = "empty-list";
-            stockTicker.innerText = "Noch keine Transaktionen Hinterlegt. Bitte füge eine Transaktion hinzu."
+            const stockTicker = this.htmlSpan(classes, text);
 
             stockListWrapper.append(stockTicker)
         }
     }
+
 }

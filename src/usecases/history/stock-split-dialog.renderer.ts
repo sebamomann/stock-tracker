@@ -32,11 +32,9 @@ export class StockSplitDialogRenderer extends Renderer {
     }
 
     private htmlHeader() {
-        let headerHTML = document.createElement("h2");
+        let headerHTML = this.htmlH2(["title"], "Stock split");
 
         headerHTML.id = "create-transaction-header";
-        headerHTML.className = "title";
-        headerHTML.innerText = "Stock split";
 
         return headerHTML;
     }
@@ -59,10 +57,13 @@ export class StockSplitDialogRenderer extends Renderer {
     }
 
     private htmlCancelButton() {
-        let cancelButton = document.createElement("button");
+        const buttonClasses = [
+            "cancel",
+            "button"
+        ];
+        const buttonText = "Cancel";
+        let cancelButton = this.htmlButton(buttonClasses, buttonText);
 
-        cancelButton.className = "cancel button";
-        cancelButton.innerText = "Cancel";
 
         cancelButton.addEventListener("click", _ => {
             this.emit("cancel")
@@ -92,11 +93,15 @@ export class StockSplitDialogRenderer extends Renderer {
     }
 
     private htmlSubmitButton() {
-        let submit = document.createElement("button");
+        const buttonClasses = [
+            "stock-split-button",
+            "button",
+            "main-button"
+        ]
+        const buttonText = "Submit"
+        const submit = this.htmlButton(buttonClasses, buttonText);
 
-        submit.className = "stock-split-button button main-button"
         submit.type = "submit";
-        submit.innerText = "submit";
 
         submit.addEventListener('click',
             this.stockSplitSubmitClickListener()

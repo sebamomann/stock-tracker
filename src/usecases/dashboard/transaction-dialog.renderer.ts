@@ -35,11 +35,9 @@ export class TransactionDialogRenderer extends Renderer {
     }
 
     private htmlHeader() {
-        let headerHTML = document.createElement("h2");
+        let headerHTML = this.htmlH2(["title"], "Create transaction");
 
         headerHTML.id = "create-transaction-header";
-        headerHTML.className = "title";
-        headerHTML.innerText = "Create transaction";
 
         return headerHTML;
     }
@@ -91,9 +89,7 @@ export class TransactionDialogRenderer extends Renderer {
     }
 
     private htmlFormActions() {
-        let formActions = document.createElement("div");
-
-        formActions.className = "form-actions";
+        let formActions = this.htmlDiv(["form-actions"]);
 
         let submitButton = this.htmlSubmitButton();
         let cancelButton = this.htmlCancelButton();
@@ -104,21 +100,28 @@ export class TransactionDialogRenderer extends Renderer {
     }
 
     private htmlSubmitButton() {
-        let submitButton = document.createElement("button");
+        const buttonClasses = [
+            "button",
+            "main-button"
+        ];
+        const buttonText = "submit";
 
-        submitButton.className = "button main-button"
+        let submitButton = this.htmlButton(buttonClasses, buttonText);
+
         submitButton.type = "submit";
-        submitButton.innerText = "submit";
         submitButton.addEventListener('click', this.submitButtonClickListener());
 
         return submitButton;
     }
 
     private htmlCancelButton() {
-        let cancelButton = document.createElement("button");
+        const buttonClasses = [
+            "button",
+            "cancel"
+        ];
+        const buttonText = "submit";
 
-        cancelButton.className = "button cancel"
-        cancelButton.innerText = "Cancel";
+        let cancelButton = this.htmlButton(buttonClasses, buttonText);
         cancelButton.addEventListener("click", this.cancelButtonClickListener());
 
         return cancelButton;

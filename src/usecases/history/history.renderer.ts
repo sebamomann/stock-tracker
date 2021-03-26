@@ -40,15 +40,13 @@ export class HistoryRenderer extends Renderer {
     private htmlHistoryHeader() {
         const stock = this.history.stock;
 
-        const historyHeader = document.createElement('div');
-
-        historyHeader.className = "history-header";
+        const historyHeader = this.htmlDiv(["history-header"])
 
         const stockTicker = this.htmlStockTicker(stock);
         const stockName = this.htmlStockName(stock);
 
         const stockInformationButton = this.htmlStockInformationButton();
-        const toDashboardButton = this.htmlBackToDashboardButton();
+        const toDashboardButton = this.htmlNavigateToDashboardButton();
 
         historyHeader.appendChild(stockTicker);
         historyHeader.appendChild(stockName);
@@ -59,25 +57,22 @@ export class HistoryRenderer extends Renderer {
     }
 
     private htmlStockTicker(stock: Stock) {
-        const stockTicker = document.createElement('h1');
-
-        stockTicker.className = "stock-ticker";
-        stockTicker.innerText = stock.ticker;
-
-        return stockTicker;
+        return this.htmlH1(["stock-ticker"], stock.ticker);
     }
 
     private htmlStockName(stock: Stock) {
-        const stockName = document.createElement('h2');
-        stockName.className = "stock-name";
-        stockName.innerText = stock.name;
-        return stockName;
+        return this.htmlH2(["stock-name"], stock.name);
     }
 
     private htmlStockInformationButton() {
-        let stockInformationButton = document.createElement('button');
-        stockInformationButton.className = "stock-information-button button main-button inline"
-        stockInformationButton.innerText = "Mehr";
+        const buttonClasses = [
+            "stock-information-button",
+            "button",
+            "main-button",
+            "inline"
+        ];
+        const buttonText = "Mehr";
+        let stockInformationButton = this.htmlButton(buttonClasses, buttonText)
 
         stockInformationButton.addEventListener("click",
             this.stockInformationClickListener()
@@ -87,22 +82,25 @@ export class HistoryRenderer extends Renderer {
     }
 
 
-    private htmlBackToDashboardButton() {
-        let toDashboardButton = document.createElement('button');
-        toDashboardButton.className = "dashboard-button button decent-button inline"
-        toDashboardButton.innerText = "Dashboard";
+    private htmlNavigateToDashboardButton() {
+        const buttonClasses = [
+            "dashboard-button",
+            "button",
+            "main-button",
+            "inline"
+        ];
+        const buttonText = "Dashboard";
+        const navigateToDashboardButton = this.htmlButton(buttonClasses, buttonText)
 
-        toDashboardButton.addEventListener("click",
+        navigateToDashboardButton.addEventListener("click",
             this.toDashboardClickListener()
         );
 
-        return toDashboardButton;
+        return navigateToDashboardButton;
     }
 
     private async htmlHistoryWrapper() {
-        const historyWrapper = document.createElement('div');
-        historyWrapper.className = "history-wrapper";
-
+        const historyWrapper = this.htmlDiv(["history-wrapper"]);
         const transactionListWrapper = this.htmlTransactionList();
         const historyDetails = await this.htmlHistoryDetails();
 
@@ -113,8 +111,7 @@ export class HistoryRenderer extends Renderer {
     }
 
     private htmlTransactionList() {
-        const transactionHistoryWrapper = document.createElement('div');
-        transactionHistoryWrapper.className = "transaction-history-wrapper";
+        const transactionHistoryWrapper = this.htmlDiv(["transaction-history-wrapper"]);
 
         this.history
             .transactions
@@ -130,11 +127,10 @@ export class HistoryRenderer extends Renderer {
     }
 
     private htmlTransactionBlock(fTransaction: Transaction) {
-        const transactionBlock = document.createElement('div')!;
         const classes = ["transaction-block", "block"];
 
         (fTransaction instanceof PurchaseTransaction) ? classes.push("purchase") : classes.push("sale")
-        transactionBlock.className = classes.join(" ");
+        const transactionBlock = this.htmlDiv(classes);
 
         const headlineHTML = this.htmlTransactionBlockHeadline(fTransaction);
         const dateHTML = this.htmlTransactionBlockDate(fTransaction);
@@ -149,27 +145,26 @@ export class HistoryRenderer extends Renderer {
     }
 
     private htmlTransactionBlockDate(fTransaction: Transaction) {
-        const dateHTML = document.createElement('span');
+        const text = `${String(fTransaction.date.toDateString())}`
+        const classes = ["date"]
 
-        dateHTML.className = "date";
-        dateHTML.innerText = `${String(fTransaction.date.toDateString())}`;
-
-        return dateHTML;
+        return this.htmlSpan(classes, text);
     }
 
     private htmlTransactionBlockHeadline(fTransaction: Transaction) {
-        const headlineHTML = document.createElement('h3');
+        const text = (fTransaction instanceof PurchaseTransaction) ? "Purchase" : "Sale";
+        const classes = ["headline"];
 
-        headlineHTML.className = "headline";
-        headlineHTML.innerText = (fTransaction instanceof PurchaseTransaction) ? "Purchase" : "Sale"
-
-        return headlineHTML;
+        return this.htmlH3(classes, text);
     }
 
     private async htmlHistoryDetails() {
-        const historyDetails = document.createElement('div');
+        const divClasses = [
+            "history-details",
+            "block"
+        ];
 
-        historyDetails.className = "history-details block";
+        const historyDetails = this.htmlDiv(divClasses);
 
         const quantityOwnedHTML = this.htmlQuantityOwned();
         const priceBalanceHTML = this.htmlPriceBalance();
@@ -187,7 +182,7 @@ export class HistoryRenderer extends Renderer {
         // let formHTML = document.createElement("form");
         // formHTML.id = "timeframe-form";
         //
-        // const spanTimeframe = this.htmlSpan("", `Zeitraum (optional)`);
+        // const spanTimeframe = this.htmlSpan([], `Zeitraum (optional)`);
         // formHTML.appendChild(spanTimeframe);
         //
         // let dateInputStart = document.createElement("input");
@@ -225,9 +220,14 @@ export class HistoryRenderer extends Renderer {
     private htmlQuantityOwned() {
         let quantityOwned = this.history.numberOfOwnedStocks();
 
-        const div = this.htmlDiv("owned-quantity table-div");
-        const span1 = this.htmlSpan("", `Owned`);
-        const span2 = this.htmlSpan("", `${String(quantityOwned)} pcs.`);
+        const divClasses = [
+            "owned-quantity",
+            "table-div"
+        ]
+
+        const div = this.htmlDiv(divClasses);
+        const span1 = this.htmlSpan([], `Owned`);
+        const span2 = this.htmlSpan([], `${String(quantityOwned)} pcs.`);
 
         div.appendChild(span1);
         div.appendChild(span2);
@@ -238,9 +238,14 @@ export class HistoryRenderer extends Renderer {
     private htmlPriceBalance() {
         let priceBalance = this.history.totalTransactionBalance();
 
-        const div = this.htmlDiv("price-balance table-div");
-        const span1 = this.htmlSpan("", `Price Balance`);
-        const span2 = this.htmlSpan("", `${String(Math.round(priceBalance))}€`);
+        const divClasses = [
+            "price-balance",
+            "table-div"
+        ]
+
+        const div = this.htmlDiv(divClasses);
+        const span1 = this.htmlSpan([], `Price Balance`);
+        const span2 = this.htmlSpan([], `${String(Math.round(priceBalance))}€`);
 
         div.appendChild(span1);
         div.appendChild(span2);
@@ -251,9 +256,14 @@ export class HistoryRenderer extends Renderer {
     private async htmlCurrentWorth() {
         let currentWorth = await this.history.totalWorthOfCurrentlyOwnedStocks();
 
-        const div = this.htmlDiv("current-worth table-div");
-        const span1 = this.htmlSpan("", `Current Worth`);
-        const span2 = this.htmlSpan("", `${String(Math.round(currentWorth))}€`);
+        const divClasses = [
+            "current-worth",
+            "table-div"
+        ]
+
+        const div = this.htmlDiv(divClasses);
+        const span1 = this.htmlSpan([], `Current Worth`);
+        const span2 = this.htmlSpan([], `${String(Math.round(currentWorth))}€`);
 
         div.appendChild(span1);
         div.appendChild(span2);
@@ -264,9 +274,14 @@ export class HistoryRenderer extends Renderer {
     private async htmlStockPrice() {
         let stockPrice = await this.history.stock.getPrice();
 
-        const div = this.htmlDiv("current-worth-per-stock table-div");
-        const span1 = this.htmlSpan("", `Worth per Stock`);
-        const span2 = this.htmlSpan("", `${String(Math.round((stockPrice + Number.EPSILON) * 100) / 100)}€`);
+        const divClasses = [
+            "current-worth-per-stock",
+            "table-div"
+        ]
+
+        const div = this.htmlDiv(divClasses);
+        const span1 = this.htmlSpan([], `Worth per Stock`);
+        const span2 = this.htmlSpan([], `${String(Math.round((stockPrice + Number.EPSILON) * 100) / 100)}€`);
 
         div.appendChild(span1);
         div.appendChild(span2);
@@ -280,9 +295,14 @@ export class HistoryRenderer extends Renderer {
 
         let potentialWinTotal = priceBalance + htmlPotentialWinTotal;
 
-        const div = this.htmlDiv("potential-win-total table-div");
-        const span1 = this.htmlSpan("", `Potential Win Total`);
-        const span2 = this.htmlSpan("", `${String(Math.round(potentialWinTotal))}€`);
+        const divClasses = [
+            "potential-win-total",
+            "table-div"
+        ]
+
+        const div = this.htmlDiv(divClasses);
+        const span1 = this.htmlSpan([], `Potential Win Total`);
+        const span2 = this.htmlSpan([], `${String(Math.round(potentialWinTotal))}€`);
 
         div.appendChild(span1);
         div.appendChild(span2);
@@ -313,24 +333,27 @@ export class HistoryRenderer extends Renderer {
     }
 
     private htmlActionsDiv() {
-        const actionsHTML = document.createElement('div');
+        const actionsHTML = this.htmlDiv(["actions"]);
 
-        actionsHTML.className = "actions";
         actionsHTML.id = "actions";
 
         return actionsHTML;
     }
 
     private htmlTransactionBlockDetails(fTransaction: ITransaction) {
-        const detailsHTML = document.createElement('div')!;
-        detailsHTML.className = "details";
+        const detailsHTML = this.htmlDiv(["details"])
 
-        let text = `Quantity: ${String(fTransaction.quantity * fTransaction.splitFactor)}`;
-        text += " - ";
-        text += `Incl split: ${fTransaction.splitFactor}`;
+        let quantityText = `Quantity: ${String(fTransaction.quantity * fTransaction.splitFactor)}`;
+        quantityText += " - ";
+        quantityText += `Incl split: ${fTransaction.splitFactor}`;
+        const quantityClasses = ["quantity"];
 
-        const quantityHTML = this.htmlSpan("quantity", text);
-        const priceHTML = this.htmlSpan("price", `Total: ${String(fTransaction.price)}€`);
+        const quantityHTML = this.htmlSpan(quantityClasses, quantityText);
+
+        const priceClasses = ["price"];
+        const priceText = `Total: ${String(fTransaction.price)}€`;
+
+        const priceHTML = this.htmlSpan(priceClasses, priceText);
 
         detailsHTML.appendChild(quantityHTML);
         detailsHTML.appendChild(priceHTML);
@@ -353,19 +376,16 @@ export class HistoryRenderer extends Renderer {
         };
     }
 
-    private htmlStockSplitFormWrapper() {
-        const stockSplitForm = document.createElement('div');
-
-        stockSplitForm.id = "stock-split-form-wrapper";
-
-        return stockSplitForm;
-    }
-
     private htmlStockSplitButton() {
-        let stockSplitButton = document.createElement('button');
-        stockSplitButton.className = "stock-split-button button main-button"
+        const buttonClasses = [
+            "stock-split-button",
+            "button",
+            "main-button"
+        ];
+        const buttonText = "Stock Split";
+
+        const stockSplitButton = this.htmlButton(buttonClasses, buttonText);
         stockSplitButton.id = "stock-split-button";
-        stockSplitButton.innerText = "Stock Split";
 
         stockSplitButton.addEventListener("click",
             this.stockSplitClickEventListener()
