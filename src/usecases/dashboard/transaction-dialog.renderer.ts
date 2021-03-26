@@ -96,7 +96,7 @@ export class TransactionDialogRenderer extends Renderer {
         formActions.className = "form-actions";
 
         let submitButton = this.htmlSubmitButton();
-        let cancelButton = this.htmlCancelButton(submitButton);
+        let cancelButton = this.htmlCancelButton();
 
         formActions.append(submitButton);
         formActions.append(cancelButton);
@@ -114,10 +114,10 @@ export class TransactionDialogRenderer extends Renderer {
         return submitButton;
     }
 
-    private htmlCancelButton(submitButton: HTMLButtonElement) {
+    private htmlCancelButton() {
         let cancelButton = document.createElement("button");
 
-        submitButton.className = "button cancel"
+        cancelButton.className = "button cancel"
         cancelButton.innerText = "Cancel";
         cancelButton.addEventListener("click", this.cancelButtonClickListener());
 
