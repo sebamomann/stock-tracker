@@ -47,6 +47,7 @@ export class Database {
         // create array for stock if not existing
         if (!data[stock.ticker]) {
             prod.info(`New Subarray for: ${stock.ticker}`);
+
             data[stock.ticker] = []
         }
 

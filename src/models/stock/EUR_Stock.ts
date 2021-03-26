@@ -6,10 +6,11 @@ export class EUR_Stock extends Stock {
         super(ticker, name, price, raw);
     }
 
-    // Override
     async getPrice(): Promise<number> {
-        return new Promise((resolve) => {
-            return resolve(this.pricing);
-        });
+        return new Promise(
+            (resolve) => {
+                return resolve(this.pricing);
+            }
+        );
     }
 }

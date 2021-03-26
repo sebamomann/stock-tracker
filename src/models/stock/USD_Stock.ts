@@ -10,10 +10,11 @@ export class USD_Stock extends Stock {
 
     }
 
-    // Override
     async getPrice(): Promise<number> {
+        const url = 'https://api.exchangeratesapi.io/latest?base=USD';
+
         const responseCurrency = await axios
-            .get('https://api.exchangeratesapi.io/latest?base=USD',
+            .get(url,
                 {
                     headers: {}
                 }

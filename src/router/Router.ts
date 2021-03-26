@@ -9,6 +9,5 @@ export class Router {
      * Route based on URL Path
      */
     public async route() {
-
     }
 }

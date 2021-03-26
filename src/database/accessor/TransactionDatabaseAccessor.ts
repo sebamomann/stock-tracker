@@ -8,11 +8,11 @@ export class TransactionDatabaseAccessor implements ITransactionAccessor {
     constructor() {
     }
 
-    getData(): ITransaction[] {
+    public getData(): ITransaction[] {
         return Database.getData();
     }
 
-    getTransactionsByStock(stock: Stock): ITransaction[] {
+    public getTransactionsByStock(stock: Stock): ITransaction[] {
         const rawTransactions: any = Database.loadTransactionsOfStock(stock);
 
         let output: ITransaction[] = [];
@@ -20,7 +20,8 @@ export class TransactionDatabaseAccessor implements ITransactionAccessor {
         if (rawTransactions) {
             rawTransactions.forEach(
                 (fTransaction: any) => {
-                    const databaseObjectFromTransaction = TransactionMapper.transactionFromDatabaseObject(fTransaction, stock);
+                    const databaseObjectFromTransaction = TransactionMapper
+                        .transactionFromDatabaseObject(fTransaction, stock);
 
                     output.push(databaseObjectFromTransaction);
                 });
@@ -29,13 +30,13 @@ export class TransactionDatabaseAccessor implements ITransactionAccessor {
         return output;
     }
 
-    updateTransaction(transaction: ITransaction): void {
+    public updateTransaction(transaction: ITransaction): void {
         const convertedTransaction = TransactionMapper.DatabaseObjectFromTransaction(transaction);
 
         Database.updateTransaction(transaction.stock, convertedTransaction);
     }
 
-    createTransaction(transaction: ITransaction): void {
+    public createTransaction(transaction: ITransaction): void {
         const convertedTransaction = TransactionMapper.DatabaseObjectFromTransaction(transaction);
 
         Database.createTransaction(transaction.stock, convertedTransaction);

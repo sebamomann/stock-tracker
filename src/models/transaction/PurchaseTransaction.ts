@@ -6,7 +6,6 @@ export class PurchaseTransaction extends Transaction {
         super(id, stock, price, quantity, date, splitFactor);
     }
 
-    // override
     getTransactionPrice(): number {
         return -this.price;
     }
