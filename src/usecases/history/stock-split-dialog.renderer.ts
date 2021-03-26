@@ -1,6 +1,7 @@
 import {Renderer} from "../Renderer";
 import {History} from "../../models/History";
 
+// noinspection JSMethodCanBeStatic
 export class StockSplitDialogRenderer extends Renderer {
     private history: History;
 

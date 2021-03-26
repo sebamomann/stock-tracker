@@ -6,7 +6,7 @@ import {History} from "../../models/History";
 import {TransactionDatabaseAccessor} from "../../database/accessor/TransactionDatabaseAccessor";
 
 export class StockInformationRenderer extends Renderer {
-    private stock: IStock;
+    private readonly stock: IStock;
 
     constructor(stock: IStock) {
         super();
@@ -23,7 +23,7 @@ export class StockInformationRenderer extends Renderer {
         const info = this.info();
         const advanced = this.advanced();
         const web = this.web();
-        const toTransactionList = this.htmlToTransactionList();
+        const toTransactionList = this.htmlNavigateToTransactionList();
 
         wrapper.appendChild(image);
         wrapper.appendChild(info);
@@ -93,9 +93,7 @@ export class StockInformationRenderer extends Renderer {
     private htmlImage() {
         let src = this.stock.getRaw().image;
 
-        const img = this.htmlImg("info-image table-div", src);
-
-        return img;
+        return this.htmlImg("info-image table-div", src);
     }
 
     private htmlName() {
@@ -215,29 +213,34 @@ export class StockInformationRenderer extends Renderer {
         return div;
     }
 
-    private htmlToTransactionList() {
-        let stockTransactionListButton = document.createElement('button');
-        stockTransactionListButton.className = "stock-transaction-button button main-button margin"
-        stockTransactionListButton.innerText = "Zu den Transaktionen";
+    private htmlNavigateToTransactionList() {
+        let navigateToTransactionList = document.createElement('button');
+        navigateToTransactionList.className = "stock-transaction-button button main-button margin"
+        navigateToTransactionList.innerText = "Zu den Transaktionen";
 
-        stockTransactionListButton.addEventListener("click",
-            _ => {
-                if (window.history.pushState) {
-                    const newUrl = window.location.protocol + "//" + window.location.host + "/stock" + '?ticker=' + this.stock.ticker;
-                    window.history.pushState({path: newUrl}, '', newUrl);
-                }
+        navigateToTransactionList.addEventListener("click",
+            this.navigateToTransactionClickListener()
+        );
 
-                const transactionDatabaseAccessor = new TransactionDatabaseAccessor();
-                const history = new History(transactionDatabaseAccessor, this.stock);
+        return navigateToTransactionList;
+    }
 
-                let historyRenderer = new HistoryRenderer(history);
-                historyRenderer.render()
-                    .then(
-                        _ => {
-                        }
-                    );
-            });
+    private navigateToTransactionClickListener() {
+        return () => {
+            if (window.history.pushState) {
+                const newUrl = window.location.protocol + "//" + window.location.host + "/stock" + '?ticker=' + this.stock.ticker;
+                window.history.pushState({path: newUrl}, '', newUrl);
+            }
 
-        return stockTransactionListButton;
+            const transactionDatabaseAccessor = new TransactionDatabaseAccessor();
+            const history = new History(transactionDatabaseAccessor, this.stock);
+
+            let historyRenderer = new HistoryRenderer(history);
+            historyRenderer.render()
+                .then(
+                    _ => {
+                    }
+                );
+        };
     }
 }
