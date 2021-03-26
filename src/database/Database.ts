@@ -1,4 +1,4 @@
-import {prod} from "../configuration/Logger";
+import {routeLogging} from "../configuration/Logger";
 import {Stock} from "../models/stock/Stock";
 import {Transaction} from "../models/transaction/Transaction";
 import {ITransactionDatabaseModel} from "./models/ITransactionDatabase.model";
@@ -17,7 +17,7 @@ export class Database {
         let data = this.getData();
         let tickers = Object.getOwnPropertyNames(data);
 
-        prod.info("Loaded Ticker List: " + JSON.stringify(tickers));
+        routeLogging.info("Loaded Ticker List: " + JSON.stringify(tickers));
 
         return tickers;
     }
@@ -46,15 +46,15 @@ export class Database {
 
         // create array for stock if not existing
         if (!data[stock.ticker]) {
-            prod.info(`New Subarray for: ${stock.ticker}`);
+            routeLogging.info(`New Subarray for: ${stock.ticker}`);
 
             data[stock.ticker] = []
         }
 
         data[stock.ticker] = [transaction, ...data[stock.ticker]];
 
-        prod.info(`DB OBJ from Transaction: ${JSON.stringify(transaction)}`);
-        prod.info(`Store to Ticker: ${stock.ticker}`);
+        routeLogging.info(`DB OBJ from Transaction: ${JSON.stringify(transaction)}`);
+        routeLogging.info(`Store to Ticker: ${stock.ticker}`);
 
         localStorage.setItem("database", JSON.stringify({...data}));
     }

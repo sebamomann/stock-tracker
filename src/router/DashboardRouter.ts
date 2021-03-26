@@ -1,20 +1,25 @@
 import {Router} from "./Router";
 import {StockList} from "../models/stock/StockList";
 import {DashboardRenderer} from "../usecases/dashboard/dashboard.renderer";
-import {prod} from "../configuration/Logger";
+import {routeLogging} from "../configuration/Logger";
 
 export class DashboardRouter extends Router {
 
     constructor(path: string) {
         super(path);
 
-        this.route().then(_ => {
-            prod.info("ROUTER - Dashboard route initialized");
-        });
+        routeLogging.info("Constructing DASHBOARD Router");
+
+        this.route()
+            .then(
+                _ => {
+                    routeLogging.info("Successfully routed DASHBOARD Route");
+                }
+            );
     }
 
     public async route() {
-        prod.info("ROUTER - Dashboard route called");
+        routeLogging.info("Routing DASHBOARD ...");
 
         const pathArray = this.path.split("/");
         const currentPath = pathArray[0];

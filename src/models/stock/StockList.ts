@@ -2,7 +2,7 @@ import {Stock} from "./Stock";
 import {Database} from "../../database/Database";
 import {StockFactory} from "./StockFactory";
 import {StockInfoService} from "../../service/StockInfoService";
-import {prod} from "../../configuration/Logger";
+import {routeLogging} from "../../configuration/Logger";
 
 export class StockList {
     private list: Stock[] = [];
@@ -31,7 +31,7 @@ export class StockList {
                 );
         }
 
-        prod.info(`Created Stocks by Profiles`);
+        routeLogging.info(`Created Stocks by Profiles`);
     }
 
     public add(stock: Stock) {

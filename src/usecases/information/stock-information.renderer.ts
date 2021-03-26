@@ -1,5 +1,5 @@
 import {Renderer} from "../Renderer";
-import {prod} from "../../configuration/Logger";
+import {routeLogging} from "../../configuration/Logger";
 import {IStock} from "../../interface/IStock";
 import {HistoryRenderer} from "../history/history.renderer";
 import {History} from "../../models/History";
@@ -31,7 +31,7 @@ export class StockInformationRenderer extends Renderer {
         wrapper.appendChild(web);
         wrapper.appendChild(toTransactionList);
 
-        prod.info(`Created HTML Stock-Info for StockInfoRenderer`);
+        routeLogging.info(`Created HTML Stock-Info for StockInfoRenderer`);
     }
 
     private image() {

@@ -1,4 +1,4 @@
-import {prod} from "../configuration/Logger";
+import {routeLogging} from "../configuration/Logger";
 
 const axios = require('axios').default;
 
@@ -22,7 +22,7 @@ export class StockInfoService {
                     }
                 )
 
-            prod.info(`Loaded Profiles for Tickers`);
+            routeLogging.info(`Loaded Profiles for Tickers`);
 
             return response.data;
         }

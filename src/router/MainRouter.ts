@@ -1,7 +1,7 @@
 import {Router} from "./Router";
 import {DashboardRouter} from "./DashboardRouter";
 import {StockRouter} from "./StockRouter";
-import {prod} from "../configuration/Logger";
+import {routeLogging} from "../configuration/Logger";
 import {StockInformationRouter} from "./StockInformationRouter";
 
 export class MainRouter extends Router {
@@ -9,20 +9,23 @@ export class MainRouter extends Router {
     constructor(path: string) {
         super(path);
 
-        prod.info("ROUTER - MAIN constructing ...");
+        routeLogging.info("Constructing MAIN Router");
 
         this.route()
             .then(
                 _ => {
-                    prod.info("ROUTER - Main route routed");
+                    routeLogging.info("Successfully routed MAIN Route");
 
+                    /**
+                     * When going back
+                     */
                     window.addEventListener('popstate', () => {
                         this.path = window.location.pathname;
 
                         this.route()
                             .then(
                                 _ => {
-                                    prod.info("ROUTER - Main route routed");
+                                    routeLogging.info("Successfully routed MAIN Route");
                                 }
                             );
                     });
@@ -31,14 +34,14 @@ export class MainRouter extends Router {
     }
 
     public async route() {
-        prod.info("ROUTER - Main route called");
+        routeLogging.info("Routing MAIN ...");
 
         const pathArray = this.path.split("/");
         const currentPath = pathArray[1];
 
         const redirectPath = pathArray.slice(2, pathArray.length);
 
-        prod.info(`ROUTER - Path: ${currentPath}`);
+        routeLogging.info(`MAIN routing to Path: ${currentPath}`);
 
         if (!currentPath) {
             new DashboardRouter(redirectPath.join("/"));

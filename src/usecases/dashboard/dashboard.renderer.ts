@@ -3,7 +3,7 @@ import {History} from "../../models/History";
 import {Renderer} from "../Renderer";
 import {HistoryRenderer} from "../history/history.renderer";
 import {TransactionDialogRenderer} from "./transaction-dialog.renderer";
-import {prod} from "../../configuration/Logger";
+import {routeLogging} from "../../configuration/Logger";
 import {Stock} from "../../models/stock/Stock";
 import {TransactionDatabaseAccessor} from "../../database/accessor/TransactionDatabaseAccessor";
 
@@ -28,7 +28,7 @@ export class DashboardRenderer extends Renderer {
         wrapper.appendChild(actions);
         wrapper.appendChild(stockList);
 
-        prod.info(`Created HTML Stock-List for Dashboard`);
+        routeLogging.info(`Created HTML Stock-List for Dashboard`);
     }
 
     private htmlStockList() {
@@ -134,7 +134,7 @@ export class DashboardRenderer extends Renderer {
             wrapper.append(actionsDiv);
         }
 
-        prod.info(`Created HTML Actions for Dashboard`);
+        routeLogging.info(`Created HTML Actions for Dashboard`);
 
         return actionsDiv;
     }

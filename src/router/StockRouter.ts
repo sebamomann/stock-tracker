@@ -1,5 +1,5 @@
 import {Router} from "./Router";
-import {prod} from "../configuration/Logger";
+import {routeLogging} from "../configuration/Logger";
 import {History} from "../models/History";
 import {HistoryRenderer} from "../usecases/history/history.renderer";
 import {StockFactory} from "../models/stock/StockFactory";
@@ -11,16 +11,18 @@ export class StockRouter extends Router {
     constructor(path: string) {
         super(path);
 
+        routeLogging.info("Constructing STOCK Router");
+
         this.route()
             .then(
                 _ => {
-                    prod.info("ROUTER - Stock route routed");
+                    routeLogging.info("Successfully routed STOCK Route");
                 }
             );
     }
 
     public async route() {
-        prod.info("ROUTER - Stock route called");
+        routeLogging.info("Routing STOCK ...");
 
         const pathArray = this.path.split("/");
         const currentPath = pathArray[0];
