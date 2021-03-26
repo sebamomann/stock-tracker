@@ -30,6 +30,7 @@ export class StockSplitDialogRenderer extends Renderer {
         dateInput.placeholder = "Datum";
 
         let submit = document.createElement("button");
+        submit.className = "stock-split-button button main-button"
         submit.type = "submit";
         submit.innerText = "submit";
         submit.addEventListener('click', (e: Event) => {
@@ -45,7 +46,7 @@ export class StockSplitDialogRenderer extends Renderer {
         });
 
         let cancelButton = document.createElement("button");
-        cancelButton.className = "cancel";
+        cancelButton.className = "cancel button";
         cancelButton.innerText = "Cancel";
         cancelButton.addEventListener("click", _ => {
             this.reset();

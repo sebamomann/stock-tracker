@@ -2,6 +2,7 @@ import {Router} from "./Router";
 import {DashboardRouter} from "./DashboardRouter";
 import {StockRouter} from "./StockRouter";
 import {prod} from "../configuration/Logger";
+import {StockInformationRouter} from "./StockInformationRouter";
 
 export class MainRouter extends Router {
 
@@ -41,10 +42,15 @@ export class MainRouter extends Router {
 
         prod.info(`ROUTER - Path: ${currentPath}`);
 
+        console.log(" reds" + redirectPath);
+
         if (!currentPath) {
             new DashboardRouter(redirectPath.join("/"));
         } else if (currentPath === "stock") {
             new StockRouter(redirectPath.join("/"));
+        }
+        else if (currentPath === "stockInfo") {
+            new StockInformationRouter(redirectPath.join("/"));
         }
     }
 

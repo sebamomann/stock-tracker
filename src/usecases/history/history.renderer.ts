@@ -4,6 +4,7 @@ import {ITransaction} from "../../interface/ITransaction";
 import {PurchaseTransaction} from "../../models/transaction/PurchaseTransaction";
 import {Transaction} from "../../models/transaction/Transaction";
 import {StockSplitDialogRenderer} from "./stock-split-dialog.renderer";
+import {StockInformationRenderer} from "../information/stock-information.renderer";
 
 export class HistoryRenderer extends Renderer {
     private readonly history: History;
@@ -38,7 +39,7 @@ export class HistoryRenderer extends Renderer {
     private htmlTransactionBlock(fTransaction: Transaction) {
         const transactionBlock = document.createElement('div')!;
         const classes = ["transaction-block", "block"];
-        // TODO?
+
         (fTransaction instanceof PurchaseTransaction) ? classes.push("purchase") : classes.push("sale")
 
         transactionBlock.className = classes.join(" ");
@@ -233,10 +234,27 @@ export class HistoryRenderer extends Renderer {
         stockName.className = "stock-name";
         stockName.innerText = stock.name;
 
+        let stockInformationButton = document.createElement('button');
+        stockInformationButton.className = "stock-information-button button main-button"
+        stockInformationButton.innerText = "Mehr Informationen";
+
+        stockInformationButton.addEventListener("click",
+            _ => {
+                if (window.history.pushState) {
+                    const newurl = window.location.protocol + "//" + window.location.host + "/stockInfo" + '?ticker=' + this.history.stock.ticker;
+                    window.history.pushState({path: newurl}, '', newurl);
+                }
+
+
+                let stockInformationRenderer = new StockInformationRenderer(this.history.stock);
+                stockInformationRenderer.render();
+            });
+
         const stockSplit = this.htmlStockSplit();
 
         historyHeader.appendChild(stockTicker);
         historyHeader.appendChild(stockName);
+        historyHeader.appendChild(stockInformationButton);
         historyHeader.appendChild(stockSplit);
 
         return historyHeader;
