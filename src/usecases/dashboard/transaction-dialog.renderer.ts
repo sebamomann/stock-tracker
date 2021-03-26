@@ -73,7 +73,7 @@ export class TransactionDialogRenderer extends Renderer {
             text: "Purchase",
             value: 0,
         }, {
-            text: "Purchase",
+            text: "Sale",
             value: 1
         }]
 

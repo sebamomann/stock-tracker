@@ -306,7 +306,11 @@ export class HistoryRenderer extends Renderer {
         const detailsHTML = document.createElement('div')!;
         detailsHTML.className = "details";
 
-        const quantityHTML = this.htmlSpan("quantity", `Quantity: ${String(fTransaction.quantity * fTransaction.splitFactor)} - Incl split: ${fTransaction.splitFactor}`);
+        let text = `Quantity: ${String(fTransaction.quantity * fTransaction.splitFactor)}`;
+        text += " - ";
+        text += `Incl split: ${fTransaction.splitFactor}`;
+
+        const quantityHTML = this.htmlSpan("quantity", text);
         const priceHTML = this.htmlSpan("price", `Total: ${String(fTransaction.price)}€`);
 
         detailsHTML.appendChild(quantityHTML);
@@ -367,10 +371,12 @@ export class HistoryRenderer extends Renderer {
     private stockInformationClickListener() {
         return () => {
             if (window.history.pushState) {
-                const newUrl = window.location.protocol + "//" + window.location.host + "/stockInfo" + '?ticker=' + this.history.stock.ticker;
+                let newUrl = window.location.protocol + "//" + window.location.host;
+                newUrl += '/stockInfo'
+                newUrl += '?ticker=' + this.history.stock.ticker;
+
                 window.history.pushState({path: newUrl}, '', newUrl);
             }
-
 
             let stockInformationRenderer = new StockInformationRenderer(this.history.stock);
             stockInformationRenderer.render();
