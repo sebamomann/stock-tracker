@@ -3,94 +3,57 @@ import {TransactionFactory} from "../../models/transaction/TransactionFactory";
 import {StockFactory} from "../../models/stock/StockFactory";
 import {ITransactionAccessor} from "../../database/accessor/ITransactionAccessor";
 
+// noinspection JSMethodCanBeStatic
 export class TransactionDialogRenderer extends Renderer {
 
-    private _transactionDatabaseAccessor: ITransactionAccessor;
+    private transactionDatabaseAccessor: ITransactionAccessor;
 
     constructor(transactionDatabaseAccessor: ITransactionAccessor) {
         super();
 
-        this._transactionDatabaseAccessor = transactionDatabaseAccessor;
+        this.transactionDatabaseAccessor = transactionDatabaseAccessor;
     }
 
-    private static htmlDropdownSelect() {
-        let select = document.createElement("select");
-
-        let option1 = document.createElement("option");
-        option1.innerText = "Purchase";
-        option1.value = "0";
-
-        let option2 = document.createElement("option");
-        option2.innerText = "Sale";
-        option2.value = "1";
-
-        select.append(option1, option2);
-
-        return select;
-    }
-
-    render() {
-        const actions = document.getElementById("actions")!;
-
+    public render() {
         this.reset();
 
+        const actions = document.getElementById("actions")!;
+
+        let headerHTML = this.htmlHeader();
+        let formHTML = this.htmlForm();
+
+        actions.append(headerHTML);
+        actions.append(formHTML);
+    }
+
+    public reset() {
+        const existingForm = document.getElementById("transaction-create-form")!;
+
+        if (existingForm) {
+            existingForm.remove();
+        }
+    }
+
+    private htmlHeader() {
         let headerHTML = document.createElement("h2");
+
         headerHTML.id = "create-transaction-header";
         headerHTML.className = "title";
         headerHTML.innerText = "Create transaction";
 
+        return headerHTML;
+    }
+
+    private htmlForm() {
         let formHTML = document.createElement("form");
         formHTML.id = "transaction-create-form";
 
-        let select = TransactionDialogRenderer.htmlDropdownSelect();
-
-        let tickerInput = document.createElement("input");
-        tickerInput.id = "form-ticker"
-        tickerInput.placeholder = "Ticker";
-
-        let quantityInput = document.createElement("input");
-        quantityInput.id = "form-quantity"
-        quantityInput.placeholder = "Quantity";
-
-        let priceInput = document.createElement("input");
-        priceInput.id = "form-price"
-        priceInput.placeholder = "Price (total)";
-
-        let dateInput = document.createElement("input");
-        dateInput.type = "date";
-        dateInput.placeholder = "Datum";
-
-        let formActions = document.createElement("div");
-        formActions.className = "form-actions";
-
-        let submitButton = document.createElement("button");
-        submitButton.type = "submit";
-        submitButton.innerText = "submit";
-        submitButton.addEventListener('click', async (e: Event) => {
-            e.preventDefault();
-            const inputs = (document.getElementById("transaction-create-form") as HTMLFormElement).elements;
-
-            let stock = await StockFactory.createStockByTicker((inputs[0] as HTMLSelectElement).value);
-
-            let option = (inputs[1] as HTMLSelectElement).value;
-            let quantity = (inputs[2] as HTMLInputElement).value;
-            let price = (inputs[3] as HTMLInputElement).value;
-            let date = (inputs[4] as HTMLInputElement).value;
-
-            const transactionFactory = new TransactionFactory();
-            const transaction = transactionFactory.createNewTransaction(+option, stock, +price, +quantity, new Date(date));
-
-            this._transactionDatabaseAccessor.createTransaction(transaction);
-
-            this.emit("created", stock);
-        });
-
-        let cancelButton = document.createElement("button");
-        cancelButton.className = "cancel";
-        cancelButton.innerText = "Cancel";
-        cancelButton.addEventListener("click", _ => {
-            this.emit("cancel");
-        });
+        let select = this.htmlDropdownSelect();
+        let tickerInput = this.htmlTickerInput();
+        let quantityInput = this.htmlQuantityInput();
+        let priceInput = this.htmlPriceInput();
+        let dateInput = this.htmlDateInput();
+        let formActions = this.htmlFormActions();
 
         formHTML.append(tickerInput);
         formHTML.append(select);
@@ -98,21 +61,131 @@ export class TransactionDialogRenderer extends Renderer {
         formHTML.append(priceInput);
         formHTML.append(dateInput);
 
-        formActions.append(submitButton);
-        formActions.append(cancelButton);
-
         formHTML.append(formActions);
 
-        actions.append(headerHTML);
-        actions.append(formHTML);
+        return formHTML;
     }
 
-    //override
-    reset() {
-        const existingForm = document.getElementById("transaction-create-form")!;
+    private htmlDropdownSelect() {
+        let select = document.createElement("select");
 
-        if (existingForm) {
-            existingForm.remove();
-        }
+        const options = [{
+            text: "Purchase",
+            value: 0,
+        }, {
+            text: "Purchase",
+            value: 1
+        }]
+
+        options.forEach(
+            (fOption) => {
+                let option = document.createElement("option");
+                option.innerText = fOption.text;
+                option.value = String(fOption.value);
+
+                select.append(option);
+            }
+        )
+
+        return select;
+    }
+
+    private htmlFormActions() {
+        let formActions = document.createElement("div");
+
+        formActions.className = "form-actions";
+
+        let submitButton = this.htmlSubmitButton();
+        let cancelButton = this.htmlCancelButton(submitButton);
+
+        formActions.append(submitButton);
+        formActions.append(cancelButton);
+        return formActions;
+    }
+
+    private htmlSubmitButton() {
+        let submitButton = document.createElement("button");
+
+        submitButton.className = "button main-button"
+        submitButton.type = "submit";
+        submitButton.innerText = "submit";
+        submitButton.addEventListener('click', this.submitButtonClickListener());
+
+        return submitButton;
+    }
+
+    private htmlCancelButton(submitButton: HTMLButtonElement) {
+        let cancelButton = document.createElement("button");
+
+        submitButton.className = "button cancel"
+        cancelButton.innerText = "Cancel";
+        cancelButton.addEventListener("click", this.cancelButtonClickListener());
+
+        return cancelButton;
+    }
+
+    private htmlDateInput() {
+        let dateInput = document.createElement("input");
+
+        dateInput.type = "date";
+        dateInput.placeholder = "Datum";
+
+        return dateInput;
+    }
+
+    private htmlPriceInput() {
+        let priceInput = document.createElement("input");
+
+        priceInput.id = "form-price"
+        priceInput.placeholder = "Price (total)";
+
+        return priceInput;
+    }
+
+    private htmlQuantityInput() {
+        let quantityInput = document.createElement("input");
+
+        quantityInput.id = "form-quantity"
+        quantityInput.placeholder = "Quantity";
+
+        return quantityInput;
+    }
+
+    private htmlTickerInput() {
+        let tickerInput = document.createElement("input");
+
+        tickerInput.id = "form-ticker"
+        tickerInput.placeholder = "Ticker";
+
+        return tickerInput;
+    }
+
+    private submitButtonClickListener() {
+        return async (e: Event) => {
+            e.preventDefault();
+
+            const inputs = (document.getElementById("transaction-create-form") as HTMLFormElement).elements;
+
+            const ticker = (inputs[0] as HTMLSelectElement).value;
+            let option = (inputs[1] as HTMLSelectElement).value;
+            let quantity = (inputs[2] as HTMLInputElement).value;
+            let price = (inputs[3] as HTMLInputElement).value;
+            let date = (inputs[4] as HTMLInputElement).value;
+
+            let stock = await StockFactory.createStockByTicker(ticker);
+
+            const transactionFactory = new TransactionFactory();
+            const transaction = transactionFactory.createNewTransaction(+option, stock, +price, +quantity, new Date(date));
+
+            this.transactionDatabaseAccessor.createTransaction(transaction);
+
+            this.emit("created", stock);
+        };
+    }
+
+    private cancelButtonClickListener() {
+        return () => {
+            this.emit("cancel");
+        };
     }
 }
