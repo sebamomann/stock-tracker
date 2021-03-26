@@ -10,7 +10,6 @@ export class Renderer extends events.EventEmitter implements IRenderer {
         wrapper.innerHTML = "";
     }
 
-    // TODO FACTORY PATTERN?
     htmlSpan(classes: string, text: string): any {
         const elem = document.createElement('span');
         elem.className = classes;
@@ -22,6 +21,23 @@ export class Renderer extends events.EventEmitter implements IRenderer {
     htmlDiv(classes: string): any {
         const elem = document.createElement('div');
         elem.className = classes;
+
+        return elem;
+    }
+
+    htmlImg(classes: string, src: string): any {
+        const elem = document.createElement('img');
+        elem.className = classes;
+        elem.src = src;
+
+        return elem;
+    }
+
+    htmlLink(classes: string, text: string, url: string): any {
+        const elem = document.createElement('a');
+        elem.className = classes;
+        elem.href = url;
+        elem.text = text;
 
         return elem;
     }

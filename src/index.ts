@@ -9,8 +9,6 @@ function run() {
         if (!loaded) {
             loaded = true;
 
-            console.log("INIT");
-
             new MainRouter(window.location.pathname);
         }
     });

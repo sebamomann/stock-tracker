@@ -50,6 +50,10 @@ export class DashboardRenderer extends Renderer {
                         );
                 });
 
+                const infoDiv = document.createElement('div');
+
+                const stockBlockImg = this.htmlImg("", fStock.getRaw().image);
+
                 const stockTicker = document.createElement('span');
                 stockTicker.className = "stock-ticker";
                 stockTicker.innerText = fStock.ticker;
@@ -58,8 +62,11 @@ export class DashboardRenderer extends Renderer {
                 stockName.className = "stock-name";
                 stockName.innerText = fStock.name;
 
-                stockBlock.appendChild(stockTicker);
-                stockBlock.appendChild(stockName);
+                infoDiv.appendChild(stockTicker);
+                infoDiv.appendChild(stockName);
+
+                stockBlock.append(stockBlockImg);
+                stockBlock.append(infoDiv);
 
                 stockListWrapper.append(stockBlock);
             });

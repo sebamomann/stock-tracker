@@ -5,6 +5,8 @@ import {PurchaseTransaction} from "../../models/transaction/PurchaseTransaction"
 import {Transaction} from "../../models/transaction/Transaction";
 import {StockSplitDialogRenderer} from "./stock-split-dialog.renderer";
 import {StockInformationRenderer} from "../information/stock-information.renderer";
+import {DashboardRenderer} from "../dashboard/dashboard.renderer";
+import {StockList} from "../../models/stock/StockList";
 
 export class HistoryRenderer extends Renderer {
     private readonly history: History;
@@ -235,14 +237,14 @@ export class HistoryRenderer extends Renderer {
         stockName.innerText = stock.name;
 
         let stockInformationButton = document.createElement('button');
-        stockInformationButton.className = "stock-information-button button main-button"
-        stockInformationButton.innerText = "Mehr Informationen";
+        stockInformationButton.className = "stock-information-button button main-button inline"
+        stockInformationButton.innerText = "Mehr";
 
         stockInformationButton.addEventListener("click",
             _ => {
                 if (window.history.pushState) {
-                    const newurl = window.location.protocol + "//" + window.location.host + "/stockInfo" + '?ticker=' + this.history.stock.ticker;
-                    window.history.pushState({path: newurl}, '', newurl);
+                    const newUrl = window.location.protocol + "//" + window.location.host + "/stockInfo" + '?ticker=' + this.history.stock.ticker;
+                    window.history.pushState({path: newUrl}, '', newUrl);
                 }
 
 
@@ -250,11 +252,30 @@ export class HistoryRenderer extends Renderer {
                 stockInformationRenderer.render();
             });
 
+        let toDashboardButton = document.createElement('button');
+        toDashboardButton.className = "dashboard-button button decent-button inline"
+        toDashboardButton.innerText = "Dashboard";
+
+        toDashboardButton.addEventListener("click",
+            async _ => {
+                if (window.history.pushState) {
+                    const newUrl = window.location.protocol + "//" + window.location.host;
+                    window.history.pushState({path: newUrl}, '', newUrl);
+                }
+
+                const stockList = new StockList();
+                await stockList.loadStockList();
+
+                let dashboardRenderer = new DashboardRenderer(stockList);
+                dashboardRenderer.render();
+            });
+
         const stockSplit = this.htmlStockSplit();
 
         historyHeader.appendChild(stockTicker);
         historyHeader.appendChild(stockName);
         historyHeader.appendChild(stockInformationButton);
+        historyHeader.appendChild(toDashboardButton);
         historyHeader.appendChild(stockSplit);
 
         return historyHeader;

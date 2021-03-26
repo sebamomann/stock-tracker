@@ -17,8 +17,6 @@ export class MainRouter extends Router {
                     prod.info("ROUTER - Main route routed");
 
                     window.addEventListener('popstate', () => {
-                        console.log('LOCATION CHANGE!');
-
                         this.path = window.location.pathname;
 
                         this.route()
@@ -42,14 +40,11 @@ export class MainRouter extends Router {
 
         prod.info(`ROUTER - Path: ${currentPath}`);
 
-        console.log(" reds" + redirectPath);
-
         if (!currentPath) {
             new DashboardRouter(redirectPath.join("/"));
         } else if (currentPath === "stock") {
             new StockRouter(redirectPath.join("/"));
-        }
-        else if (currentPath === "stockInfo") {
+        } else if (currentPath === "stockInfo") {
             new StockInformationRouter(redirectPath.join("/"));
         }
     }

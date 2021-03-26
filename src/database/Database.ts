@@ -42,7 +42,7 @@ export class Database {
      * @param stock
      * @param transaction {@link Transaction}
      */
-    static createTransaction(stock: IStock, transaction: ITransactionDatabaseModel): void {
+    static createTransaction(stock: Stock, transaction: ITransactionDatabaseModel): void {
         let data: any = this.getData();
 
         // create array for stock if not existing
@@ -56,9 +56,6 @@ export class Database {
         prod.info(`DB OBJ from Transaction: ${JSON.stringify(transaction)}`);
         prod.info(`Store to Ticker: ${stock.ticker}`);
 
-        console.log(data);
-        console.log(JSON.stringify({...data}));
-
         localStorage.setItem("database", JSON.stringify({...data}));
     }
 
@@ -68,7 +65,7 @@ export class Database {
      * @param stock         {@link IStock}
      * @param transaction   {@link ITransactionDatabaseModel}
      */
-    static updateTransaction(stock: IStock, transaction: ITransactionDatabaseModel) {
+    static updateTransaction(stock: Stock, transaction: ITransactionDatabaseModel) {
         let data = this.getData();
 
         data[stock.ticker] = data[stock.ticker].map(

@@ -1,14 +1,22 @@
 import {IStock} from "../../interface/IStock";
+import {IAPI_StockProfile} from "../API/IAPI_StockProfile";
 
 export class Stock implements IStock {
     public name: string;
     public ticker: string;
     public pricing: number;
 
-    constructor(ticker: string, name: string, price: number) {
+    /**
+     * RAW API INFORMATION OF STOCK
+     */
+    public raw: IAPI_StockProfile
+
+    constructor(ticker: string, name: string, price: number, raw: IAPI_StockProfile) {
         this.ticker = ticker;
         this.name = name;
         this.pricing = price;
+
+        this.raw = raw;
     }
 
     /**
@@ -22,5 +30,9 @@ export class Stock implements IStock {
         return new Promise((resolve) => {
             return resolve(this.pricing);
         });
+    }
+
+    public getRaw(): IAPI_StockProfile {
+        return this.raw;
     }
 }

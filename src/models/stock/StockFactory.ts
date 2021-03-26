@@ -13,9 +13,9 @@ export class StockFactory {
         let stock;
 
         try {
-            stock = new stockTypes[profile.currency](profile.symbol, profile.companyName, profile.price);
+            stock = new stockTypes[profile.currency](profile.symbol, profile.companyName, profile.price, profile);
         } catch (e) {
-            stock = new stockTypes["USD"](profile.symbol, profile.companyName, profile.price);
+            stock = new stockTypes["USD"](profile.symbol, profile.companyName, profile.price, profile);
         }
 
         return stock;

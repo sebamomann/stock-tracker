@@ -16,8 +16,6 @@ export class TransactionMapper {
         let transaction: Transaction;
 
         const transactionFactory = new TransactionFactory();
-        console.log(option, id, stock, price, quantity, "--- " + date + "----", splitFactor);
-        console.log(option, id, stock, price, quantity, new Date(date), splitFactor);
         transaction = transactionFactory.createTransaction(option, id, stock, price, quantity, new Date(date), splitFactor);
 
         return transaction;
