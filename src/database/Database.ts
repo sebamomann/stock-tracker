@@ -3,7 +3,6 @@ import {Stock} from "../models/stock/Stock";
 import {Transaction} from "../models/transaction/Transaction";
 import {ITransactionDatabaseModel} from "./models/ITransactionDatabase.model";
 import {ITransaction} from "../interface/ITransaction";
-import {IStock} from "../interface/IStock";
 
 export class Database {
     constructor() {

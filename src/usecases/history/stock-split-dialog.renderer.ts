@@ -12,7 +12,7 @@ export class StockSplitDialogRenderer extends Renderer {
 
     // Override
     public render() {
-        const block = document.getElementById("stock-split-block")!;
+        const block = document.getElementById("stock-split-form-wrapper")!;
 
         this.reset();
 

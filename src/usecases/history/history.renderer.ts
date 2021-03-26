@@ -7,10 +7,12 @@ import {StockSplitDialogRenderer} from "./stock-split-dialog.renderer";
 import {StockInformationRenderer} from "../information/stock-information.renderer";
 import {DashboardRenderer} from "../dashboard/dashboard.renderer";
 import {StockList} from "../../models/stock/StockList";
+import {Stock} from "../../models/stock/Stock";
 
 export class HistoryRenderer extends Renderer {
+
     private readonly history: History;
-    //
+
     // private startDate: Date | undefined = undefined;
     // private endDate: Date | undefined = undefined;
 
@@ -26,59 +28,87 @@ export class HistoryRenderer extends Renderer {
         const wrapper = document.getElementById("wrapper")!;
 
         const historyHeader = this.htmlHistoryHeader();
-        const historyWrapper = this.htmlHistoryWrapper();
-        const transactionListWrapper = this.htmlTransactionList();
-        const historyDetails = await this.htmlHistoryDetails();
+        const historyWrapper = await this.htmlHistoryWrapper();
 
         wrapper.appendChild(historyHeader);
+        wrapper.appendChild(historyWrapper);
+    }
+
+    private htmlHistoryHeader() {
+        const stock = this.history.stock;
+
+        const historyHeader = document.createElement('div');
+
+        historyHeader.className = "history-header";
+
+        const stockTicker = this.htmlStockTicker(stock);
+        const stockName = this.htmlStockName(stock);
+
+        const stockInformationButton = this.htmlStockInformationButton();
+        const toDashboardButton = this.htmlBackToDashboardButton();
+        const stockSplit = this.htmlStockSplitForm();
+
+        historyHeader.appendChild(stockTicker);
+        historyHeader.appendChild(stockName);
+        historyHeader.appendChild(stockInformationButton);
+        historyHeader.appendChild(toDashboardButton);
+        historyHeader.appendChild(stockSplit);
+
+        return historyHeader;
+    }
+
+    private htmlStockTicker(stock: Stock) {
+        const stockTicker = document.createElement('h1');
+
+        stockTicker.className = "stock-ticker";
+        stockTicker.innerText = stock.ticker;
+
+        return stockTicker;
+    }
+
+    private htmlStockName(stock: Stock) {
+        const stockName = document.createElement('h2');
+        stockName.className = "stock-name";
+        stockName.innerText = stock.name;
+        return stockName;
+    }
+
+    private htmlStockInformationButton() {
+        let stockInformationButton = document.createElement('button');
+        stockInformationButton.className = "stock-information-button button main-button inline"
+        stockInformationButton.innerText = "Mehr";
+
+        stockInformationButton.addEventListener("click",
+            this.stockInformationClickListener()
+        );
+        return stockInformationButton;
+    }
+
+
+    private htmlBackToDashboardButton() {
+        let toDashboardButton = document.createElement('button');
+        toDashboardButton.className = "dashboard-button button decent-button inline"
+        toDashboardButton.innerText = "Dashboard";
+
+        toDashboardButton.addEventListener("click",
+            this.toDashboardClickListener()
+        );
+
+        return toDashboardButton;
+    }
+
+    private async htmlHistoryWrapper() {
+        const historyWrapper = document.createElement('div');
+
+        historyWrapper.className = "history-wrapper";
+
+        const transactionListWrapper = this.htmlTransactionList();
+        const historyDetails = await this.htmlHistoryDetails();
 
         historyWrapper.appendChild(transactionListWrapper);
         historyWrapper.appendChild(historyDetails);
 
-        wrapper.appendChild(historyWrapper);
-    }
-
-    private htmlTransactionBlock(fTransaction: Transaction) {
-        const transactionBlock = document.createElement('div')!;
-        const classes = ["transaction-block", "block"];
-
-        (fTransaction instanceof PurchaseTransaction) ? classes.push("purchase") : classes.push("sale")
-
-        transactionBlock.className = classes.join(" ");
-
-        transactionBlock.addEventListener("click", _ => {
-
-        });
-
-        const headlineHTML = document.createElement('h3');
-        headlineHTML.className = "headline";
-        headlineHTML.innerText = (fTransaction instanceof PurchaseTransaction) ? "Purchase" : "Sale"
-
-        transactionBlock.appendChild(headlineHTML);
-
-        const dateHTML = document.createElement('span');
-        dateHTML.className = "date";
-        dateHTML.innerText = `${String(fTransaction.date.toDateString())}`;
-
-        transactionBlock.appendChild(dateHTML);
-
-        const detailsHTML = this.htmlTransactionDetails(fTransaction);
-        transactionBlock.appendChild(detailsHTML);
-
-        return transactionBlock;
-    }
-
-    private htmlTransactionDetails(fTransaction: ITransaction) {
-        const detailsHTML = document.createElement('div')!;
-        detailsHTML.className = "details";
-
-        const quantityHTML = this.htmlSpan("quantity", `Quantity: ${String(fTransaction.quantity * fTransaction.splitFactor)} - Incl split: ${fTransaction.splitFactor}`);
-        const priceHTML = this.htmlSpan("price", `Total: ${String(fTransaction.price)}€`);
-
-        detailsHTML.appendChild(quantityHTML);
-        detailsHTML.appendChild(priceHTML);
-
-        return detailsHTML;
+        return historyWrapper;
     }
 
     private htmlTransactionList() {
@@ -87,33 +117,70 @@ export class HistoryRenderer extends Renderer {
 
         this.history
             .transactions
-            .forEach((fTransaction: Transaction) => {
-                const transactionBlock = this.htmlTransactionBlock(fTransaction);
+            .forEach(
+                (fTransaction: Transaction) => {
+                    const transactionBlock = this.htmlTransactionBlock(fTransaction);
 
-                transactionHistoryWrapper.append(transactionBlock);
-            });
+                    transactionHistoryWrapper.append(transactionBlock);
+                }
+            );
 
         return transactionHistoryWrapper;
     }
 
+    private htmlTransactionBlock(fTransaction: Transaction) {
+        const transactionBlock = document.createElement('div')!;
+        const classes = ["transaction-block", "block"];
+
+        (fTransaction instanceof PurchaseTransaction) ? classes.push("purchase") : classes.push("sale")
+        transactionBlock.className = classes.join(" ");
+
+        const headlineHTML = this.htmlTransactionBlockHeadline(fTransaction);
+        const dateHTML = this.htmlTransactionBlockDate(fTransaction);
+        const detailsHTML = this.htmlTransactionBlockDetails(fTransaction);
+
+        transactionBlock.appendChild(headlineHTML);
+        transactionBlock.appendChild(dateHTML);
+        transactionBlock.appendChild(detailsHTML);
+
+
+        return transactionBlock;
+    }
+
+    private htmlTransactionBlockDate(fTransaction: Transaction) {
+        const dateHTML = document.createElement('span');
+
+        dateHTML.className = "date";
+        dateHTML.innerText = `${String(fTransaction.date.toDateString())}`;
+
+        return dateHTML;
+    }
+
+    private htmlTransactionBlockHeadline(fTransaction: Transaction) {
+        const headlineHTML = document.createElement('h3');
+
+        headlineHTML.className = "headline";
+        headlineHTML.innerText = (fTransaction instanceof PurchaseTransaction) ? "Purchase" : "Sale"
+
+        return headlineHTML;
+    }
+
     private async htmlHistoryDetails() {
         const historyDetails = document.createElement('div');
+
         historyDetails.className = "history-details block";
 
         const quantityOwnedHTML = this.htmlQuantityOwned();
-        historyDetails.appendChild(quantityOwnedHTML);
-
         const priceBalanceHTML = this.htmlPriceBalance();
+        const stockPriceHTML = await this.htmlStockPrice();
+        const potentialValueHTML = await this.htmlCurrentWorth();
+        const potentialWinTotalHTML = await this.htmlPotentialWinTotal();
+
+        historyDetails.appendChild(quantityOwnedHTML);
         historyDetails.appendChild(priceBalanceHTML);
-
-        const stockPrice = await this.htmlStockPrice();
-        historyDetails.appendChild(stockPrice);
-
-        const potentialValue = await this.htmlCurrentWorth();
-        historyDetails.appendChild(potentialValue);
-
-        const potentialWinTotal = await this.htmlPotentialWinTotal();
-        historyDetails.appendChild(potentialWinTotal);
+        historyDetails.appendChild(stockPriceHTML);
+        historyDetails.appendChild(potentialValueHTML);
+        historyDetails.appendChild(potentialWinTotalHTML);
 
         // // date specification
         // let formHTML = document.createElement("form");
@@ -222,73 +289,68 @@ export class HistoryRenderer extends Renderer {
         return div;
     }
 
-    private htmlHistoryHeader() {
-        const stock = this.history.stock;
-
-        const historyHeader = document.createElement('div');
-        historyHeader.className = "history-header";
-
-        const stockTicker = document.createElement('h1');
-        stockTicker.className = "stock-ticker";
-        stockTicker.innerText = stock.ticker;
-
-        const stockName = document.createElement('h2');
-        stockName.className = "stock-name";
-        stockName.innerText = stock.name;
-
-        let stockInformationButton = document.createElement('button');
-        stockInformationButton.className = "stock-information-button button main-button inline"
-        stockInformationButton.innerText = "Mehr";
-
-        stockInformationButton.addEventListener("click",
-            _ => {
-                if (window.history.pushState) {
-                    const newUrl = window.location.protocol + "//" + window.location.host + "/stockInfo" + '?ticker=' + this.history.stock.ticker;
-                    window.history.pushState({path: newUrl}, '', newUrl);
-                }
-
-
-                let stockInformationRenderer = new StockInformationRenderer(this.history.stock);
-                stockInformationRenderer.render();
-            });
-
-        let toDashboardButton = document.createElement('button');
-        toDashboardButton.className = "dashboard-button button decent-button inline"
-        toDashboardButton.innerText = "Dashboard";
-
-        toDashboardButton.addEventListener("click",
-            async _ => {
-                if (window.history.pushState) {
-                    const newUrl = window.location.protocol + "//" + window.location.host;
-                    window.history.pushState({path: newUrl}, '', newUrl);
-                }
-
-                const stockList = new StockList();
-                await stockList.loadStockList();
-
-                let dashboardRenderer = new DashboardRenderer(stockList);
-                dashboardRenderer.render();
-            });
-
-        const stockSplit = this.htmlStockSplit();
-
-        historyHeader.appendChild(stockTicker);
-        historyHeader.appendChild(stockName);
-        historyHeader.appendChild(stockInformationButton);
-        historyHeader.appendChild(toDashboardButton);
-        historyHeader.appendChild(stockSplit);
-
-        return historyHeader;
-    }
-
-    private htmlStockSplit() {
+    private htmlStockSplitForm() {
         const stockSplitWrapper = document.createElement('div');
         stockSplitWrapper.id = "stock-split-wrapper";
 
+        const stockSplitButton = this.htmlStockSplitButton();
+        const stockSplitForm = this.htmlStockSplitFormWrapper();
+
+        stockSplitWrapper.appendChild(stockSplitButton);
+        stockSplitWrapper.appendChild(stockSplitForm);
+
+        return stockSplitWrapper;
+    }
+
+    private htmlTransactionBlockDetails(fTransaction: ITransaction) {
+        const detailsHTML = document.createElement('div')!;
+        detailsHTML.className = "details";
+
+        const quantityHTML = this.htmlSpan("quantity", `Quantity: ${String(fTransaction.quantity * fTransaction.splitFactor)} - Incl split: ${fTransaction.splitFactor}`);
+        const priceHTML = this.htmlSpan("price", `Total: ${String(fTransaction.price)}€`);
+
+        detailsHTML.appendChild(quantityHTML);
+        detailsHTML.appendChild(priceHTML);
+
+        return detailsHTML;
+    }
+
+    private toDashboardClickListener() {
+        return async () => {
+            if (window.history.pushState) {
+                const newUrl = window.location.protocol + "//" + window.location.host;
+                window.history.pushState({path: newUrl}, '', newUrl);
+            }
+
+            const stockList = new StockList();
+            await stockList.loadStockList();
+
+            let dashboardRenderer = new DashboardRenderer(stockList);
+            dashboardRenderer.render();
+        };
+    }
+
+    private htmlStockSplitFormWrapper() {
+        const stockSplitForm = document.createElement('div');
+
+        stockSplitForm.id = "stock-split-form-wrapper";
+
+        return stockSplitForm;
+    }
+
+    private htmlStockSplitButton() {
         let stockSplitButton = document.createElement('button');
         stockSplitButton.className = "stock-split-button button main-button"
         stockSplitButton.innerText = "Stock Split";
-        stockSplitButton.addEventListener("click", _ => {
+
+        stockSplitButton.addEventListener("click",
+            this.stockSplitClickEventListener()
+        );
+        return stockSplitButton;
+    }
+
+    private stockSplitClickEventListener() {
+        return () => {
             let stockSplitDialogRenderer = new StockSplitDialogRenderer(this.history);
             stockSplitDialogRenderer.render();
 
@@ -299,21 +361,19 @@ export class HistoryRenderer extends Renderer {
                         }
                     );
             })
-        });
-
-        const stockSplitForm = document.createElement('div');
-        stockSplitForm.id = "stock-split-block";
-
-        stockSplitWrapper.appendChild(stockSplitButton);
-        stockSplitWrapper.appendChild(stockSplitForm);
-
-        return stockSplitWrapper;
+        };
     }
 
-    private htmlHistoryWrapper() {
-        const historyWrapper = document.createElement('div');
-        historyWrapper.className = "history-wrapper";
+    private stockInformationClickListener() {
+        return () => {
+            if (window.history.pushState) {
+                const newUrl = window.location.protocol + "//" + window.location.host + "/stockInfo" + '?ticker=' + this.history.stock.ticker;
+                window.history.pushState({path: newUrl}, '', newUrl);
+            }
 
-        return historyWrapper;
+
+            let stockInformationRenderer = new StockInformationRenderer(this.history.stock);
+            stockInformationRenderer.render();
+        };
     }
 }
