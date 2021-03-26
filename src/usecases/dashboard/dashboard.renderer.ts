@@ -168,8 +168,12 @@ export class DashboardRenderer extends Renderer {
             const transactionsDatabaseAccessor = new TransactionDatabaseAccessor();
             const transactionCreateDialogRenderer = new TransactionDialogRenderer(transactionsDatabaseAccessor);
 
-            transactionCreateDialogRenderer.on("created", this.transactionCreateEmitListener());
-            transactionCreateDialogRenderer.on("cancel", this.transactionCreateCancelListener())
+            transactionCreateDialogRenderer.on("created",
+                this.transactionCreateEmitListener()
+            );
+            transactionCreateDialogRenderer.on("cancel",
+                this.transactionCreateCancelListener()
+            )
 
             transactionCreateDialogRenderer.render();
         };

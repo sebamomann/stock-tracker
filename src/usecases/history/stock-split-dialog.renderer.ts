@@ -14,10 +14,12 @@ export class StockSplitDialogRenderer extends Renderer {
     public render() {
         this.reset();
 
-        const block = document.getElementById("stock-split-form-wrapper")!;
+        const block = document.getElementById("actions")!;
 
-        let formHTML = this.htmlForm();
+        const htmlHeader = this.htmlHeader();
+        const formHTML = this.htmlForm();
 
+        block.append(htmlHeader);
         block.append(formHTML);
     }
 
@@ -29,9 +31,18 @@ export class StockSplitDialogRenderer extends Renderer {
         }
     }
 
+    private htmlHeader() {
+        let headerHTML = document.createElement("h2");
+
+        headerHTML.id = "create-transaction-header";
+        headerHTML.className = "title";
+        headerHTML.innerText = "Stock split";
+
+        return headerHTML;
+    }
+
     private htmlForm() {
         let formHTML = document.createElement("form");
-
         formHTML.id = "stock-split-form";
 
         let splitFactorInput = this.htmlSplitFactorInput();
@@ -54,7 +65,7 @@ export class StockSplitDialogRenderer extends Renderer {
         cancelButton.innerText = "Cancel";
 
         cancelButton.addEventListener("click", _ => {
-            this.reset();
+            this.emit("cancel")
         });
 
         return cancelButton;

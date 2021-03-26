@@ -9,6 +9,7 @@ import {DashboardRenderer} from "../dashboard/dashboard.renderer";
 import {StockList} from "../../models/stock/StockList";
 import {Stock} from "../../models/stock/Stock";
 
+// noinspection JSMethodCanBeStatic
 export class HistoryRenderer extends Renderer {
 
     private readonly history: History;
@@ -28,9 +29,11 @@ export class HistoryRenderer extends Renderer {
         const wrapper = document.getElementById("wrapper")!;
 
         const historyHeader = this.htmlHistoryHeader();
+        const htmlActions = this.htmlActions();
         const historyWrapper = await this.htmlHistoryWrapper();
 
         wrapper.appendChild(historyHeader);
+        wrapper.appendChild(htmlActions);
         wrapper.appendChild(historyWrapper);
     }
 
@@ -46,13 +49,11 @@ export class HistoryRenderer extends Renderer {
 
         const stockInformationButton = this.htmlStockInformationButton();
         const toDashboardButton = this.htmlBackToDashboardButton();
-        const stockSplit = this.htmlStockSplitForm();
 
         historyHeader.appendChild(stockTicker);
         historyHeader.appendChild(stockName);
         historyHeader.appendChild(stockInformationButton);
         historyHeader.appendChild(toDashboardButton);
-        historyHeader.appendChild(stockSplit);
 
         return historyHeader;
     }
@@ -81,6 +82,7 @@ export class HistoryRenderer extends Renderer {
         stockInformationButton.addEventListener("click",
             this.stockInformationClickListener()
         );
+
         return stockInformationButton;
     }
 
@@ -99,7 +101,6 @@ export class HistoryRenderer extends Renderer {
 
     private async htmlHistoryWrapper() {
         const historyWrapper = document.createElement('div');
-
         historyWrapper.className = "history-wrapper";
 
         const transactionListWrapper = this.htmlTransactionList();
@@ -289,17 +290,35 @@ export class HistoryRenderer extends Renderer {
         return div;
     }
 
-    private htmlStockSplitForm() {
-        const stockSplitWrapper = document.createElement('div');
-        stockSplitWrapper.id = "stock-split-wrapper";
+    private htmlActions() {
+        const actionsDiv = this.htmlActionsDiv();
 
         const stockSplitButton = this.htmlStockSplitButton();
-        const stockSplitForm = this.htmlStockSplitFormWrapper();
 
-        stockSplitWrapper.appendChild(stockSplitButton);
-        stockSplitWrapper.appendChild(stockSplitForm);
+        actionsDiv.appendChild(stockSplitButton);
 
-        return stockSplitWrapper;
+        /*
+        * Check if actions div already exists. If so -> replace, else append
+        */
+        const existing = document.getElementById("actions");
+
+        if (existing) {
+            existing.replaceWith(actionsDiv);
+        } else {
+            const wrapper = document.getElementById("wrapper")!;
+            wrapper.append(actionsDiv);
+        }
+
+        return actionsDiv;
+    }
+
+    private htmlActionsDiv() {
+        const actionsHTML = document.createElement('div');
+
+        actionsHTML.className = "actions";
+        actionsHTML.id = "actions";
+
+        return actionsHTML;
     }
 
     private htmlTransactionBlockDetails(fTransaction: ITransaction) {
@@ -345,26 +364,43 @@ export class HistoryRenderer extends Renderer {
     private htmlStockSplitButton() {
         let stockSplitButton = document.createElement('button');
         stockSplitButton.className = "stock-split-button button main-button"
+        stockSplitButton.id = "stock-split-button";
         stockSplitButton.innerText = "Stock Split";
 
         stockSplitButton.addEventListener("click",
             this.stockSplitClickEventListener()
         );
+
         return stockSplitButton;
     }
 
     private stockSplitClickEventListener() {
         return () => {
+            /**
+             * Clear button for better layout
+             */
+            const button = document.getElementById("stock-split-button")!;
+            button.remove();
+
             let stockSplitDialogRenderer = new StockSplitDialogRenderer(this.history);
             stockSplitDialogRenderer.render();
 
-            stockSplitDialogRenderer.on("split", () => {
-                this.render()
-                    .then(
-                        _ => {
-                        }
-                    );
-            })
+            stockSplitDialogRenderer.on("split",
+                this.stockSplitEmitListener()
+            );
+            stockSplitDialogRenderer.on("cancel",
+                this.stockSplitCancelListener()
+            );
+        };
+    }
+
+    private stockSplitEmitListener() {
+        return () => {
+            this.render()
+                .then(
+                    _ => {
+                    }
+                );
         };
     }
 
@@ -380,6 +416,12 @@ export class HistoryRenderer extends Renderer {
 
             let stockInformationRenderer = new StockInformationRenderer(this.history.stock);
             stockInformationRenderer.render();
+        };
+    }
+
+    private stockSplitCancelListener() {
+        return () => {
+            this.htmlActions();
         };
     }
 }
