@@ -1,4 +1,4 @@
-import {History} from "../../src/models/History";
+import {TransactionList} from "../../src/models/TransactionList";
 import {Transaction} from "../../src/models/transaction/Transaction";
 import {ITransaction} from "../../src/interface/ITransaction";
 import {instance, mock, spy, verify, when} from "ts-mockito";
@@ -25,7 +25,7 @@ function createMockedTransactionsOlderThanCurrentDate(_mock: Transaction, number
     return output;
 }
 
-describe('Calculate statistical data of History', () => {
+describe('Calculate statistical data of TransactionList', () => {
     beforeAll(() => {
     });
 
@@ -38,7 +38,7 @@ describe('Calculate statistical data of History', () => {
             const mockedTransactionsDatabaseAccessor: TransactionDatabaseAccessor = mock(TransactionDatabaseAccessor);
             const mockedInstanceTransactionDatabaseAccessor: TransactionDatabaseAccessor = instance(mockedTransactionsDatabaseAccessor);
 
-            const history: History = new History(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
+            const history: TransactionList = new TransactionList(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
             const spiedHistory = spy(history);
 
             when(mockedTransactionsDatabaseAccessor.getTransactionsByStock(mockedInstanceStock)).thenReturn([]);
@@ -71,7 +71,7 @@ describe('Calculate statistical data of History', () => {
             when(mockTransaction.getTransactionQuantity()).thenReturn(3, 2, 2, 1, 2);
 
             // setup
-            const history = new History(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
+            const history = new TransactionList(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
 
             // action
             const numberOfOwnedStocks = history.numberOfOwnedStocks();
@@ -99,7 +99,7 @@ describe('Calculate statistical data of History', () => {
             when(mockTransaction.getTransactionPrice()).thenReturn(-10);
 
             // setup
-            const history = new History(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
+            const history = new TransactionList(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
 
             // action
             const totalTransactionBalance = history.totalTransactionBalance();
@@ -127,7 +127,7 @@ describe('Calculate statistical data of History', () => {
             when(mockTransaction.getTransactionPrice()).thenReturn(10);
 
             // setup
-            const history = new History(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
+            const history = new TransactionList(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
 
             // action
             const totalTransactionBalance = history.totalTransactionBalance();
@@ -155,7 +155,7 @@ describe('Calculate statistical data of History', () => {
             when(mockTransaction.getTransactionPrice()).thenReturn(-10, 10, 20, -5, -10);
 
             // setup
-            const history = new History(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
+            const history = new TransactionList(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
 
             // action
             const totalTransactionBalance = history.totalTransactionBalance();

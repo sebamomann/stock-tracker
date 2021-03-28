@@ -20,7 +20,7 @@ export class Renderer extends events.EventEmitter implements IRenderer {
     }
 
     public htmlH1(classes: string[], text: string): any {
-        const elem = document.createElement('span');
+        const elem = document.createElement('h1');
 
         elem.classList.add(...classes);
         elem.innerText = text;
@@ -29,7 +29,7 @@ export class Renderer extends events.EventEmitter implements IRenderer {
     }
 
     public htmlH2(classes: string[], text: string): any {
-        const elem = document.createElement('span');
+        const elem = document.createElement('h2');
 
         elem.classList.add(...classes);
         elem.innerText = text;
@@ -38,7 +38,7 @@ export class Renderer extends events.EventEmitter implements IRenderer {
     }
 
     public htmlH3(classes: string[], text: string): any {
-        const elem = document.createElement('span');
+        const elem = document.createElement('h3');
 
         elem.classList.add(...classes);
         elem.innerText = text;

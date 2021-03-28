@@ -1,7 +1,7 @@
 import {Router} from "./Router";
 import {routeLogging} from "../configuration/Logger";
-import {History} from "../models/History";
-import {HistoryRenderer} from "../usecases/history/history.renderer";
+import {TransactionList} from "../models/TransactionList";
+import {TransactionListRenderer} from "../usecases/transactionList/transactionListRenderer";
 import {StockFactory} from "../models/stock/StockFactory";
 import {InvalidStock} from "../models/stock/InvalidStock";
 import {TransactionDatabaseAccessor} from "../database/accessor/TransactionDatabaseAccessor";
@@ -38,10 +38,10 @@ export class StockRouter extends Router {
             }
 
             const transactionsDatabaseAccessor = new TransactionDatabaseAccessor();
-            const history = new History(transactionsDatabaseAccessor, stock);
+            const transactionList = new TransactionList(transactionsDatabaseAccessor, stock);
 
-            const historyRenderer = new HistoryRenderer(history);
-            await historyRenderer.render();
+            const transactionListRenderer = new TransactionListRenderer(transactionList);
+            await transactionListRenderer.render();
         }
     }
 

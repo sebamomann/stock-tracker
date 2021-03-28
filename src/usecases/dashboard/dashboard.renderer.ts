@@ -1,10 +1,12 @@
-import {StockList} from "../../models/stock/StockList";
-import {History} from "../../models/History";
+import {StockList} from "../../models/stock/stockList/StockList";
+import {TransactionList} from "../../models/TransactionList";
 import {Renderer} from "../Renderer";
-import {HistoryRenderer} from "../history/history.renderer";
+import {TransactionListRenderer} from "../transactionList/transactionListRenderer";
 import {TransactionDialogRenderer} from "./transaction-dialog.renderer";
 import {Stock} from "../../models/stock/Stock";
 import {TransactionDatabaseAccessor} from "../../database/accessor/TransactionDatabaseAccessor";
+import {StockListAnalyzer} from "../../models/stock/stockList/StockListAnalyzer";
+import {StockListAnalyticsRenderer} from "../analytics/stockListAnalytics.renderer";
 
 // noinspection JSMethodCanBeStatic
 export class DashboardRenderer extends Renderer {
@@ -86,8 +88,8 @@ export class DashboardRenderer extends Renderer {
     private stockClickEventListener(fStock: Stock) {
         return () => {
             const transactionsDatabaseAccessor = new TransactionDatabaseAccessor();
-            const history = new History(transactionsDatabaseAccessor, fStock);
-            const historyRenderer = new HistoryRenderer(history);
+            const transactionList = new TransactionList(transactionsDatabaseAccessor, fStock);
+            const transactionListRenderer = new TransactionListRenderer(transactionList);
 
             if (window.history.pushState) {
                 let newUrl = window.location.protocol + "//" + window.location.host;
@@ -97,7 +99,7 @@ export class DashboardRenderer extends Renderer {
                 window.history.pushState({path: newUrl}, '', newUrl);
             }
 
-            historyRenderer.render()
+            transactionListRenderer.render()
                 .then(
                     _ => {
                     }
@@ -109,8 +111,10 @@ export class DashboardRenderer extends Renderer {
         let actionsDiv = this.htmlActionsDiv();
 
         let createButton = this.htmlCreateTransactionButton();
+        let navigateToDistribution = this.htmlNavigateToDistributionButton();
 
         actionsDiv.appendChild(createButton);
+        actionsDiv.appendChild(navigateToDistribution);
 
         /*
          * Check if actions div already exists. If so -> replace, else append
@@ -151,6 +155,38 @@ export class DashboardRenderer extends Renderer {
         );
 
         return createButton;
+    }
+
+    private htmlNavigateToDistributionButton() {
+        const buttonClasses = [
+            "button",
+            "main-button"
+        ]
+
+        let createButton = this.htmlButton(buttonClasses, "Analytics");
+
+        createButton.addEventListener("click",
+            this.navigateToDistributionButtonClickListener()
+        );
+
+        return createButton;
+    }
+
+    private navigateToDistributionButtonClickListener() {
+        return async () => {
+            if (window.history.pushState) {
+                let newUrl = window.location.protocol + "//" + window.location.host + "/";
+                newUrl += "distribution";
+
+                window.history.pushState({path: newUrl}, '', newUrl);
+            }
+
+            const distributionAnalyzer = await new StockListAnalyzer(this.stockList);
+            await distributionAnalyzer.analyze();
+
+            const distributionRenderer = new StockListAnalyticsRenderer(distributionAnalyzer);
+            distributionRenderer.render();
+        };
     }
 
     private createTransactionClickListener() {
@@ -207,5 +243,4 @@ export class DashboardRenderer extends Renderer {
             stockListWrapper.append(stockTicker)
         }
     }
-
 }

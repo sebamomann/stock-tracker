@@ -1,4 +1,4 @@
-import {History} from "../../src/models/History";
+import {TransactionList} from "../../src/models/TransactionList";
 import {Transaction} from "../../src/models/transaction/Transaction";
 import {TransactionDatabaseAccessor} from "../../src/database/accessor/TransactionDatabaseAccessor";
 import {anyOfClass, instance, mock, verify, when} from "ts-mockito";
@@ -14,7 +14,6 @@ function createMockedTransactionsOlderThanCurrentDate(numberOfStocksToCreate: nu
     for (let i = idStartingAt; i < idStartingAt + numberOfStocksToCreate; i++) {
         const mockTransaction: Transaction = mock(Transaction);
         const transaction: Transaction = instance(mockTransaction);
-
         transaction.id = String(i);
         transaction.date = dateInPast;
         transaction.splitFactor = 1;
@@ -45,7 +44,7 @@ function createMockedTransactionsYoungerThanCurrentDate(numberOfStocksToCreate: 
     return output;
 }
 
-describe('Create Stocksplit by adapting split factor of transaction of History', () => {
+describe('Create Stocksplit by adapting split factor of transaction of TransactionList', () => {
     describe('totalWorthOfCurrentlyOwnedStocks', () => {
         it('Correctly save all 5 updated transactions', async () => {
             const transactions: ITransaction[] = [];
@@ -61,7 +60,7 @@ describe('Create Stocksplit by adapting split factor of transaction of History',
             when(mockedTransactionsDatabaseAccessor.updateTransaction(anyOfClass(Transaction))).thenReturn();
 
             // action
-            const history = new History(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
+            const history = new TransactionList(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
             history.stockSplit(5, new Date());
 
             // prepare expected
@@ -93,7 +92,7 @@ describe('Create Stocksplit by adapting split factor of transaction of History',
             when(mockedTransactionsDatabaseAccessor.updateTransaction(anyOfClass(Transaction))).thenReturn();
 
             // action
-            const history = new History(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
+            const history = new TransactionList(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
             history.stockSplit(5, new Date());
 
             // prepare expected
@@ -123,7 +122,7 @@ describe('Create Stocksplit by adapting split factor of transaction of History',
             when(mockedTransactionsDatabaseAccessor.updateTransaction(anyOfClass(Transaction))).thenReturn();
 
             // action
-            const history = new History(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
+            const history = new TransactionList(mockedInstanceTransactionDatabaseAccessor, mockedInstanceStock);
             history.stockSplit(5, new Date());
 
             // prepare expected

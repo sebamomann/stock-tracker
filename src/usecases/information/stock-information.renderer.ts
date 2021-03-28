@@ -1,7 +1,7 @@
 import {Renderer} from "../Renderer";
 import {IStock} from "../../interface/IStock";
-import {HistoryRenderer} from "../history/history.renderer";
-import {History} from "../../models/History";
+import {TransactionListRenderer} from "../transactionList/transactionListRenderer";
+import {TransactionList} from "../../models/TransactionList";
 import {TransactionDatabaseAccessor} from "../../database/accessor/TransactionDatabaseAccessor";
 
 export class StockInformationRenderer extends Renderer {
@@ -266,7 +266,7 @@ export class StockInformationRenderer extends Renderer {
 
     private htmlNavigateToTransactionList() {
         const buttonClasses = [
-            "stock-transaction-button ",
+            "stock-transaction-button",
             "main-button",
             "margin"
         ];
@@ -288,9 +288,9 @@ export class StockInformationRenderer extends Renderer {
             }
 
             const transactionDatabaseAccessor = new TransactionDatabaseAccessor();
-            const history = new History(transactionDatabaseAccessor, this.stock);
+            const transactionList = new TransactionList(transactionDatabaseAccessor, this.stock);
 
-            let historyRenderer = new HistoryRenderer(history);
+            let historyRenderer = new TransactionListRenderer(transactionList);
             historyRenderer.render()
                 .then(
                     _ => {

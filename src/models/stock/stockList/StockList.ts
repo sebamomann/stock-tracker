@@ -1,10 +1,10 @@
-import {Stock} from "./Stock";
-import {Database} from "../../database/Database";
-import {StockFactory} from "./StockFactory";
-import {StockInfoService} from "../../service/StockInfoService";
+import {Stock} from "../Stock";
+import {Database} from "../../../database/Database";
+import {StockFactory} from "../StockFactory";
+import {StockInfoService} from "../../../service/StockInfoService";
 
 export class StockList {
-    private list: Stock[] = [];
+    private stocks: Stock[] = [];
 
     constructor() {
     }
@@ -25,17 +25,17 @@ export class StockList {
                     (ticker: string, index: number) => {
                         const stock = StockFactory.createStockByProfile(profiles[index]);
 
-                        this.list.push(stock)
+                        this.stocks.push(stock)
                     }
                 );
         }
     }
 
     public add(stock: Stock) {
-        this.list.push(stock);
+        this.stocks.push(stock);
     }
 
     public getList() {
-        return this.list;
+        return this.stocks;
     }
 }

@@ -88,6 +88,7 @@ body {
     }
   }
 
+  button,
   .button {
     display: inline-block;
     border-radius: 5px;
@@ -121,7 +122,8 @@ body {
   }
 }
 
-.history-header {
+.history-header,
+.header-div {
   h1, h2 {
     display: inline-block;
     color: white;
@@ -133,6 +135,10 @@ body {
     font-style: italic;
     color: lightgray;
     vertical-align: middle;
+  }
+
+  button {
+    margin-left: 15px;
   }
 }
 
@@ -289,3 +295,20 @@ form {
   }
 }
 
+.charts-wrapper {
+  .chart-wrapper {
+    margin: 50px 0;
+
+    .title {
+      display: block;
+      font-size: 1.25em;
+    }
+
+    canvas {
+      #worth-chart {
+        width: 80%;
+        max-width: 500px;
+      }
+    }
+  }
+}

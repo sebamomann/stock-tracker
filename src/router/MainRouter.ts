@@ -3,6 +3,7 @@ import {DashboardRouter} from "./DashboardRouter";
 import {StockRouter} from "./StockRouter";
 import {routeLogging} from "../configuration/Logger";
 import {StockInformationRouter} from "./StockInformationRouter";
+import {AnalyticsRouter} from "./AnalyticsRouter";
 
 export class MainRouter extends Router {
 
@@ -49,7 +50,8 @@ export class MainRouter extends Router {
             new StockRouter(redirectPath.join("/"));
         } else if (currentPath === "stockInfo") {
             new StockInformationRouter(redirectPath.join("/"));
+        } else if (currentPath === "distribution") {
+            new AnalyticsRouter(redirectPath.join("/"));
         }
     }
-
 }

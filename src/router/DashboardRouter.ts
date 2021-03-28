@@ -1,5 +1,5 @@
 import {Router} from "./Router";
-import {StockList} from "../models/stock/StockList";
+import {StockList} from "../models/stock/stockList/StockList";
 import {DashboardRenderer} from "../usecases/dashboard/dashboard.renderer";
 import {routeLogging} from "../configuration/Logger";
 

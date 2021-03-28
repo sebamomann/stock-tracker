@@ -1,26 +1,26 @@
 import {Renderer} from "../Renderer";
-import {History} from "../../models/History";
+import {TransactionList} from "../../models/TransactionList";
 import {ITransaction} from "../../interface/ITransaction";
 import {PurchaseTransaction} from "../../models/transaction/PurchaseTransaction";
 import {Transaction} from "../../models/transaction/Transaction";
 import {StockSplitDialogRenderer} from "./stock-split-dialog.renderer";
 import {StockInformationRenderer} from "../information/stock-information.renderer";
 import {DashboardRenderer} from "../dashboard/dashboard.renderer";
-import {StockList} from "../../models/stock/StockList";
+import {StockList} from "../../models/stock/stockList/StockList";
 import {Stock} from "../../models/stock/Stock";
 
 // noinspection JSMethodCanBeStatic
-export class HistoryRenderer extends Renderer {
+export class TransactionListRenderer extends Renderer {
 
-    private readonly history: History;
+    private readonly transactionList: TransactionList;
 
     // private startDate: Date | undefined = undefined;
     // private endDate: Date | undefined = undefined;
 
-    constructor(history: History) {
+    constructor(transactionList: TransactionList) {
         super();
 
-        this.history = history;
+        this.transactionList = transactionList;
     }
 
     async render(): Promise<void> {
@@ -38,7 +38,7 @@ export class HistoryRenderer extends Renderer {
     }
 
     private htmlHistoryHeader() {
-        const stock = this.history.stock;
+        const stock = this.transactionList.stock;
 
         const historyHeader = this.htmlDiv(["history-header"])
 
@@ -113,7 +113,7 @@ export class HistoryRenderer extends Renderer {
     private htmlTransactionList() {
         const transactionHistoryWrapper = this.htmlDiv(["transaction-history-wrapper"]);
 
-        this.history
+        this.transactionList
             .transactions
             .forEach(
                 (fTransaction: Transaction) => {
@@ -218,7 +218,7 @@ export class HistoryRenderer extends Renderer {
     }
 
     private htmlQuantityOwned() {
-        let quantityOwned = this.history.numberOfOwnedStocks();
+        let quantityOwned = this.transactionList.numberOfOwnedStocks();
 
         const divClasses = [
             "owned-quantity",
@@ -236,7 +236,7 @@ export class HistoryRenderer extends Renderer {
     }
 
     private htmlPriceBalance() {
-        let priceBalance = this.history.totalTransactionBalance();
+        let priceBalance = this.transactionList.totalTransactionBalance();
 
         const divClasses = [
             "price-balance",
@@ -254,7 +254,7 @@ export class HistoryRenderer extends Renderer {
     }
 
     private async htmlCurrentWorth() {
-        let currentWorth = await this.history.totalWorthOfCurrentlyOwnedStocks();
+        let currentWorth = await this.transactionList.totalWorthOfCurrentlyOwnedStocks();
 
         const divClasses = [
             "current-worth",
@@ -272,7 +272,7 @@ export class HistoryRenderer extends Renderer {
     }
 
     private async htmlStockPrice() {
-        let stockPrice = await this.history.stock.getPrice();
+        let stockPrice = await this.transactionList.stock.getPrice();
 
         const divClasses = [
             "current-worth-per-stock",
@@ -290,8 +290,8 @@ export class HistoryRenderer extends Renderer {
     }
 
     private async htmlPotentialWinTotal() {
-        let htmlPotentialWinTotal = await this.history.totalWorthOfCurrentlyOwnedStocks();
-        let priceBalance = this.history.totalTransactionBalance();
+        let htmlPotentialWinTotal = await this.transactionList.totalWorthOfCurrentlyOwnedStocks();
+        let priceBalance = this.transactionList.totalTransactionBalance();
 
         let potentialWinTotal = priceBalance + htmlPotentialWinTotal;
 
@@ -402,7 +402,7 @@ export class HistoryRenderer extends Renderer {
             const button = document.getElementById("stock-split-button")!;
             button.remove();
 
-            let stockSplitDialogRenderer = new StockSplitDialogRenderer(this.history);
+            let stockSplitDialogRenderer = new StockSplitDialogRenderer(this.transactionList);
             stockSplitDialogRenderer.render();
 
             stockSplitDialogRenderer.on("split",
@@ -429,12 +429,12 @@ export class HistoryRenderer extends Renderer {
             if (window.history.pushState) {
                 let newUrl = window.location.protocol + "//" + window.location.host;
                 newUrl += '/stockInfo'
-                newUrl += '?ticker=' + this.history.stock.ticker;
+                newUrl += '?ticker=' + this.transactionList.stock.ticker;
 
                 window.history.pushState({path: newUrl}, '', newUrl);
             }
 
-            let stockInformationRenderer = new StockInformationRenderer(this.history.stock);
+            let stockInformationRenderer = new StockInformationRenderer(this.transactionList.stock);
             stockInformationRenderer.render();
         };
     }

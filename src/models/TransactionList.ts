@@ -3,9 +3,8 @@ import {Stock} from "./stock/Stock";
 import {ITransactionAccessor} from "../database/accessor/ITransactionAccessor";
 import {IStock} from "../interface/IStock";
 
-export class History {
+export class TransactionList {
     private readonly _transactionDatabaseAccessor: ITransactionAccessor;
-    private readonly _stock: Stock;
 
     constructor(transactionDatabaseAccessor: ITransactionAccessor,
                 stock: Stock) {
@@ -20,6 +19,8 @@ export class History {
     get transactions(): Transaction[] {
         return this._transactions;
     }
+
+    private readonly _stock: Stock;                  
 
     get stock(): Stock {
         return this._stock;
@@ -38,7 +39,7 @@ export class History {
     }
 
     /**
-     * Get the number of currently owned {@link IStock} (of particular company specified in {@link History.stock} field)
+     * Get the number of currently owned {@link IStock} (of particular company specified in {@link TransactionList.stock} field)
      *
      * @return number        Owned {@link IStock}
      */
@@ -95,6 +96,34 @@ export class History {
                 }
             }
         );
+    }
+
+    /**
+     * Returns the balance of all Stocks that have been purchased, but not sold
+     * Number is negative
+     */
+    public balanceOfPurchasedStocksNotSold() {
+        const nrOfOwnedStocks = this.numberOfOwnedStocks();
+        let balance = 0;
+        let leftStocksToAnalyze = nrOfOwnedStocks;
+
+        this.transactions
+            .reverse()
+            .forEach(
+                (fTransaction) => {
+                    if (fTransaction.getTransactionPrice() < 0) {
+                        if (leftStocksToAnalyze - fTransaction.getTransactionQuantity() > 0) {
+                            balance += fTransaction.getTransactionPrice();
+
+                            leftStocksToAnalyze -= fTransaction.getTransactionQuantity();
+                        } else {
+                            balance += (fTransaction.getTransactionPrice() / fTransaction.getTransactionQuantity()) * leftStocksToAnalyze;
+                        }
+                    }
+                }
+            )
+
+        return balance;
     }
 
     /**

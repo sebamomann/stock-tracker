@@ -1,14 +1,14 @@
 import {Renderer} from "../Renderer";
-import {History} from "../../models/History";
+import {TransactionList} from "../../models/TransactionList";
 
 // noinspection JSMethodCanBeStatic
 export class StockSplitDialogRenderer extends Renderer {
-    private history: History;
+    private transactionList: TransactionList;
 
-    constructor(history: History) {
+    constructor(transactionList: TransactionList) {
         super();
 
-        this.history = history;
+        this.transactionList = transactionList;
     }
 
     public render() {
@@ -118,7 +118,7 @@ export class StockSplitDialogRenderer extends Renderer {
             let splitFactor = (inputs[0] as HTMLInputElement).value;
             let date = (inputs[1] as HTMLInputElement).value;
 
-            this.history.stockSplit(+splitFactor, new Date(date));
+            this.transactionList.stockSplit(+splitFactor, new Date(date));
 
             this.emit("split")
         };

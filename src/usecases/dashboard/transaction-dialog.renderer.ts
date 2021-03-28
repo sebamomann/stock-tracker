@@ -119,7 +119,7 @@ export class TransactionDialogRenderer extends Renderer {
             "button",
             "cancel"
         ];
-        const buttonText = "submit";
+        const buttonText = "cancel";
 
         let cancelButton = this.htmlButton(buttonClasses, buttonText);
         cancelButton.addEventListener("click", this.cancelButtonClickListener());
