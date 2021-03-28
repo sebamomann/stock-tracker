@@ -10,7 +10,7 @@ import {StockListAnalyticsRenderer} from "../analytics/stockListAnalytics.render
 
 // noinspection JSMethodCanBeStatic
 export class DashboardRenderer extends Renderer {
-    private stockList: StockList;
+    private readonly stockList: StockList;
 
     constructor(stockList: StockList) {
         super();
