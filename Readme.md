@@ -7,7 +7,7 @@ docker build . -t stock-tracker
 ```
 
 ```shell
-docker start stock-tracker -p 40004:80
+docker run -d -p 40004:80 stock-tracker
 ```
 um anschließend den Container auf Port 40004 zu starten.
 
