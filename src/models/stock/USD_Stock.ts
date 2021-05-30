@@ -11,7 +11,7 @@ export class USD_Stock extends Stock {
     }
 
     async getPrice(): Promise<number> {
-        const url = 'https://api.exchangeratesapi.io/latest?base=USD';
+        const url = 'http://api.exchangeratesapi.io/latest?access_key=6f208c15294939156cbb35e81b8dbd68';
 
         const responseCurrency = await axios
             .get(url,
@@ -20,6 +20,16 @@ export class USD_Stock extends Stock {
                 }
             )
 
-        return this.pricing * responseCurrency.data.rates.EUR;
+
+        console.log(responseCurrency.data.rates.USD);
+        const rate = 1 / responseCurrency.data.rates.USD;
+        console.log(rate);
+        return this.pricing * rate;
+
+        // HINWEIS
+        // AUFGRUND EINES API CHANGE IST ES NICHT MÖGLICH, USD ALS BASE AUSZUWÄLEN
+        // MAN BEKOMMT IMMER NUR EUR IN ANDERE WÄHRUNGEN
+        // und ist nicht mehr kostenlos ....
+        // zum glück hab ichs noch getestet
     }
 }
